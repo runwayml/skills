@@ -4,9 +4,41 @@ Agent skills for the [Runway API](https://dev.runwayml.com) - generate AI videos
 
 ## Available Skills
 
-### Runway API
+### CLI vs SDK
 
-Complete skill for the Runway API covering video generation, image generation, and audio generation.
+| | CLI | SDK |
+|---|-----|-----|
+| **Best for** | Shell scripts, CI/CD, quick generation | Building applications |
+| **Output** | URLs to stdout | Programmatic task objects |
+| **File handling** | Local paths auto-uploaded | URLs or base64 required |
+| **Install** | `npm install -g @runwayml/cli` | `pip install runwayml` / `npm install @runwayml/sdk` |
+
+---
+
+### Runway CLI
+
+Command-line interface for quick generation, shell scripts, and CI/CD pipelines.
+
+```bash
+# Generate video from local image
+runway video generate --model gen4.5 --image ./photo.jpg --prompt "Camera pushes in slowly"
+
+# Capture URL for scripting
+VIDEO_URL=$(runway video generate --model gen4.5 --prompt "A sunset over mountains")
+```
+
+**Install:**
+```bash
+claude skill add runwayml/skills/cli
+```
+
+[View Documentation](./cli/SKILL.md)
+
+---
+
+### Runway API (SDK)
+
+Complete SDK skill for Python and Node.js applications.
 
 **Video Generation:**
 - **Gen-4.5** (latest) - Text-to-video and image-to-video
@@ -38,6 +70,11 @@ claude skill add runwayml/skills/api
 
 ## Installation
 
+### Install the Runway CLI Skill
+```bash
+claude skill add runwayml/skills/cli
+```
+
 ### Install the Runway API Skill
 ```bash
 claude skill add runwayml/skills/api
@@ -56,9 +93,15 @@ Set your Runway API key as an environment variable:
 export RUNWAYML_API_SECRET="your_api_key_here"
 ```
 
+Or for CLI, use the login command:
+
+```bash
+runway login <your-api-key>
+```
+
 Get your API key at [dev.runwayml.com](https://dev.runwayml.com).
 
-## SDK Support
+## Package Installation
 
 ### Python
 ```bash
@@ -68,6 +111,11 @@ pip install runwayml
 ### Node.js
 ```bash
 npm install @runwayml/sdk
+```
+
+### CLI
+```bash
+npm install -g @runwayml/cli
 ```
 
 ## Quick Example
