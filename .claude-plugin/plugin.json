@@ -16,6 +16,7 @@
     "characters",
     "avatars",
     "public-api",
-    "runway-api"
+    "runway-api",
+    "cli"
   ]
 }

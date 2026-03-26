@@ -51,6 +51,12 @@ npx skills add runwayml/skills
 | `integrate-character-embed` | Embed avatar call UI in React apps using `@runwayml/avatars-react`                         |
 | `integrate-documents`       | Add knowledge base documents to avatars for domain-specific conversations                  |
 
+### CLI
+
+| Skill     | Description                                                            |
+| --------- | ---------------------------------------------------------------------- |
+| `use-cli` | Use the Runway CLI for quick generation, scripting, CI/CD, and MCP     |
+
 ### Utilities
 
 | Skill                 | Description                                                                                                           |
