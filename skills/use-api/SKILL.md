@@ -11,7 +11,15 @@ Call the Runway public API directly from the agent to manage resources, trigger 
 
 > **When to use this skill:** Use this when the user wants to **act on their Runway account** — create or update avatars, manage documents, trigger generations, check credit balance, etc. For writing integration code into a project, use the `+integrate-*` skills instead.
 
-> **Prerequisites:** Global auth must be configured first. Run `+setup-global-auth` if `auth status` shows `authenticated: false`.
+## Before Your First Call
+
+**Always check auth before making API calls.** Run:
+
+```bash
+node <path-to-skills-repo>/scripts/runway-api.mjs auth status
+```
+
+If `authenticated` is `false`, follow the `+setup-global-auth` skill to walk the user through authentication. Do not proceed with API calls until auth is confirmed.
 
 ## Runtime Location
 
