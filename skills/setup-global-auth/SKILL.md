@@ -31,9 +31,8 @@ Tell the user:
 
 > You need to authenticate with Runway. Here's what to do:
 >
-> 1. Open the Runway developer portal: **https://dev.runwayml.com/**
-> 2. Go to **Organization Settings → API Keys**
-> 3. Create a new API key (or use an existing one) and copy it
+> 1. Open the API keys page: **https://dev.runwayml.com/settings/api-keys**
+> 2. Create a new API key (or use an existing one) and copy it
 > 4. Run this command **in your terminal** (not here in the chat):
 >
 > ```

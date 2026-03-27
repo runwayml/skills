@@ -35,6 +35,8 @@ node <path>/scripts/runway-api.mjs request <METHOD> <path> [--body '<json>']
 
 All output is JSON. Errors go to stderr with a non-zero exit code.
 
+> **Before constructing a POST or PATCH body**, consult `+api-reference` for exact field names and required parameters. For the very latest schema, use `+fetch-api-reference`. The examples below cover simple, stable operations only — endpoints with richer schemas (avatar creation, generation) are documented in the reference skills.
+
 ### Examples
 
 **Get organization info:**
@@ -50,16 +52,6 @@ node <path>/scripts/runway-api.mjs request GET /v1/avatars
 **Get a specific avatar:**
 ```bash
 node <path>/scripts/runway-api.mjs request GET /v1/avatars/<id>
-```
-
-**Create an avatar:**
-```bash
-node <path>/scripts/runway-api.mjs request POST /v1/avatars --body '{
-  "name": "Support Agent",
-  "referenceImage": "https://example.com/headshot.jpg",
-  "personality": "Friendly and helpful support agent",
-  "voicePresetId": "victoria"
-}'
 ```
 
 **Update an avatar:**
@@ -93,27 +85,9 @@ node <path>/scripts/runway-api.mjs request POST /v1/documents --body '{
 node <path>/scripts/runway-api.mjs request GET /v1/voices
 ```
 
-**Generate an image:**
-```bash
-node <path>/scripts/runway-api.mjs request POST /v1/text_to_image --body '{
-  "model": "gen4_image",
-  "promptText": "A red door in a white wall"
-}'
-```
-
-**Generate a video:**
-```bash
-node <path>/scripts/runway-api.mjs request POST /v1/image_to_video --body '{
-  "model": "gen4_turbo",
-  "promptImage": "https://example.com/photo.jpg",
-  "promptText": "Slow push in",
-  "ratio": "1280:720"
-}'
-```
-
 ## Waiting for Tasks
 
-Generation endpoints return a task ID. Poll until completion:
+Generation endpoints return a task ID. **Always run `wait` immediately after a generation call** — do not ask the user whether to wait. Return the final output URLs in your response.
 
 ```bash
 node <path>/scripts/runway-api.mjs wait <task-id>
@@ -125,15 +99,17 @@ Prints progress to stderr and the final task object (with output URLs) to stdout
 
 ### Create an avatar and add knowledge
 
-1. Create the avatar → note the returned `id`
-2. Create documents with `avatarId` set to that `id`
-3. Verify with `GET /v1/avatars/<id>` and `GET /v1/documents?avatarId=<id>`
+1. Consult `+api-reference` for the current avatar creation schema
+2. Create the avatar → note the returned `id`
+3. Create documents with `avatarId` set to that `id`
+4. Verify with `GET /v1/avatars/<id>` and `GET /v1/documents?avatarId=<id>`
 
 ### Generate and retrieve output
 
-1. Call a generation endpoint (e.g. `POST /v1/text_to_image`) → note the `id`
-2. Run `wait <id>` → get the final task with output URLs
-3. Output URLs expire — download or use them promptly
+1. Consult `+api-reference` for the endpoint's required fields
+2. Call the generation endpoint → note the returned `id`
+3. Run `wait <id>` → return the output URLs to the user
+4. Remind the user that output URLs expire within 24-48 hours
 
 ### Check account state
 
