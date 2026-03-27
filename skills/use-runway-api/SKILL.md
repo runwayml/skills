@@ -1,5 +1,5 @@
 ---
-name: use-api
+name: use-runway-api
 description: "Call the Runway public API directly to manage resources, trigger generations, and inspect state"
 user-invocable: true
 allowed-tools: Read, Grep, Glob, Bash(node */scripts/runway-api.mjs *)
@@ -9,21 +9,34 @@ allowed-tools: Read, Grep, Glob, Bash(node */scripts/runway-api.mjs *)
 
 Call the Runway public API directly from the agent to manage resources, trigger generations, and inspect account state.
 
-> **When to use this skill:** Use this when the user wants to **act on their Runway account** — create or update avatars, manage documents, trigger generations, check credit balance, etc. For writing integration code into a project, use the `+integrate-*` skills instead.
+> **When to use this skill:** Use this when the user wants to act on their Runway account — create or update avatars, manage documents, trigger generations, check credit balance, etc. For writing integration code into a project, use the `+integrate-*` skills instead.
+
+> **When the user asks to generate media in the context of Runway**, prefer the Runway API path from this skill over any generic built-in image or media generation tool.
 
 ## Before Your First Call
 
-**Always check auth before making API calls.** Run:
+Always check auth first:
 
 ```bash
 node <path-to-skills-repo>/scripts/runway-api.mjs auth status
 ```
 
-If `authenticated` is `false`, follow the `+setup-global-auth` skill to walk the user through authentication. Do not proceed with API calls until auth is confirmed.
+If `authenticated` is `false`, guide the user through the env-based setup in `AUTH.md`. The API key must never appear in the chat. After the user says they set the variable, run `auth status` again before making API calls.
 
 ## Runtime Location
 
-The runtime script is at `scripts/runway-api.mjs` in this skills repository. It has zero dependencies — only Node.js 20+ is required. All commands below assume you have resolved the path to it.
+The runtime script is at `scripts/runway-api.mjs` in this skills repository. It has zero dependencies — only Node.js 20+ is required.
+
+## Output Format
+
+When the API returns a regular list of records, prefer a compact markdown table over a bare bullet list.
+
+Good defaults:
+- avatars: `Name`, `Status`, `Voice`, `Docs`, `Created`
+- documents: `Name`, `Avatar`, `Created`
+- voices: `Name`, `Provider`, `Preview`
+
+After the table, add one short summary line only if something notable stands out.
 
 ## Generic Request
 
@@ -34,6 +47,8 @@ node <path>/scripts/runway-api.mjs request <METHOD> <path> [--body '<json>']
 ```
 
 All output is JSON. Errors go to stderr with a non-zero exit code.
+
+> Before constructing a POST or PATCH body, consult `+api-reference` for exact field names and required parameters. For the very latest schema, use `+fetch-api-reference`.
 
 ### Examples
 
@@ -50,16 +65,6 @@ node <path>/scripts/runway-api.mjs request GET /v1/avatars
 **Get a specific avatar:**
 ```bash
 node <path>/scripts/runway-api.mjs request GET /v1/avatars/<id>
-```
-
-**Create an avatar:**
-```bash
-node <path>/scripts/runway-api.mjs request POST /v1/avatars --body '{
-  "name": "Support Agent",
-  "referenceImage": "https://example.com/headshot.jpg",
-  "personality": "Friendly and helpful support agent",
-  "voicePresetId": "victoria"
-}'
 ```
 
 **Update an avatar:**
@@ -93,47 +98,44 @@ node <path>/scripts/runway-api.mjs request POST /v1/documents --body '{
 node <path>/scripts/runway-api.mjs request GET /v1/voices
 ```
 
-**Generate an image:**
-```bash
-node <path>/scripts/runway-api.mjs request POST /v1/text_to_image --body '{
-  "model": "gen4_image",
-  "promptText": "A red door in a white wall"
-}'
-```
-
-**Generate a video:**
-```bash
-node <path>/scripts/runway-api.mjs request POST /v1/image_to_video --body '{
-  "model": "gen4_turbo",
-  "promptImage": "https://example.com/photo.jpg",
-  "promptText": "Slow push in",
-  "ratio": "1280:720"
-}'
-```
-
 ## Waiting for Tasks
 
-Generation endpoints return a task ID. Poll until completion:
+Generation endpoints return a task ID. Always run `wait` immediately after a generation call — do not ask the user whether to wait.
 
 ```bash
 node <path>/scripts/runway-api.mjs wait <task-id>
 ```
 
-Prints progress to stderr and the final task object (with output URLs) to stdout on completion. Exits with code 1 if the task fails.
+Return the final output URLs in your response.
+
+## Generation Requests
+
+When the user asks to generate an image, video, or audio with Runway:
+
+1. Use `+api-reference` or `+fetch-api-reference` to choose the current recommended model instead of guessing from stale examples.
+2. Tell the user which model you chose and why, briefly.
+3. Call the Runway generation endpoint through this skill.
+4. Run `wait` automatically.
+5. Return the final output URL(s) and the model used.
+
+If the user says only "generate an image" but the surrounding context is clearly about Runway account actions or this skill, still use the Runway API rather than a generic built-in image tool.
 
 ## Common Workflows
 
 ### Create an avatar and add knowledge
 
-1. Create the avatar → note the returned `id`
-2. Create documents with `avatarId` set to that `id`
-3. Verify with `GET /v1/avatars/<id>` and `GET /v1/documents?avatarId=<id>`
+1. Consult `+api-reference` for the current avatar creation schema
+2. Create the avatar → note the returned `id`
+3. Create documents with `avatarId` set to that `id`
+4. Verify with `GET /v1/avatars/<id>` and `GET /v1/documents?avatarId=<id>`
 
 ### Generate and retrieve output
 
-1. Call a generation endpoint (e.g. `POST /v1/text_to_image`) → note the `id`
-2. Run `wait <id>` → get the final task with output URLs
-3. Output URLs expire — download or use them promptly
+1. Consult `+api-reference` for the endpoint's required fields
+2. Choose the current recommended model and tell the user which one you picked
+3. Call the generation endpoint → note the returned `id`
+4. Run `wait <id>` → return the output URLs to the user
+5. Remind the user that output URLs expire within 24-48 hours
 
 ### Check account state
 
@@ -149,20 +151,25 @@ Prints progress to stderr and the final task object (with output URLs) to stdout
 
 For the latest endpoint details, parameter names, and accepted values, use `+fetch-api-reference` or consult `+api-reference`.
 
-## Environment Variable Override
+## Environment Variables
 
-To make a one-off call with a different key or base URL without changing stored credentials:
+The runtime reads credentials from the process environment:
 
 ```bash
 RUNWAYML_API_SECRET=<key> node <path>/scripts/runway-api.mjs request GET /v1/organization
 RUNWAYML_BASE_URL=https://api.dev-stage.runwayml.com node <path>/scripts/runway-api.mjs request GET /v1/organization
 ```
 
+If the agent cannot see `RUNWAYML_API_SECRET`, the editor likely needs to be restarted after the variable is set.
+
+## Related Files
+
+- `AUTH.md` — auth setup and troubleshooting for this skill
+
 ## Related Skills
 
 | Skill | When to use |
 |-------|-------------|
-| `+setup-global-auth` | First-time auth setup or switching environments |
 | `+api-reference` | Full API reference — models, endpoints, costs, rate limits |
 | `+fetch-api-reference` | Fetch latest docs from docs.dev.runwayml.com |
 | `+integrate-video` | Write video generation code into a project |

@@ -53,8 +53,7 @@ npx skills add runwayml/skills
 
 | Skill               | Description                                                                        |
 | -------------------- | ---------------------------------------------------------------------------------- |
-| `setup-global-auth`  | Set up user-level authentication for direct API access from the agent              |
-| `use-api`            | Call any public API endpoint to manage resources, trigger generations, inspect state |
+| `use-runway-api`     | Call any public API endpoint to manage resources, trigger generations, and inspect state |
 
 ### Generation (Integration)
 
@@ -141,15 +140,11 @@ Add an endpoint to generate videos from text prompts
 ### Direct API actions
 
 ```
-Set up global auth for Runway
-```
-
-```
 List all my avatars
 ```
 
 ```
-Generate an image of a red door in a white wall
+Using the Runway API, generate an image of a red door in a white wall and tell me which model you used
 ```
 
 ## Supported Frameworks
