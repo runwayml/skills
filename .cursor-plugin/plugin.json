@@ -1,0 +1,34 @@
+{
+  "name": "runway-api",
+  "displayName": "Runway API",
+  "version": "1.0.1",
+  "description": "Gives AI agents the knowledge and tools to work with Runway's public API — integrate video, image, and audio generation into server-side projects, or manage Runway resources directly from the editor.",
+  "author": {
+    "name": "Runway"
+  },
+  "homepage": "https://docs.dev.runwayml.com/",
+  "repository": "https://github.com/runwayml/skills",
+  "license": "MIT",
+  "logo": "assets/logo.png",
+  "keywords": [
+    "runway",
+    "runwayml",
+    "video-generation",
+    "image-generation",
+    "audio-generation",
+    "ai-api",
+    "gen4",
+    "veo3",
+    "characters",
+    "avatars"
+  ],
+  "category": "ai-tools",
+  "tags": [
+    "api-integration",
+    "media-generation",
+    "video",
+    "image",
+    "audio"
+  ],
+  "skills": "./skills/"
+}
