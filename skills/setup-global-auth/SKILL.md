@@ -2,7 +2,7 @@
 name: setup-global-auth
 description: "Set up global authentication for direct Runway API access from the agent"
 user-invocable: true
-allowed-tools: Read, Grep, Glob, Bash(node */scripts/runway-api.mjs auth *), Bash(cat ~/.config/runwayml/credentials.json)
+allowed-tools: Read, Grep, Glob, Bash(node */scripts/runway-api.mjs auth status)
 ---
 
 # Setup Global Auth
@@ -11,72 +11,75 @@ Set up user-level authentication so the agent can call the Runway API directly �
 
 > **When to use this skill:** Use this when the user wants the agent to manage Runway resources directly (create avatars, upload files, trigger generations, etc.) rather than writing integration code into their app. For project-level `.env` setup, use `+setup-api-key` instead.
 
-## How It Works
+## Agent Flow
 
-Credentials are stored at `~/.config/runwayml/credentials.json` with restrictive file permissions (`0600`). The file contains an API key and base URL — never committed to any repo.
+Follow these steps in order. **The API key must never appear in the chat.**
 
-**Precedence:** The `RUNWAYML_API_SECRET` environment variable always overrides the stored credentials. This lets users do one-off calls against a different key without changing their global config.
+### 1. Check existing auth
 
-## Step 1: Obtain an API Key
-
-Direct the user to:
-
-1. Go to **https://dev.runwayml.com/**
-2. Create an organization (or use an existing one)
-3. Navigate to **Organization Settings → API Keys**
-4. Click **Create API Key**
-5. **Copy the key immediately** — it is only shown once
-
-Remind the user:
-- API keys are **organization-scoped**, not user-scoped.
-- They must **prepay for credits** ($10 minimum) before the API works.
-
-## Step 2: Authenticate
-
-Locate the `scripts/runway-api.mjs` script in this skills repository. Run:
-
-```bash
-node <path-to-skills-repo>/scripts/runway-api.mjs auth login <api-key>
-```
-
-The command verifies the key against the API and stores it on success. It prints the organization name and the credentials file path.
-
-### Non-production environments
-
-To authenticate against a non-production API (e.g. staging):
-
-```bash
-node <path-to-skills-repo>/scripts/runway-api.mjs auth login <api-key> --base-url https://api.dev-stage.runwayml.com
-```
-
-## Step 3: Verify
+Run:
 
 ```bash
 node <path-to-skills-repo>/scripts/runway-api.mjs auth status
 ```
 
-Expected output:
+If `authenticated` is `true`, you're done — tell the user they're already set up and proceed with whatever they asked for.
 
-```json
-{
-  "authenticated": true,
-  "source": "credentials-file",
-  "baseUrl": "https://api.dev.runwayml.com",
-  "keyPrefix": "rw_live_..."
-}
+### 2. If not authenticated, guide the user
+
+Tell the user:
+
+> You need to authenticate with Runway. Here's what to do:
+>
+> 1. Open the Runway developer portal: **https://dev.runwayml.com/**
+> 2. Go to **Organization Settings → API Keys**
+> 3. Create a new API key (or use an existing one) and copy it
+> 4. Run this command **in your terminal** (not here in the chat):
+>
+> ```
+> node <path-to-skills-repo>/scripts/runway-api.mjs auth login YOUR_KEY_HERE
+> ```
+>
+> Replace `YOUR_KEY_HERE` with the key you copied. The command will verify the key and store it securely.
+
+Fill in the actual absolute path to `scripts/runway-api.mjs` so the user can copy-paste directly.
+
+Remind the user:
+- API keys require **prepaid credits** ($10 minimum) to work.
+- The key is stored at `~/.config/runwayml/credentials.json` with restrictive permissions — it never enters any repo.
+
+### 3. Verify
+
+After the user says they've run the command, verify:
+
+```bash
+node <path-to-skills-repo>/scripts/runway-api.mjs auth status
 ```
 
-## Removing Credentials
+If it shows `authenticated: true`, confirm success and continue with whatever the user originally asked for.
+
+If it still shows `false`, ask the user to check the terminal output from the login command for errors.
+
+## Non-production environments
+
+If the user wants to target staging or another environment, the login command accepts `--base-url`:
+
+```
+node <path-to-skills-repo>/scripts/runway-api.mjs auth login YOUR_KEY_HERE --base-url https://api.dev-stage.runwayml.com
+```
+
+## Removing credentials
 
 ```bash
 node <path-to-skills-repo>/scripts/runway-api.mjs auth logout
 ```
 
-## Security Notes
+## How It Works
 
-- The credentials file is stored with `0600` permissions (owner read/write only).
-- Never pass the API key as a visible command-line argument in shared environments — use `RUNWAYML_API_SECRET` instead.
-- The agent should **never** print or echo the full API key in its output.
+- Credentials are stored at `~/.config/runwayml/credentials.json` with `0600` permissions.
+- `RUNWAYML_API_SECRET` environment variable always overrides stored credentials for one-off calls.
+- The login command verifies the key against the API before persisting it.
+- The agent should **never** print, echo, or request the full API key in the chat.
 
 ## Next Steps
 
