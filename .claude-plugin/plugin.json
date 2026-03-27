@@ -1,9 +1,10 @@
 {
   "name": "runway-api",
-  "description": "Gives AI agents the knowledge and tools to work with Runway's public API (https://docs.dev.runwayml.com/) — integrate generation capabilities into server-side projects, or manage Runway resources directly from the editor.",
+  "description": "Helps users integrate Runway's public API (https://docs.dev.runwayml.com/) into their projects. Analyzes codebase compatibility, guides API key setup, and provides hands-on assistance for video generation, image generation, audio, file uploads, and direct API actions.",
   "version": "1.2.0",
   "author": {
-    "name": "Runway"
+    "name": "Runway",
+    "email": "ops@runwayml.com"
   },
   "keywords": [
     "runway",
