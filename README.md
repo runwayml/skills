@@ -26,38 +26,42 @@ npx skills add runwayml/skills
 
 ## Available Skills
 
+<!-- GENERATED:SKILLS:START -->
+
 ### Getting Started
 
-| Skill                 | Description                                                                                    |
-| --------------------- | ---------------------------------------------------------------------------------------------- |
-| `recipe-full-setup`   | End-to-end setup: compatibility check → API key → SDK install → integration code → test        |
-| `check-compatibility` | Analyze your project to verify it can safely call the Runway API server-side                   |
-| `setup-api-key`       | Guide through account creation, SDK installation, and environment variable configuration       |
-| `check-org-details`   | Query your organization's rate limits, credit balance, usage tier, and daily generation counts |
+| Skill                 | Description                                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `recipe-full-setup`   | Complete Runway API setup: check compatibility, configure API key, and integrate generation endpoints               |
+| `check-compatibility` | Analyze a user's codebase to verify it can use Runway's public API (server-side requirement)                        |
+| `setup-api-key`       | Guide users through obtaining and configuring a Runway API key                                                      |
+| `check-org-details`   | Query the Runway API for organization details: rate limits, credit balance, usage tier, and daily generation counts |
 
 ### Generation
 
-| Skill             | Description                                                                         |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| `integrate-video` | Text-to-video, image-to-video, video-to-video, and character performance generation |
-| `integrate-image` | Text-to-image generation with optional reference images via `@Tag` syntax           |
-| `integrate-audio` | Text-to-speech, sound effects, voice isolation, dubbing, and speech-to-speech       |
+| Skill             | Description                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `integrate-video` | Help users integrate Runway video generation APIs (text-to-video, image-to-video, video-to-video) |
+| `integrate-image` | Help users integrate Runway image generation APIs (text-to-image with reference images)           |
+| `integrate-audio` | Help users integrate Runway audio APIs (TTS, sound effects, voice isolation, dubbing)             |
 
 ### Characters (Real-Time Avatars)
 
-| Skill                       | Description                                                                                |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| `integrate-characters`      | Create GWM-1 avatars and set up server-side session management for real-time conversations |
-| `integrate-character-embed` | Embed avatar call UI in React apps using `@runwayml/avatars-react`                         |
-| `integrate-documents`       | Add knowledge base documents to avatars for domain-specific conversations                  |
+| Skill                       | Description                                                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `integrate-characters`      | Help users create Runway Characters (GWM-1 avatars) and integrate real-time conversational sessions into their apps |
+| `integrate-character-embed` | Help users embed Runway Character avatar calls in React apps using the @runwayml/avatars-react SDK                  |
+| `integrate-documents`       | Help users add knowledge base documents to Runway Characters for domain-specific conversations                      |
 
 ### Utilities
 
-| Skill                 | Description                                                                                                           |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `integrate-uploads`   | Upload local files to get `runway://` URIs for use as generation inputs                                               |
-| `api-reference`       | Complete API reference — models, endpoints, costs, rate limits, and error codes                                       |
-| `fetch-api-reference` | Fetch the latest API docs from [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api/) as the source of truth |
+| Skill                 | Description                                                                                                                            |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `integrate-uploads`   | Help users upload local files to Runway for use as inputs to generation models                                                         |
+| `api-reference`       | Complete reference for Runway's public API: models, endpoints, costs, limits, and types                                                |
+| `fetch-api-reference` | Retrieve the latest Runway API reference from docs.dev.runwayml.com and use it as the authoritative source before any integration work |
+
+<!-- GENERATED:SKILLS:END -->
 
 ## Supported Models
 
