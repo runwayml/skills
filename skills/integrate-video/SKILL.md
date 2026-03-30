@@ -289,9 +289,9 @@ async def generate_video(req: VideoRequest):
 
 ## Tips
 
-- **Output URLs expire in 24-48 hours.** Download videos to your own storage (S3, GCS, local filesystem) immediately after generation.
+See `runway.md` in the repository root for shared platform rules (output URL expiry, task polling, credits). Model-specific tips:
+
 - **`gen4_turbo` requires an image** — it cannot do text-only generation.
 - **`gen4_aleph` is the only video-to-video model** — use it for editing/transforming existing videos.
 - **Duration range is 2-10 seconds.** Longer videos require chaining multiple generations.
-- **`waitForTaskOutput()` has a default 10-minute timeout.** For long-running generations, you may want to implement your own polling loop or increase the timeout.
 - **For local files**, always use `+integrate-uploads` to upload first, then pass the `runway://` URI.

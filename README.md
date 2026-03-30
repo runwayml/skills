@@ -127,11 +127,10 @@ The skills generate framework-specific code for:
 
 ## API Reference
 
-- **Base URL:** `https://api.dev.runwayml.com`
-- **Auth header:** `Authorization: Bearer <RUNWAYML_API_SECRET>`
-- **Version header:** `X-Runway-Version: 2024-11-06`
+See [`runway.md`](runway.md) for authentication, request headers, base URLs, output URL expiry, task polling, and other shared platform rules.
+
 - **Official docs:** [docs.dev.runwayml.com](https://docs.dev.runwayml.com/)
-- **API Reference:** [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api)
+- **API reference:** [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api)
 - **Developer portal:** [dev.runwayml.com](https://dev.runwayml.com/)
 
 ## License

@@ -209,7 +209,8 @@ async def generate_image(req: ImageRequest):
 
 ## Tips
 
-- **Output URLs expire in 24-48 hours.** Download images to your own storage immediately.
+See `runway.md` in the repository root for shared platform rules (output URL expiry, task polling, credits). Model-specific tips:
+
 - **Reference images use `@Tag` syntax** in the prompt — the tag must match the `tag` field in the `referenceImages` array.
 - **For local files**, always upload via `+integrate-uploads` first, then use the `runway://` URI.
 - **`gen4_image_turbo`** is the cheapest option at 2 credits per image — good for prototyping.

@@ -172,7 +172,8 @@ async def generate_sound(req: SoundRequest):
 
 ## Tips
 
-- **Output URLs expire in 24-48 hours.** Download audio files to your own storage.
+See `runway.md` in the repository root for shared platform rules (output URL expiry, task polling, credits). Model-specific tips:
+
 - **For local audio files** (voice isolation, dubbing, speech-to-speech), upload via `+integrate-uploads` first.
 - **Voice IDs** can be listed via the voices endpoint — see `+api-reference` for details.
 - **Text-to-speech cost** scales with text length: 1 credit per 50 characters.
