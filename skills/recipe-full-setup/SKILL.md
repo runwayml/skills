@@ -96,9 +96,6 @@ Does the input come from a public HTTPS URL?
 
 ## Important Reminders
 
-- **Never expose the API key in client-side code.** All API calls must happen server-side.
-- **Output URLs expire.** Always download and store generated content.
-- **Credits are required.** The API won't work without prepaid credits.
-- **Rate limits exist.** Rate limits exist. You should always check what is the rate limit before attempting concurrent generations.
-- **Content moderation applies** to both inputs and outputs. Safety-flagged inputs are non-refundable.
+See `runway.md` in the repository root for shared platform rules (auth, output expiry, credits, rate limits, moderation). Key points for this workflow:
+
 - **Be cost-conscious.** Help users pick the right model for their budget. Credit cost can be found on https://docs.dev.runwayml.com/guides/pricing/
