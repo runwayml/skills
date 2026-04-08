@@ -15,9 +15,24 @@ When you ask your agent to add Runway capabilities to your project, these skills
 
 ## Installation
 
+### Claude Code (community marketplace)
+
+Add the [Anthropic community plugins](https://github.com/anthropics/claude-plugins-community) marketplace, then install this plugin.
+
+```bash
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install runway-api-skills@claude-community
+```
+
+You can also run `/plugin` in Claude Code, open **Discover**, search for **runway-api-skills**, and install from there. After installing or updating plugins, run `/reload-plugins` if skills do not appear immediately.
+
+### Other agents (`npx skills`)
+
 ```bash
 npx skills add runwayml/skills
 ```
+
+Select all the skills with your keyboard (Space to select, arrow keys to navigate), then press Enter to install.
 
 ## Prerequisites
 
@@ -28,36 +43,36 @@ npx skills add runwayml/skills
 
 ### Getting Started
 
-| Skill                 | Description                                                                                    |
-| --------------------- | ---------------------------------------------------------------------------------------------- |
-| `recipe-full-setup`   | End-to-end setup: compatibility check → API key → SDK install → integration code → test        |
-| `check-compatibility` | Analyze your project to verify it can safely call the Runway API server-side                   |
-| `setup-api-key`       | Guide through account creation, SDK installation, and environment variable configuration       |
-| `check-org-details`   | Query your organization's rate limits, credit balance, usage tier, and daily generation counts |
+| Skill                    | Description                                                                                    |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| `rw-recipe-full-setup`   | End-to-end setup: compatibility check → API key → SDK install → integration code → test        |
+| `rw-check-compatibility` | Analyze your project to verify it can safely call the Runway API server-side                   |
+| `rw-setup-api-key`       | Guide through account creation, SDK installation, and environment variable configuration       |
+| `rw-check-org-details`   | Query your organization's rate limits, credit balance, usage tier, and daily generation counts |
 
 ### Generation
 
-| Skill             | Description                                                                         |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| `integrate-video` | Text-to-video, image-to-video, video-to-video, and character performance generation |
-| `integrate-image` | Text-to-image generation with optional reference images via `@Tag` syntax           |
-| `integrate-audio` | Text-to-speech, sound effects, voice isolation, dubbing, and speech-to-speech       |
+| Skill                | Description                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| `rw-integrate-video` | Text-to-video, image-to-video, video-to-video, and character performance generation |
+| `rw-integrate-image` | Text-to-image generation with optional reference images via `@Tag` syntax           |
+| `rw-integrate-audio` | Text-to-speech, sound effects, voice isolation, dubbing, and speech-to-speech       |
 
 ### Characters (Real-Time Avatars)
 
-| Skill                       | Description                                                                                |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| `integrate-characters`      | Create GWM-1 avatars and set up server-side session management for real-time conversations |
-| `integrate-character-embed` | Embed avatar call UI in React apps using `@runwayml/avatars-react`                         |
-| `integrate-documents`       | Add knowledge base documents to avatars for domain-specific conversations                  |
+| Skill                          | Description                                                                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------ |
+| `rw-integrate-characters`      | Create GWM-1 avatars and set up server-side session management for real-time conversations |
+| `rw-integrate-character-embed` | Embed avatar call UI in React apps using `@runwayml/avatars-react`                         |
+| `rw-integrate-documents`       | Add knowledge base documents to avatars for domain-specific conversations                  |
 
 ### Utilities
 
-| Skill                 | Description                                                                                                           |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `integrate-uploads`   | Upload local files to get `runway://` URIs for use as generation inputs                                               |
-| `api-reference`       | Complete API reference — models, endpoints, costs, rate limits, and error codes                                       |
-| `fetch-api-reference` | Fetch the latest API docs from [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api/) as the source of truth |
+| Skill                    | Description                                                                                                           |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `rw-integrate-uploads`   | Upload local files to get `runway://` URIs for use as generation inputs                                               |
+| `rw-api-reference`       | Complete API reference — models, endpoints, costs, rate limits, and error codes                                       |
+| `rw-fetch-api-reference` | Fetch the latest API docs from [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api/) as the source of truth |
 
 ## Supported Models
 

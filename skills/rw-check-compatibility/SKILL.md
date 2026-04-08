@@ -1,5 +1,5 @@
 ---
-name: check-compatibility
+name: rw-check-compatibility
 description: "Analyze a user's codebase to verify it can use Runway's public API (server-side requirement)"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Bash(node --version), Bash(python3 --version), Bash(pip show *), Bash(npm ls *)
@@ -114,4 +114,4 @@ Your project is frontend-only and cannot safely call Runway's API. Options:
 
 ## After Compatibility Check
 
-If the project is compatible, suggest the user proceed with `+setup-api-key` to configure their API credentials.
+If the project is compatible, suggest the user proceed with `+rw-setup-api-key` to configure their API credentials.

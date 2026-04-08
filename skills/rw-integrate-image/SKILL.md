@@ -1,5 +1,5 @@
 ---
-name: integrate-image
+name: rw-integrate-image
 description: "Help users integrate Runway image generation APIs (text-to-image with reference images)"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -7,7 +7,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 
 # Integrate Image Generation
 
-> **PREREQUISITE:** Run `+check-compatibility` first. Run `+fetch-api-reference` to load the latest API reference before integrating. Requires `+setup-api-key` for API credentials. Requires `+integrate-uploads` when the user has local reference images.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first. Run `+rw-fetch-api-reference` to load the latest API reference before integrating. Requires `+rw-setup-api-key` for API credentials. Requires `+rw-integrate-uploads` when the user has local reference images.
 
 Help users add Runway image generation to their server-side code.
 
@@ -85,7 +85,7 @@ task = client.text_to_image.create(
 ).wait_for_task_output()
 ```
 
-**If the user has local reference images**, upload them first with `+integrate-uploads`:
+**If the user has local reference images**, upload them first with `+rw-integrate-uploads`:
 
 ```javascript
 import fs from 'fs';
@@ -211,5 +211,5 @@ async def generate_image(req: ImageRequest):
 
 - **Output URLs expire in 24-48 hours.** Download images to your own storage immediately.
 - **Reference images use `@Tag` syntax** in the prompt — the tag must match the `tag` field in the `referenceImages` array.
-- **For local files**, always upload via `+integrate-uploads` first, then use the `runway://` URI.
+- **For local files**, always upload via `+rw-integrate-uploads` first, then use the `runway://` URI.
 - **`gen4_image_turbo`** is the cheapest option at 2 credits per image — good for prototyping.

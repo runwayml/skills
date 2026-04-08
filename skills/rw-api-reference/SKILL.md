@@ -1,12 +1,12 @@
 ---
-name: api-reference
+name: rw-api-reference
 description: "Complete reference for Runway's public API: models, endpoints, costs, limits, and types"
 user-invocable: false
 ---
 
 # Runway Public API Reference
 
-> **PREREQUISITE:** Run `+check-compatibility` first to ensure the project has server-side capability.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first to ensure the project has server-side capability.
 
 Base URL: `https://api.dev.runwayml.com`
 

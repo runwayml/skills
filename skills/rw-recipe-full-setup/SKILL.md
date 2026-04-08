@@ -1,5 +1,5 @@
 ---
-name: recipe-full-setup
+name: rw-recipe-full-setup
 description: "Complete Runway API setup: check compatibility, configure API key, and integrate generation endpoints"
 user-invocable: true
 allowed-tools: Read, Grep, Glob, Edit, Write, Bash(node --version), Bash(python3 --version), Bash(npm install *), Bash(pip install *), Bash(pip3 install *)
@@ -7,7 +7,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash(node --version), Bash(python3
 
 # Full Runway API Setup
 
-> **PREREQUISITE:** Run `+check-compatibility` first to ensure the project has server-side capability.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first to ensure the project has server-side capability.
 
 This recipe guides a user through the complete process of integrating Runway's public API into their project. It chains together the compatibility check, API key setup, and API integration skills.
 
@@ -15,7 +15,7 @@ This recipe guides a user through the complete process of integrating Runway's p
 
 ### Phase 1: Compatibility Check
 
-Use `+check-compatibility` to analyze the user's project.
+Use `+rw-check-compatibility` to analyze the user's project.
 
 1. Identify the project type (Node.js, Python, etc.)
 2. Verify server-side capability
@@ -35,7 +35,7 @@ Use `+check-compatibility` to analyze the user's project.
 
 ### Phase 2: API Key Setup
 
-Use `+setup-api-key` to configure credentials.
+Use `+rw-setup-api-key` to configure credentials.
 
 1. Direct the user to https://dev.runwayml.com/ to create an account and API key
 2. Install the appropriate SDK (`@runwayml/sdk` for Node.js, `runwayml` for Python)
@@ -51,16 +51,16 @@ Ask the user what they want to build. Based on their response, use the appropria
 
 | User wants...                   | Skill to use                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------- |
-| Generate videos from text       | `+integrate-video` (text-to-video)                                              |
-| Animate images into video       | `+integrate-video` (image-to-video) + `+integrate-uploads` if local files       |
-| Edit/transform existing videos  | `+integrate-video` (video-to-video) + `+integrate-uploads`                      |
-| Generate images from text       | `+integrate-image`                                                              |
-| Generate images with references | `+integrate-image` + `+integrate-uploads` if local refs                         |
-| Text-to-speech                  | `+integrate-audio`                                                              |
-| Sound effects                   | `+integrate-audio`                                                              |
-| Voice isolation/dubbing         | `+integrate-audio` + `+integrate-uploads`                                       |
-| Real-time conversational avatar | `+integrate-characters` + `+integrate-character-embed` (React UI)               |
-| Avatar with domain knowledge    | `+integrate-characters` + `+integrate-documents` + `+integrate-character-embed` |
+| Generate videos from text       | `+rw-integrate-video` (text-to-video)                                              |
+| Animate images into video       | `+rw-integrate-video` (image-to-video) + `+rw-integrate-uploads` if local files       |
+| Edit/transform existing videos  | `+rw-integrate-video` (video-to-video) + `+rw-integrate-uploads`                      |
+| Generate images from text       | `+rw-integrate-image`                                                              |
+| Generate images with references | `+rw-integrate-image` + `+rw-integrate-uploads` if local refs                         |
+| Text-to-speech                  | `+rw-integrate-audio`                                                              |
+| Sound effects                   | `+rw-integrate-audio`                                                              |
+| Voice isolation/dubbing         | `+rw-integrate-audio` + `+rw-integrate-uploads`                                       |
+| Real-time conversational avatar | `+rw-integrate-characters` + `+rw-integrate-character-embed` (React UI)               |
+| Avatar with domain knowledge    | `+rw-integrate-characters` + `+rw-integrate-documents` + `+rw-integrate-character-embed` |
 | Multiple capabilities           | Integrate each one, sharing the same client instance                            |
 
 ### Phase 4: Write the Integration Code
@@ -88,10 +88,10 @@ When the user's workflow involves images or videos as input:
 Does the input come from a public HTTPS URL?
 ├── YES → Pass the URL directly to the API
 └── NO → Is it a local file or user-uploaded file?
-    ├── YES → Use +integrate-uploads to upload first, then pass runway:// URI
+    ├── YES → Use +rw-integrate-uploads to upload first, then pass runway:// URI
     └── NO → Is it small enough for a data URI? (< 5MB image, < 16MB video)
         ├── YES → Convert to base64 data URI
-        └── NO → Use +integrate-uploads
+        └── NO → Use +rw-integrate-uploads
 ```
 
 ## Important Reminders

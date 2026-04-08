@@ -1,5 +1,5 @@
 ---
-name: integrate-video
+name: rw-integrate-video
 description: "Help users integrate Runway video generation APIs (text-to-video, image-to-video, video-to-video)"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -7,7 +7,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 
 # Integrate Video Generation
 
-> **PREREQUISITE:** Run `+check-compatibility` first. Run `+fetch-api-reference` to load the latest API reference before integrating. Requires `+setup-api-key` for API credentials. Requires `+integrate-uploads` when the user has local files to use as input.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first. Run `+rw-fetch-api-reference` to load the latest API reference before integrating. Requires `+rw-setup-api-key` for API credentials. Requires `+rw-integrate-uploads` when the user has local files to use as input.
 
 Help users add Runway video generation to their server-side code.
 
@@ -97,7 +97,7 @@ task = client.image_to_video.create(
 ).wait_for_task_output()
 ```
 
-**If the user has a local image file**, use `+integrate-uploads` first to upload it:
+**If the user has a local image file**, use `+rw-integrate-uploads` first to upload it:
 
 ```javascript
 // Upload local file first
@@ -164,7 +164,7 @@ const task = await client.characterPerformance.create({
 When helping the user integrate, follow this pattern:
 
 1. **Determine the use case** — What type of video generation? (text-to-video, image-to-video, etc.)
-2. **Check for local files** — If the user has local images/videos, use `+integrate-uploads` first
+2. **Check for local files** — If the user has local images/videos, use `+rw-integrate-uploads` first
 3. **Select the model** — Recommend based on quality/cost/speed needs
 4. **Write the server-side handler** — Create an API route or server function
 5. **Handle the output** — Download and store the video, don't serve signed URLs to clients
@@ -294,4 +294,4 @@ async def generate_video(req: VideoRequest):
 - **`gen4_aleph` is the only video-to-video model** — use it for editing/transforming existing videos.
 - **Duration range is 2-10 seconds.** Longer videos require chaining multiple generations.
 - **`waitForTaskOutput()` has a default 10-minute timeout.** For long-running generations, you may want to implement your own polling loop or increase the timeout.
-- **For local files**, always use `+integrate-uploads` to upload first, then pass the `runway://` URI.
+- **For local files**, always use `+rw-integrate-uploads` to upload first, then pass the `runway://` URI.

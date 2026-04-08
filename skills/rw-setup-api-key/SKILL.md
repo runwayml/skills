@@ -1,5 +1,5 @@
 ---
-name: setup-api-key
+name: rw-setup-api-key
 description: "Guide users through obtaining and configuring a Runway API key"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write, Bash(npm install *), Bash(pip install *), Bash(pip3 install *)
@@ -9,7 +9,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash(npm install *), Bash(pip inst
 
 Guide the user through obtaining a Runway API key, installing the SDK, and configuring their project for API access.
 
-> **PREREQUISITE:** Run `+check-compatibility` first to ensure the project has server-side capability.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first to ensure the project has server-side capability.
 
 ## Step 1: Create a Runway Developer Account
 
@@ -157,7 +157,7 @@ Before moving on, verify:
 ## Next Steps
 
 Once the API key is configured, the user can proceed with integration:
-- `+integrate-video` — Video generation (text-to-video, image-to-video)
-- `+integrate-image` — Image generation
-- `+integrate-audio` — Audio generation (TTS, sound effects, voice)
-- `+integrate-uploads` — File upload for models that require image/video input
+- `+rw-integrate-video` — Video generation (text-to-video, image-to-video)
+- `+rw-integrate-image` — Image generation
+- `+rw-integrate-audio` — Audio generation (TTS, sound effects, voice)
+- `+rw-integrate-uploads` — File upload for models that require image/video input

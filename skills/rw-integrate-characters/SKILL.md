@@ -1,5 +1,5 @@
 ---
-name: integrate-characters
+name: rw-integrate-characters
 description: "Help users create Runway Characters (GWM-1 avatars) and integrate real-time conversational sessions into their apps"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -8,13 +8,13 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 # Integrate Characters (GWM-1 Avatars)
 
 > **PREREQUISITES:**
-> - `+check-compatibility` — Project must have a server-side component (API key must NEVER be exposed to the client)
-> - `+fetch-api-reference` — Load the latest API reference from https://docs.dev.runwayml.com/api/ before integrating
-> - `+setup-api-key` — API credentials must be configured
+> - `+rw-check-compatibility` — Project must have a server-side component (API key must NEVER be exposed to the client)
+> - `+rw-fetch-api-reference` — Load the latest API reference from https://docs.dev.runwayml.com/api/ before integrating
+> - `+rw-setup-api-key` — API credentials must be configured
 >
 > **OPTIONAL DEPENDENCIES:**
-> - `+integrate-documents` — Add a knowledge base to your character
-> - `+integrate-character-embed` — Use the React SDK to embed the avatar call UI
+> - `+rw-integrate-documents` — Add a knowledge base to your character
+> - `+rw-integrate-character-embed` — Use the React SDK to embed the avatar call UI
 
 Help users create Runway Characters — real-time conversational AI avatars powered by GWM-1.
 
@@ -141,7 +141,7 @@ avatar = client.avatars.create(
 print('Avatar ID:', avatar.id)
 ```
 
-**If the reference image is a local file**, upload it first using `+integrate-uploads`:
+**If the reference image is a local file**, upload it first using `+rw-integrate-uploads`:
 
 ```javascript
 import fs from 'fs';
@@ -366,7 +366,7 @@ async def create_session(req: SessionRequest):
 
 ## Step 4: Connect from the Client
 
-See `+integrate-character-embed` for the React SDK components that handle WebRTC connection and rendering. The simplest approach:
+See `+rw-integrate-character-embed` for the React SDK components that handle WebRTC connection and rendering. The simplest approach:
 
 ```tsx
 'use client';

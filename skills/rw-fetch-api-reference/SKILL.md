@@ -1,5 +1,5 @@
 ---
-name: fetch-api-reference
+name: rw-fetch-api-reference
 description: "Retrieve the latest Runway API reference from docs.dev.runwayml.com and use it as the authoritative source before any integration work"
 user-invocable: false
 allowed-tools: Read, Grep, Glob
@@ -27,7 +27,7 @@ Use your available fetch tool (e.g. `mcp_web_fetch` or equivalent) to load this 
 
 - **Before** writing or suggesting integration code for video, image, audio, uploads, characters, documents, or any other Runway API feature, use the fetched content as the authoritative reference.
 - Prefer **exact** endpoint paths, model IDs, parameter names, and header values from the fetched reference over any cached or local documentation.
-- If the fetched content conflicts with text in other skills (e.g. `+api-reference` or an integrate skill), **the fetched docs take precedence** for that session.
+- If the fetched content conflicts with text in other skills (e.g. `+rw-api-reference` or an integrate skill), **the fetched docs take precedence** for that session.
 
 ### 3. When to Re-Fetch
 
@@ -36,7 +36,7 @@ Use your available fetch tool (e.g. `mcp_web_fetch` or equivalent) to load this 
 
 ## After Fetching
 
-Proceed with the relevant integrate skill (`+integrate-video`, `+integrate-image`, `+integrate-audio`, `+integrate-uploads`, `+integrate-characters`, `+integrate-documents`, `+integrate-character-embed`) using the retrieved reference to guide implementation.
+Proceed with the relevant integrate skill (`+rw-integrate-video`, `+rw-integrate-image`, `+rw-integrate-audio`, `+rw-integrate-uploads`, `+rw-integrate-characters`, `+rw-integrate-documents`, `+rw-integrate-character-embed`) using the retrieved reference to guide implementation.
 
 ## Important Notes
 

@@ -1,5 +1,5 @@
 ---
-name: integrate-character-embed
+name: rw-integrate-character-embed
 description: "Help users embed Runway Character avatar calls in React apps using the @runwayml/avatars-react SDK"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -8,13 +8,13 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 # Embed Characters in React (Avatars React SDK)
 
 > **PREREQUISITES:**
-> - `+check-compatibility` — Project must have server-side capability (API key must never be exposed to the client)
-> - `+fetch-api-reference` — Load the latest API reference from https://docs.dev.runwayml.com/api/ before integrating
-> - `+integrate-characters` — Character (Avatar) must be created and session endpoint must exist
+> - `+rw-check-compatibility` — Project must have server-side capability (API key must never be exposed to the client)
+> - `+rw-fetch-api-reference` — Load the latest API reference from https://docs.dev.runwayml.com/api/ before integrating
+> - `+rw-integrate-characters` — Character (Avatar) must be created and session endpoint must exist
 > - Project must use **React** (Next.js, Vite+React, Remix, etc.)
 >
 > **OPTIONAL:**
-> - `+integrate-documents` — Add knowledge base before embedding
+> - `+rw-integrate-documents` — Add knowledge base before embedding
 
 Embed real-time avatar video calls in React applications using the `@runwayml/avatars-react` SDK.
 
@@ -24,7 +24,7 @@ Embed real-time avatar video calls in React applications using the `@runwayml/av
 npm install @runwayml/avatars-react
 ```
 
-This is a **client-side** package. The server-side `@runwayml/sdk` should already be installed from `+integrate-characters`.
+This is a **client-side** package. The server-side `@runwayml/sdk` should already be installed from `+rw-integrate-characters`.
 
 ## Option A: Simple — `AvatarCall` Component
 
@@ -175,7 +175,7 @@ export default function CharacterPage() {
 ### Next.js App Router (Full Example)
 
 **Server route** (`app/api/avatar/session/route.ts`):
-See `+integrate-characters` for the complete server-side session creation code.
+See `+rw-integrate-characters` for the complete server-side session creation code.
 
 **Client page** (`app/character/page.tsx`):
 

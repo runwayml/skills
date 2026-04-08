@@ -1,5 +1,5 @@
 ---
-name: check-org-details
+name: rw-check-org-details
 description: "Query the Runway API for organization details: rate limits, credit balance, usage tier, and daily generation counts"
 user-invocable: true
 allowed-tools: Read, Grep, Glob, Bash(node *), Bash(python3 *), Bash(curl *)
@@ -7,7 +7,7 @@ allowed-tools: Read, Grep, Glob, Bash(node *), Bash(python3 *), Bash(curl *)
 
 # Check Organization Details
 
-> **PREREQUISITE:** Run `+setup-api-key` first to ensure the API key is configured.
+> **PREREQUISITE:** Run `+rw-setup-api-key` first to ensure the API key is configured.
 
 Query the Runway API to retrieve the user's organization details — credit balance, usage tier, rate limits, current daily generation counts, and historical credit usage.
 
@@ -18,7 +18,7 @@ Before making any requests, confirm the API key is accessible:
 1. Check for a `.env` file containing `RUNWAYML_API_SECRET`
 2. Or check if the environment variable is set: `echo $RUNWAYML_API_SECRET`
 
-If the key is not found, tell the user to run `+setup-api-key` first and stop.
+If the key is not found, tell the user to run `+rw-setup-api-key` first and stop.
 
 ## Step 2: Query Organization Info
 
@@ -185,7 +185,7 @@ Tiers upgrade automatically once the spend and time requirements are met.
 
 | Issue | Cause | Fix |
 |-------|-------|-----|
-| `401 Unauthorized` | Invalid or missing API key | Re-run `+setup-api-key` |
+| `401 Unauthorized` | Invalid or missing API key | Re-run `+rw-setup-api-key` |
 | `creditBalance` is 0 | No credits purchased | Purchase at https://dev.runwayml.com/ → Billing (min $10) |
 | Daily limit reached | Rolling 24-hour quota exhausted | Wait for the window to reset, or upgrade tier |
 | All models show 0 daily limit | Tier 1 restrictions | Check that credits have been purchased |

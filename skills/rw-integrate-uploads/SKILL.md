@@ -1,5 +1,5 @@
 ---
-name: integrate-uploads
+name: rw-integrate-uploads
 description: "Help users upload local files to Runway for use as inputs to generation models"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -7,7 +7,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 
 # Integrate Uploads
 
-> **PREREQUISITE:** Run `+check-compatibility` first. Run `+fetch-api-reference` to load the latest API reference before integrating. Requires `+setup-api-key` for API credentials.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first. Run `+rw-fetch-api-reference` to load the latest API reference before integrating. Requires `+rw-setup-api-key` for API credentials.
 
 Help users upload local files (images, videos, audio) to Runway's ephemeral storage for use as inputs to generation models.
 

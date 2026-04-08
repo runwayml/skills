@@ -1,5 +1,5 @@
 ---
-name: integrate-documents
+name: rw-integrate-documents
 description: "Help users add knowledge base documents to Runway Characters for domain-specific conversations"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -7,9 +7,9 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 
 # Integrate Documents (Knowledge Base)
 
-> **PREREQUISITE:** Run `+check-compatibility` first. Run `+fetch-api-reference` to load the latest API reference before integrating. `+setup-api-key` — API credentials must be configured
+> **PREREQUISITE:** Run `+rw-check-compatibility` first. Run `+rw-fetch-api-reference` to load the latest API reference before integrating. `+rw-setup-api-key` — API credentials must be configured
 >
-> **USED BY:** `+integrate-characters` — Documents are linked to Avatars to give them domain-specific knowledge
+> **USED BY:** `+rw-integrate-characters` — Documents are linked to Avatars to give them domain-specific knowledge
 
 Give your Characters access to domain-specific knowledge. Upload content that your Avatar can reference during conversations for accurate, contextual responses.
 
@@ -147,7 +147,7 @@ session = client.realtime_sessions.create(
 )
 ```
 
-See `+integrate-characters` for the full session creation, polling, and WebRTC flow.
+See `+rw-integrate-characters` for the full session creation, polling, and WebRTC flow.
 
 ## Integration Patterns
 

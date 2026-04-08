@@ -1,5 +1,5 @@
 ---
-name: integrate-audio
+name: rw-integrate-audio
 description: "Help users integrate Runway audio APIs (TTS, sound effects, voice isolation, dubbing)"
 user-invocable: false
 allowed-tools: Read, Grep, Glob, Edit, Write
@@ -7,7 +7,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 
 # Integrate Audio Generation
 
-> **PREREQUISITE:** Run `+check-compatibility` first. Run `+fetch-api-reference` to load the latest API reference before integrating. Requires `+setup-api-key` for API credentials. Requires `+integrate-uploads` for local audio/video files.
+> **PREREQUISITE:** Run `+rw-check-compatibility` first. Run `+rw-fetch-api-reference` to load the latest API reference before integrating. Requires `+rw-setup-api-key` for API credentials. Requires `+rw-integrate-uploads` for local audio/video files.
 
 Help users add Runway audio generation to their server-side code.
 
@@ -173,6 +173,6 @@ async def generate_sound(req: SoundRequest):
 ## Tips
 
 - **Output URLs expire in 24-48 hours.** Download audio files to your own storage.
-- **For local audio files** (voice isolation, dubbing, speech-to-speech), upload via `+integrate-uploads` first.
-- **Voice IDs** can be listed via the voices endpoint — see `+api-reference` for details.
+- **For local audio files** (voice isolation, dubbing, speech-to-speech), upload via `+rw-integrate-uploads` first.
+- **Voice IDs** can be listed via the voices endpoint — see `+rw-api-reference` for details.
 - **Text-to-speech cost** scales with text length: 1 credit per 50 characters.
