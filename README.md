@@ -149,6 +149,65 @@ The skills generate framework-specific code for:
 - **API Reference:** [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api)
 - **Developer portal:** [dev.runwayml.com](https://dev.runwayml.com/)
 
+## Repository Structure
+
+```
+skills/
+├── skills/                        # Agent skill docs (one SKILL.md per skill)
+│   ├── integrate-video/SKILL.md
+│   ├── integrate-image/SKILL.md
+│   └── ...
+├── scripts/
+│   ├── runway-api.mjs             # Zero-dependency runtime for direct API calls
+│   ├── build-manifests.mjs        # Generates plugin manifests from plugin-metadata.json
+│   ├── build-readme.mjs           # Generates the skill inventory section below
+│   └── validate-skills.mjs        # Validates skill frontmatter and cross-references
+├── plugin-metadata.json           # Single source of truth for plugin name, version, keywords
+├── runway.md                      # Shared Runway API context (auth, headers, expiry, polling)
+├── .cursor-plugin/plugin.json     # Generated — do not edit directly
+├── .claude-plugin/plugin.json     # Generated — do not edit directly
+└── README.md                      # This file (skill tables are generated between markers)
+```
+
+### Skill authoring
+
+Each skill lives in `skills/<name>/SKILL.md` with YAML frontmatter:
+
+```yaml
+---
+name: integrate-video
+description: "Help users integrate Runway video generation APIs"
+user-invocable: false
+allowed-tools: Read, Grep, Glob, Edit, Write
+---
+```
+
+Required fields: `name` (must match the directory), `description`, `user-invocable`.
+
+Skills reference each other with `` `+skill-name` `` syntax.
+
+### Build and validation
+
+```bash
+node scripts/build-manifests.mjs          # regenerate plugin manifests
+node scripts/build-manifests.mjs --check  # exit 1 if manifests are stale
+
+node scripts/build-readme.mjs             # regenerate README skill tables
+node scripts/build-readme.mjs --check     # exit 1 if tables are stale
+
+node scripts/validate-skills.mjs          # check frontmatter and cross-references
+```
+
+### Runtime script
+
+`scripts/runway-api.mjs` is a standalone Node.js 20+ script with zero dependencies. It lets the agent call any Runway API endpoint directly:
+
+```bash
+node scripts/runway-api.mjs auth status
+node scripts/runway-api.mjs request GET /v1/organization
+node scripts/runway-api.mjs wait <task-id>
+```
+
 ## License
 
 [MIT](LICENSE)
