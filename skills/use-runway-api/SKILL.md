@@ -24,7 +24,9 @@ node <path-to-skills-repo>/scripts/runway-api.mjs auth status
 ```
 
 - If `authenticated` is `true` → proceed to the API call. Do not re-check.
-- If `authenticated` is `false` → tell the user to set `RUNWAYML_API_SECRET` (see `AUTH.md` for details), then **stop and wait for the user to confirm**. Do not retry or re-check in a loop.
+- If `authenticated` is `false` → tell the user to set `RUNWAY_SKILLS_API_SECRET` (see `AUTH.md` for details), then **stop and wait for the user to confirm**. Do not retry or re-check in a loop.
+
+> **Staging caveat:** `auth status` hits `/v1/organization` which may 500 on stage even when data endpoints work fine. If stage `auth status` fails but you have `RUNWAY_SKILLS_API_SECRET_STAGE` set, try a data endpoint like `avatars list --stage` to confirm the key works before giving up.
 
 ## Runtime Location
 
@@ -153,16 +155,45 @@ If the user says only "generate an image" but the surrounding context is clearly
 
 Use `+api-reference` for the canonical API contract. Use `+fetch-api-reference` only when you specifically need the latest docs content from `docs.dev.runwayml.com`.
 
+## Staging (--stage)
+
+Add `--stage` to any command to target the staging API:
+
+```bash
+node <path>/scripts/runway-api.mjs --stage avatars list
+node <path>/scripts/runway-api.mjs --stage request GET /v1/avatars
+```
+
+With `--stage`, the CLI checks `RUNWAY_SKILLS_API_SECRET_STAGE` first, then falls back to `RUNWAY_SKILLS_API_SECRET`. The base URL defaults to `https://api.dev-stage.runwayml.com`.
+
+## Large Payloads (--stdin)
+
+When creating resources with data URIs (e.g. base64-encoded images for avatar `referenceImage`), the body can exceed shell argument limits. Use `--stdin` to pipe the body:
+
+```bash
+python3 -c "
+import json, base64
+with open('image.png', 'rb') as f:
+    b64 = base64.b64encode(f.read()).decode()
+body = json.dumps({'name': 'My Avatar', 'referenceImage': f'data:image/png;base64,{b64}', ...})
+with open('/tmp/body.json', 'w') as f:
+    f.write(body)
+" && cat /tmp/body.json | node <path>/scripts/runway-api.mjs request POST /v1/avatars --stdin
+```
+
+Alternatively, write the JSON to a file and use `curl -d @file` directly. The `--body` flag is fine for small JSON payloads but will hit `argument list too long` for data URIs of images over ~200KB.
+
 ## Environment Variables
 
 The runtime reads credentials from the process environment:
 
-```bash
-RUNWAYML_API_SECRET=<key> node <path>/scripts/runway-api.mjs request GET /v1/organization
-RUNWAYML_BASE_URL=https://api.dev-stage.runwayml.com node <path>/scripts/runway-api.mjs request GET /v1/organization
-```
+| Variable | Description |
+|----------|-------------|
+| `RUNWAY_SKILLS_API_SECRET` | Production API key |
+| `RUNWAY_SKILLS_API_SECRET_STAGE` | Stage API key (used with `--stage`) |
+| `RUNWAY_SKILLS_BASE_URL` | Override the base URL for any environment |
 
-If the agent cannot see `RUNWAYML_API_SECRET`, the editor likely needs to be restarted after the variable is set.
+If the agent cannot see `RUNWAY_SKILLS_API_SECRET`, the editor likely needs to be restarted after the variable is set.
 
 ## Related Files
 

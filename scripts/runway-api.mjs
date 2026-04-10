@@ -2,11 +2,18 @@
 
 const VERSION = "1.0.1";
 const DEFAULT_BASE_URL = "https://api.dev.runwayml.com";
+const STAGE_BASE_URL = "https://api.dev-stage.runwayml.com";
 const API_VERSION = "2024-11-06";
 const BIN = "runway-api.mjs";
 
+const useStage = process.argv.includes("--stage");
+
 function hasFlag(args, ...flags) {
   return flags.some((f) => args.includes(f));
+}
+
+function stripFlag(args, flag) {
+  return args.filter((a) => a !== flag);
 }
 
 // ---------------------------------------------------------------------------
@@ -14,15 +21,19 @@ function hasFlag(args, ...flags) {
 // ---------------------------------------------------------------------------
 
 async function resolveAuth() {
-  const envKey = process.env.RUNWAY_SKILLS_API_SECRET;
-  const envUrl = process.env.RUNWAY_SKILLS_BASE_URL;
+  const envKey = useStage
+    ? process.env.RUNWAY_SKILLS_API_SECRET_STAGE ?? process.env.RUNWAY_SKILLS_API_SECRET
+    : process.env.RUNWAY_SKILLS_API_SECRET;
+  const envUrl = useStage
+    ? process.env.RUNWAY_SKILLS_BASE_URL ?? STAGE_BASE_URL
+    : process.env.RUNWAY_SKILLS_BASE_URL;
 
   if (!envKey) return null;
 
   return {
     apiKey: envKey,
     baseUrl: envUrl || DEFAULT_BASE_URL,
-    source: "environment",
+    source: useStage ? "environment (stage)" : "environment",
   };
 }
 
@@ -89,6 +100,8 @@ async function apiFetch(method, path, { body, auth } = {}) {
         const error = new Error(errorBody.message || errorBody.error || `HTTP ${response.status}`);
         error.status = response.status;
         if (errorBody.code) error.code = errorBody.code;
+        if (errorBody.issues) error.issues = errorBody.issues;
+        if (errorBody.docUrl) error.docUrl = errorBody.docUrl;
         throw error;
       }
 
@@ -126,7 +139,27 @@ function printApiError(error) {
   const payload = { error: error.message };
   if (error.status) payload.status = error.status;
   if (error.code) payload.code = error.code;
+  if (error.issues) payload.issues = summarizeIssues(error.issues);
+  if (error.docUrl) payload.docUrl = error.docUrl;
   console.error(JSON.stringify(payload, null, 2));
+}
+
+function summarizeIssues(issues) {
+  return issues.map((issue) => {
+    const field = Array.isArray(issue.path) ? issue.path.join(".") : undefined;
+    const messages = [];
+    if (issue.message && issue.message !== "Invalid input") messages.push(issue.message);
+    if (Array.isArray(issue.errors)) {
+      for (const branch of issue.errors) {
+        const branchMsgs = (Array.isArray(branch) ? branch : [branch])
+          .map((e) => e.message)
+          .filter(Boolean);
+        if (branchMsgs.length) messages.push(...branchMsgs);
+      }
+    }
+    const unique = [...new Set(messages)];
+    return { field, messages: unique.length ? unique : [issue.message ?? issue.code] };
+  });
 }
 
 function compactIsoDate(value) {
@@ -198,15 +231,27 @@ async function authStatus() {
       keyPrefix: auth.apiKey.slice(0, 8) + "...",
       organization: organization.name ?? null,
     });
-  } catch (error) {
-    printJson({
-      authenticated: false,
-      source: auth.source,
-      baseUrl: auth.baseUrl,
-      keyPrefix: auth.apiKey.slice(0, 8) + "...",
-      error: error.message,
-    });
-    process.exit(1);
+  } catch (primaryError) {
+    try {
+      await apiFetch("GET", "/v1/avatars", { auth });
+      printJson({
+        authenticated: true,
+        source: auth.source,
+        baseUrl: auth.baseUrl,
+        keyPrefix: auth.apiKey.slice(0, 8) + "...",
+        organization: null,
+        note: "/v1/organization unavailable; verified via /v1/avatars",
+      });
+    } catch {
+      printJson({
+        authenticated: false,
+        source: auth.source,
+        baseUrl: auth.baseUrl,
+        keyPrefix: auth.apiKey.slice(0, 8) + "...",
+        error: primaryError.message,
+      });
+      process.exit(1);
+    }
   }
 }
 
@@ -457,6 +502,7 @@ Commands:
   wait            Poll a task until completion
 
 Options:
+  --stage         Target the staging API (uses RUNWAY_SKILLS_API_SECRET_STAGE)
   --help          Show help for a command
   --version       Show version
 
@@ -488,7 +534,7 @@ Examples:
 // Main
 // ---------------------------------------------------------------------------
 
-const allArgs = process.argv.slice(2);
+const allArgs = stripFlag(process.argv.slice(2), "--stage");
 
 if (hasFlag(allArgs, "--version", "-v") && !allArgs.some((a) => !a.startsWith("-"))) {
   console.log(VERSION);

@@ -170,7 +170,11 @@ const avatar = await client.avatars.create({
 | `data:image/…;base64,…` | 5 MB (characters) | Small-to-medium local files (~3.5 MB raw max) |
 | `runway://…` URI | 5000 chars | Large files uploaded via `/v1/uploads` first |
 
+<<<<<<< HEAD:skills/rw-integrate-characters/SKILL.md
 For local files over ~3.5 MB, use the upload flow (`+rw-integrate-uploads`) to get a `runway://` URI instead of a data URI.
+=======
+For local files over ~3.5 MB, use the upload flow (`+integrate-uploads`) to get a `runway://` URI instead of a data URI.
+>>>>>>> 810dd3a (Improve CLI error details, auth fallback, and skill docs from testing):skills/integrate-characters/SKILL.md
 
 ### Reference Image Guidelines
 
