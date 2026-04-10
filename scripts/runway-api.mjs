@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
+import { randomUUID } from "node:crypto";
+
 const VERSION = "1.0.1";
 const DEFAULT_BASE_URL = "https://api.dev.runwayml.com";
 const STAGE_BASE_URL = "https://api.dev-stage.runwayml.com";
 const API_VERSION = "2024-11-06";
 const BIN = "runway-api.mjs";
+const CLIENT_ID = process.env.RUNWAY_SKILLS_CLIENT_ID || randomUUID();
 
 const useStage = process.argv.includes("--stage");
 
@@ -62,6 +65,10 @@ async function apiFetch(method, path, { body, auth } = {}) {
   const headers = {
     Authorization: `Bearer ${resolvedAuth.apiKey}`,
     "X-Runway-Version": API_VERSION,
+    "X-Runway-Client-Id": CLIENT_ID,
+    "X-Runway-Source-Application": "skills",
+    "X-Runway-Source-Application-Version": VERSION,
+    "User-Agent": `runway-skills/${VERSION}`,
     Accept: "application/json",
   };
   if (body !== undefined) {
@@ -339,6 +346,10 @@ Examples:
       headers: {
         Authorization: "Bearer ***",
         "X-Runway-Version": API_VERSION,
+        "X-Runway-Client-Id": CLIENT_ID,
+        "X-Runway-Source-Application": "skills",
+        "X-Runway-Source-Application-Version": VERSION,
+        "User-Agent": `runway-skills/${VERSION}`,
         Accept: "application/json",
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
       },

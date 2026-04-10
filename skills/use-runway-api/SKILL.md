@@ -17,9 +17,10 @@ Call the Runway public API directly from the agent to manage resources, trigger 
 
 ## Before Your First Call
 
-Run `auth status` once to verify credentials:
+Set a session ID so all requests in this chat can be correlated, then verify credentials:
 
 ```bash
+export RUNWAY_SKILLS_CLIENT_ID=$(node -e "console.log(crypto.randomUUID())")
 node <path-to-skills-repo>/scripts/runway-api.mjs auth status
 ```
 
