@@ -1,17 +1,30 @@
 # Runway API Skills
 
-A set of skills that gives your AI coding agent the knowledge and tools to integrate [Runway's public API](https://docs.dev.runwayml.com/api/) into any server-side project — video generation, image generation, audio, file uploads, and real-time conversational avatars.
+A set of skills that gives your AI coding agent the knowledge and tools to work with [Runway's public API](https://docs.dev.runwayml.com/api/) — integrate video, image, and audio generation into server-side projects, or manage Runway resources directly from the editor.
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://openai.com/index/codex/), and other compatible agents.
 
-## What It Does
+## Two Ways to Use
 
-When you ask your agent to add Runway capabilities to your project, these skills guide it through the full workflow:
+### 1. Integrate into your app
 
-1. **Verify compatibility** — confirm your project has a server-side component (the API key must never be exposed to the client).
-2. **Set up credentials** — walk you through creating a Runway developer account, installing the SDK, and configuring `RUNWAYML_API_SECRET`.
-3. **Write integration code** — generate server-side API routes for the exact capability you need, with framework-specific examples for Next.js, Express, FastAPI, and more.
-4. **Handle edge cases** — upload local files, poll for task completion, download expiring output URLs, and manage rate limits.
+Guide your agent through adding Runway capabilities to a server-side project: verify compatibility, set up credentials, write framework-specific routes, and handle edge cases like file uploads and task polling.
+
+```
+Set up Runway video generation in my Next.js app
+```
+
+### 2. Act on your Runway account directly
+
+Let your agent call the Runway API to manage resources — create avatars, update knowledge documents, trigger generations, check credit balance — without writing app code.
+
+```
+Create a new avatar called "Support Agent" with a friendly personality
+```
+
+```
+List my knowledge documents for avatar abc123
+```
 
 ## Installation
 
@@ -37,7 +50,8 @@ Select all the skills with your keyboard (Space to select, arrow keys to navigat
 ## Prerequisites
 
 - A [Runway developer account](https://dev.runwayml.com/) with prepaid credits ($10 minimum)
-- A server-side project — Node.js 18+ or Python 3.8+ with a backend framework (Express, Next.js, FastAPI, etc.)
+- For integration skills: a server-side project — Node.js 18+ or Python 3.8+ with a backend framework
+- For direct API actions: Node.js 20+ (zero dependencies — just the runtime script)
 
 ## Available Skills
 
@@ -50,7 +64,13 @@ Select all the skills with your keyboard (Space to select, arrow keys to navigat
 | `rw-setup-api-key`       | Guide through account creation, SDK installation, and environment variable configuration       |
 | `rw-check-org-details`   | Query your organization's rate limits, credit balance, usage tier, and daily generation counts |
 
-### Generation
+### Direct API Actions
+
+| Skill               | Description                                                                        |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| `use-runway-api`     | Call any public API endpoint to manage resources, trigger generations, and inspect state |
+
+### Generation (Integration)
 
 | Skill                | Description                                                                         |
 | -------------------- | ----------------------------------------------------------------------------------- |
@@ -112,7 +132,7 @@ Select all the skills with your keyboard (Space to select, arrow keys to navigat
 
 ## Quick Start
 
-Ask your agent to set everything up:
+### Integrate into a project
 
 ```
 Set up Runway video generation in my Next.js app
@@ -132,9 +152,19 @@ Help me set up my Runway API key
 Add an endpoint to generate videos from text prompts
 ```
 
+### Direct API actions
+
+```
+List all my avatars
+```
+
+```
+Using the Runway API, generate an image of a red door in a white wall and tell me which model you used
+```
+
 ## Supported Frameworks
 
-The skills generate framework-specific code for:
+The integration skills generate framework-specific code for:
 
 - **Node.js** — Express, Fastify, Next.js (App Router & Pages Router), Remix, SvelteKit, Nuxt, Astro
 - **Python** — FastAPI, Flask, Django
