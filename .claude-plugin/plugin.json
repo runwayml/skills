@@ -1,7 +1,7 @@
 {
   "name": "runway-api",
-  "description": "Helps users integrate Runway's public API (https://docs.dev.runwayml.com/) into their projects. Analyzes codebase compatibility, guides API key setup, and provides hands-on assistance for video generation, image generation, audio, file uploads, and direct API actions.",
-  "version": "1.2.0",
+  "description": "Agent-first media generation at scale. Generate videos, images, and audio with Runway's API — batch campaigns, localization, and creative iteration. Supports seedance2, gen4.5, veo3, and more.",
+  "version": "2.0.0",
   "author": {
     "name": "Runway",
     "email": "ops@runwayml.com"
@@ -11,12 +11,14 @@
     "runwayml",
     "video-generation",
     "image-generation",
+    "audio-generation",
     "ai-api",
+    "seedance2",
     "gen4",
     "veo3",
-    "characters",
-    "avatars",
-    "public-api",
+    "media-generation",
+    "agent-first",
+    "batch",
     "runway-api"
   ]
 }
