@@ -42,6 +42,13 @@ def main():
     api_key = get_api_key(args.api_key)
     model_info = VIDEO_MODELS[args.model]
 
+    valid_durations = model_info.get("durations")
+    duration = args.duration
+    if valid_durations and duration not in valid_durations:
+        closest = min(valid_durations, key=lambda d: abs(d - duration))
+        print(f"  Note: {args.model} supports durations {valid_durations}, using {closest}s instead of {duration}s.", file=sys.stderr)
+        duration = closest
+
     if args.video_url:
         if "video_to_video" not in model_info["endpoints"]:
             print(f"Error: {args.model} does not support video-to-video.", file=sys.stderr)
@@ -55,7 +62,7 @@ def main():
         }
         if args.model != "seedance2":
             body["ratio"] = args.ratio
-            body["duration"] = args.duration
+            body["duration"] = duration
     elif args.image_url:
         if "image_to_video" not in model_info["endpoints"]:
             print(f"Error: {args.model} does not support image-to-video.", file=sys.stderr)
@@ -67,8 +74,8 @@ def main():
             "promptImage": image_uri,
             "promptText": args.prompt,
             "ratio": args.ratio,
-            "duration": args.duration,
         }
+        body["duration"] = duration
     else:
         if "text_to_video" not in model_info["endpoints"]:
             print(
@@ -82,7 +89,7 @@ def main():
             "model": args.model,
             "promptText": args.prompt,
             "ratio": args.ratio,
-            "duration": args.duration,
+            "duration": duration,
         }
 
     print(f"Generating video with {args.model} ({args.duration}s, {args.ratio})...", file=sys.stderr)

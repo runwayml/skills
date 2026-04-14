@@ -76,9 +76,8 @@ def main():
         if not args.text:
             print("Error: --text is required for tts.", file=sys.stderr)
             sys.exit(1)
-        body["text"] = args.text
-        if args.voice_id:
-            body["voiceId"] = args.voice_id
+        body["promptText"] = args.text
+        body["voice"] = {"type": "runway-preset", "presetId": args.voice_id or "Maya"}
 
     elif args.type == "sfx":
         if not args.text:

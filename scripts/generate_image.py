@@ -23,14 +23,18 @@ from runway_helpers import (
 def main():
     parser = argparse.ArgumentParser(description="Generate images with the Runway API")
     parser.add_argument("--prompt", required=True, help="Text description of the image")
-    parser.add_argument("--filename", required=True, help="Output filename (e.g. output.png)")
+    parser.add_argument(
+        "--filename", required=True, help="Output filename (e.g. output.png)"
+    )
     parser.add_argument(
         "--model",
-        default="gen4_image",
+        default="gemini_2.5_flash",
         choices=list(IMAGE_MODELS.keys()),
-        help="Image model (default: gen4_image)",
+        help="Image model (default: gemini_2.5_flash / Nano Banana)",
     )
-    parser.add_argument("--ratio", default="1280:720", help="Aspect ratio (default: 1280:720)")
+    parser.add_argument(
+        "--ratio", default=None, help="Aspect ratio. gemini_2.5_flash: 1344:768, 768:1344, 1024:1024, etc. Others: 1280:720"
+    )
     parser.add_argument(
         "--reference-images",
         nargs="*",
@@ -43,17 +47,27 @@ def main():
 
     api_key = get_api_key(args.api_key)
 
+    if args.ratio:
+        ratio = args.ratio
+    elif args.model == "gemini_2.5_flash":
+        ratio = "1344:768"
+    else:
+        ratio = "1280:720"
+
     body = {
         "model": args.model,
         "promptText": args.prompt,
-        "ratio": args.ratio,
+        "ratio": ratio,
     }
 
     if args.reference_images:
         refs = []
         for pair in args.reference_images:
             if "=" not in pair:
-                print(f"Error: Reference image must be Tag=URL, got: {pair}", file=sys.stderr)
+                print(
+                    f"Error: Reference image must be Tag=URL, got: {pair}",
+                    file=sys.stderr,
+                )
                 sys.exit(1)
             tag, uri = pair.split("=", 1)
             refs.append({"tag": tag, "uri": uri})

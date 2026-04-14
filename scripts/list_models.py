@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.10"
-# dependencies = []
+# dependencies = ["requests"]
 # ///
 
 """List available Runway API models and their costs."""

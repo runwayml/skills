@@ -32,9 +32,9 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 
 ## Model Selection Guidance
 
-- "fast", "cheap", "draft" -> `gen4_image_turbo`
+- "fast", "cheap", "draft" -> `gemini_2.5_flash` (Nano Banana)
 - "high quality", "best" -> `gen4_image`
-- No preference -> `gen4_image`
+- No preference -> `gemini_2.5_flash`
 
 ## Parameters
 
@@ -42,7 +42,7 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 |-------|-------------|---------|
 | `--prompt` | Text description (required) | -- |
 | `--filename` | Output filename (required) | -- |
-| `--model` | Image model | `gen4_image` |
+| `--model` | Image model | `gemini_2.5_flash` |
 | `--ratio` | Aspect ratio (e.g. 1280:720, 1080:1080) | `1280:720` |
 | `--reference-images` | Reference images as Tag=URL pairs | -- |
 | `--output-dir` | Output directory | cwd |

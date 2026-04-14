@@ -50,18 +50,21 @@ VIDEO_MODELS = {
         "cost": "40 credits/sec",
         "description": "Premium quality",
         "input": "Text/Image",
+        "durations": [4, 6, 8],
     },
     "veo3.1": {
         "endpoints": ["text_to_video", "image_to_video"],
         "cost": "20-40 credits/sec",
         "description": "High quality Google model",
         "input": "Text/Image",
+        "durations": [4, 6, 8],
     },
     "veo3.1_fast": {
         "endpoints": ["text_to_video", "image_to_video"],
         "cost": "10-15 credits/sec",
         "description": "Fast Google model",
         "input": "Text/Image",
+        "durations": [4, 6, 8],
     },
 }
 
@@ -139,11 +142,17 @@ def format_api_error(status_code, response_text):
     try:
         data = json.loads(response_text)
         error = data.get("error", data.get("message", ""))
+        issues = data.get("issues", [])
     except (json.JSONDecodeError, TypeError):
         error = response_text[:500] if response_text else ""
+        issues = []
 
     if status_code == 400:
-        return f"{msg}: Invalid input — {error}"
+        detail = error
+        if issues:
+            parts = [f"{i.get('path', ['?'])[-1]}: {i.get('message', '')}" for i in issues]
+            detail = f"{error} [{'; '.join(parts)}]"
+        return f"{msg}: Invalid input — {detail}"
     elif status_code == 401:
         return f"{msg}: Authentication failed. Check RUNWAYML_API_SECRET."
     elif status_code == 429:
