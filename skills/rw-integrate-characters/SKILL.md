@@ -18,6 +18,8 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 
 Help users create Runway Characters — real-time conversational AI avatars powered by GWM-1.
 
+Use this only when modifying a user's codebase. For direct avatar management or other one-off Runway account actions from the agent, use `+use-runway-api` instead.
+
 Characters are generated from a **single image** (any visual style — photorealistic, animated, non-human) with full control over voice, personality, knowledge, and actions. No fine-tuning or training required.
 
 ## Key Concepts
@@ -158,11 +160,27 @@ const avatar = await client.avatars.create({
 });
 ```
 
+### Reference Image (Required)
+
+`referenceImage` is **required** when creating an avatar. It accepts three formats:
+
+| Format | Limit | When to use |
+|--------|-------|-------------|
+| `https://…` URL | 2048 chars | Image already hosted publicly |
+| `data:image/…;base64,…` | 5 MB (characters) | Small-to-medium local files (~3.5 MB raw max) |
+| `runway://…` URI | 5000 chars | Large files uploaded via `/v1/uploads` first |
+
+<<<<<<< HEAD:skills/rw-integrate-characters/SKILL.md
+For local files over ~3.5 MB, use the upload flow (`+rw-integrate-uploads`) to get a `runway://` URI instead of a data URI.
+=======
+For local files over ~3.5 MB, use the upload flow (`+integrate-uploads`) to get a `runway://` URI instead of a data URI.
+>>>>>>> 810dd3a (Improve CLI error details, auth fallback, and skill docs from testing):skills/integrate-characters/SKILL.md
+
 ### Reference Image Guidelines
 
 - **Any visual style works**: photorealistic humans, animated mascots, stylized brand characters
 - Use high-quality images with good lighting
-- Face should be clearly visible and centered
+- **Face must be clearly visible and centered** — images without a recognizable face will fail processing
 - Avoid images with multiple people or obstructions
 - Recommended aspect ratio: **1088×704**
 
