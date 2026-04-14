@@ -1,6 +1,6 @@
 # Runway API Skills
 
-Agent-first media generation at scale. Generate videos, images, and audio with Runway's API — batch campaigns, localization, and creative iteration. Supports seedance2, gen4.5, veo3, and more.
+Agent-first media generation at scale. Generate videos, images, and audio with Runway's API — batch Ad campaigns, product videos, multishot stories, and creative iteration. Supports seedance2, gen4.5, veo3, and more.
 
 Works with [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Cursor](https://cursor.com), [Codex](https://openai.com/index/codex/), and other compatible agents.
 
