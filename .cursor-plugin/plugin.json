@@ -1,11 +1,10 @@
 {
   "name": "runway-api",
   "displayName": "Runway API",
-  "version": "1.0.1",
-  "description": "Helps users integrate Runway's public API (https://docs.dev.runwayml.com/) into their projects. Analyzes codebase compatibility, guides API key setup, and provides hands-on assistance for video generation, image generation, audio, file uploads, and direct API actions.",
+  "version": "2.0.0",
+  "description": "Agent-first media generation at scale. Generate videos, images, and audio with Runway's API -- batch campaigns, Shopify product ads, localization, and creative iteration.",
   "author": {
-    "name": "Runway",
-    "email": "ops@runwayml.com"
+    "name": "Runway"
   },
   "homepage": "https://docs.dev.runwayml.com/",
   "repository": "https://github.com/runwayml/skills",
@@ -21,7 +20,12 @@
     "gen4",
     "veo3",
     "characters",
-    "avatars"
+    "avatars",
+    "agent-first",
+    "batch-generation",
+    "pipeline",
+    "campaign",
+    "shopify"
   ],
   "category": "ai-tools",
   "tags": [
@@ -29,7 +33,10 @@
     "media-generation",
     "video",
     "image",
-    "audio"
+    "audio",
+    "batch",
+    "pipeline",
+    "agent-first"
   ],
   "skills": "./skills/"
 }
