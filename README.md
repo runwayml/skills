@@ -100,7 +100,8 @@ Select all the skills with your keyboard (Space to select, arrow keys to navigat
 
 | Model                    | Use Case                            | Cost              |
 | ------------------------ | ----------------------------------- | ----------------- |
-| `gen4.5`                 | Highest quality, general purpose    | 12 credits/sec    |
+| `seedance2`              | Reference image and video, long duration | 36 credits/sec    |
+| `gen4.5`                 | High quality, general purpose       | 12 credits/sec    |
 | `gen4_turbo`             | Fast, image-driven (image required) | 5 credits/sec     |
 | `gen4_aleph`             | Video-to-video editing              | 15 credits/sec    |
 | `veo3`                   | Premium quality                     | 40 credits/sec    |
