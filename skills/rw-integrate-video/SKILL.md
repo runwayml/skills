@@ -15,7 +15,8 @@ Help users add Runway video generation to their server-side code.
 
 | Model | Best For | Input | Cost | Speed |
 |-------|----------|-------|------|-------|
-| `gen4.5` | Highest quality, general purpose | Text and/or Image | 12 credits/sec | Standard |
+| `seedance2` | Reference image and video, long duration | Text, Image, and/or Video | 36 credits/sec | Standard |
+| `gen4.5` | High quality, general purpose | Text and/or Image | 12 credits/sec | Standard |
 | `gen4_turbo` | Fast, image-driven | Image required | 5 credits/sec | Fast |
 | `gen4_aleph` | Video editing/transformation | Video + Text/Image | 15 credits/sec | Standard |
 | `veo3` | Premium Google model | Text/Image | 40 credits/sec | Standard |
@@ -24,9 +25,10 @@ Help users add Runway video generation to their server-side code.
 
 **Model selection guidance:**
 - Default recommendation: **`gen4.5`** — best balance of quality and cost
+- **Product ads / e-commerce:** **`seedance2`** — up to 15s, supports reference image and video
 - Budget-conscious: **`gen4_turbo`** (requires image) or **`veo3.1_fast`**
 - Highest quality: **`veo3`** (most expensive)
-- Video-to-video editing: **`gen4_aleph`** (only option)
+- Video-to-video editing: **`gen4_aleph`** or **`seedance2`**
 
 ## Endpoints
 
@@ -34,7 +36,7 @@ Help users add Runway video generation to their server-side code.
 
 Generate video from a text prompt only.
 
-**Compatible models:** `gen4.5`, `veo3`, `veo3.1`, `veo3.1_fast`
+**Compatible models:** `seedance2`, `gen4.5`, `veo3`, `veo3.1`, `veo3.1_fast`
 
 ```javascript
 // Node.js SDK
@@ -73,7 +75,7 @@ video_url = task.output[0]
 
 Animate a still image into a video.
 
-**Compatible models:** `gen4.5`, `gen4_turbo`, `veo3`, `veo3.1`, `veo3.1_fast`
+**Compatible models:** `seedance2`, `gen4.5`, `gen4_turbo`, `veo3`, `veo3.1`, `veo3.1_fast`
 
 ```javascript
 // Node.js SDK
@@ -120,10 +122,10 @@ const task = await client.imageToVideo.create({
 
 Transform an existing video with a text prompt and/or reference image.
 
-**Compatible models:** `gen4_aleph`
+**Compatible models:** `gen4_aleph`, `seedance2`
 
 ```javascript
-// Node.js SDK
+// Node.js SDK — gen4_aleph
 const task = await client.videoToVideo.create({
   model: 'gen4_aleph',
   promptVideo: 'https://example.com/source.mp4',
@@ -132,6 +134,96 @@ const task = await client.videoToVideo.create({
   duration: 5
 }).waitForTaskOutput();
 ```
+
+```javascript
+// Node.js SDK — seedance2 video-to-video (with optional image reference)
+const task = await client.videoToVideo.create({
+  model: 'seedance2',
+  promptVideo: 'https://example.com/input.mp4',
+  promptText: 'Transform into a warm golden sunset scene',
+  references: [{ type: 'image', uri: 'https://example.com/style_ref.jpg' }]
+}).waitForTaskOutput();
+```
+
+> **seedance2 VTV input requirements:** max 15 seconds, max 32 MB, min 720p resolution, MP4 recommended.
+
+### Seedance 2
+
+Seedance 2 supports text-to-video, image-to-video (two modes), and video-to-video. It uses aspect ratio shorthands — pixel-based ratios (e.g. `1280:720`) are **not** supported.
+
+#### Text-to-Video
+
+```javascript
+const task = await client.textToVideo.create({
+  model: 'seedance2',
+  promptText: 'A calm ocean wave gently crashing on a sandy beach at sunset',
+  duration: 5,
+  ratio: '16:9'
+}).waitForTaskOutput();
+```
+
+#### Image-to-Video — Mode 1: First / Last Frame
+
+Use a specific image as the first and/or last frame. The `references` field **cannot** be used in this mode.
+
+```javascript
+const task = await client.imageToVideo.create({
+  model: 'seedance2',
+  promptText: 'Smooth transition from day to night in a cozy mountain cabin',
+  promptImage: [
+    { uri: 'https://example.com/image.jpg', position: 'first' },
+    { uri: 'https://example.com/image2.jpg', position: 'last' }
+  ],
+  duration: 4,
+  ratio: '16:9'
+}).waitForTaskOutput();
+```
+
+`promptImage` is an array of objects with `uri` (required) and `position` (`"first"` or `"last"`, defaults to first).
+
+#### Image-to-Video — Mode 2: Image Reference
+
+Use an image as a stylistic/content reference rather than a literal frame. `promptImage` is still required (as a URI string or single-item array).
+
+```javascript
+const task = await client.imageToVideo.create({
+  model: 'seedance2',
+  promptText: 'Smooth transition from day to night in a cozy mountain cabin',
+  promptImage: 'https://example.com/image.jpg',
+  references: [{ type: 'image', uri: 'https://example.com/reference.jpg' }],
+  duration: 4,
+  ratio: '16:9'
+}).waitForTaskOutput();
+```
+
+> These two ITV modes are **mutually exclusive** — you cannot use `position` in `promptImage` and `references` in the same request.
+
+#### Video-to-Video
+
+Transform an existing video guided by a text prompt, optionally with an image reference.
+
+```python
+task = client.video_to_video.create(
+    model='seedance2',
+    prompt_video='https://example.com/input.mp4',
+    prompt_text='Transform into a warm golden sunset scene',
+    references=[{'type': 'image', 'uri': 'https://example.com/style_ref.jpg'}]
+).wait_for_task_output()
+```
+
+> **VTV input requirements:** max 15 seconds, max 32 MB, min 720p resolution, MP4 recommended.
+
+#### Seedance 2 Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model` | string | Yes | Must be `"seedance2"` |
+| `promptText` | string | Yes | Text description of the desired video |
+| `duration` | number | Yes (TTV/ITV) | Duration in seconds |
+| `ratio` | string | Yes (TTV/ITV) | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9` |
+| `promptImage` | string or array | Yes (ITV) | URI string or array of `{ uri, position? }` objects |
+| `promptVideo` | string | Yes (VTV) | Publicly accessible URL of the input video |
+| `references` | array | No | Image references — `[{ type: "image", uri: "..." }]` (ITV Mode 2 and VTV only) |
 
 ### Character Performance: `POST /v1/character_performance`
 
@@ -157,7 +249,7 @@ const task = await client.characterPerformance.create({
 | `promptText` | string | Text prompt describing the video |
 | `promptImage` | string | URL, data URI, or `runway://` URI of input image |
 | `ratio` | string | Aspect ratio, e.g. `'1280:720'`, `'720:1280'` |
-| `duration` | number | Video length in seconds (2-10) |
+| `duration` | number | Video length in seconds (2-15, model-dependent) |
 
 ## Integration Pattern
 
@@ -291,7 +383,7 @@ async def generate_video(req: VideoRequest):
 
 - **Output URLs expire in 24-48 hours.** Download videos to your own storage (S3, GCS, local filesystem) immediately after generation.
 - **`gen4_turbo` requires an image** — it cannot do text-only generation.
-- **`gen4_aleph` is the only video-to-video model** — use it for editing/transforming existing videos.
-- **Duration range is 2-10 seconds.** Longer videos require chaining multiple generations.
+- **Video-to-video models:** `gen4_aleph` and `seedance2` — use for editing/transforming existing videos.
+- **Duration varies by model.** Most models support 2-10 seconds; seedance2 supports up to 15 seconds.
 - **`waitForTaskOutput()` has a default 10-minute timeout.** For long-running generations, you may want to implement your own polling loop or increase the timeout.
 - **For local files**, always use `+rw-integrate-uploads` to upload first, then pass the `runway://` URI.
