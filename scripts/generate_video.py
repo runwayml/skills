@@ -31,7 +31,7 @@ def main():
         choices=list(VIDEO_MODELS.keys()),
         help="Video model (default: gen4.5)",
     )
-    parser.add_argument("--ratio", default="1280:720", help="Aspect ratio (default: 1280:720). seedance2 uses shorthands: 16:9, 9:16, 1:1, etc.")
+    parser.add_argument("--ratio", default="1280:720", help="Aspect ratio (default: 1280:720). All models use pixel-based ratios.")
     parser.add_argument("--duration", type=int, default=5, help="Duration in seconds (default: 5)")
     parser.add_argument("--image-url", help="Input image URL or local path for image-to-video")
     parser.add_argument("--video-url", help="Input video URL or local path for video-to-video (gen4_aleph, seedance2)")

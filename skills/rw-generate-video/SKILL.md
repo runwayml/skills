@@ -14,7 +14,7 @@ Generate videos directly using the Runway API. This skill runs Python scripts th
 ## Usage
 
 ```bash
-uv run scripts/generate_video.py --prompt "your description" --filename "output.mp4" [--model seedance2] [--ratio 16:9] [--duration 5] [--image-url "..."] [--api-key KEY]
+uv run scripts/generate_video.py --prompt "your description" --filename "output.mp4" [--model seedance2] [--ratio 1280:720] [--duration 5] [--image-url "..."] [--api-key KEY]
 ```
 
 ## Preflight
@@ -50,7 +50,7 @@ Map user requests:
 | `--prompt` | Text description (required) | -- |
 | `--filename` | Output filename (required) | -- |
 | `--model` | Video model | `gen4.5` |
-| `--ratio` | Aspect ratio. seedance2: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9`. Others: `1280:720`, `720:1280` | `1280:720` |
+| `--ratio` | Aspect ratio (pixel-based). Common: `1280:720`, `720:1280`, `960:960`. seedance2 also supports `1112:834`, `834:1112`, `1470:630`, etc. | `1280:720` |
 | `--duration` | Duration in seconds (model-dependent, seedance2 supports up to 15s) | `5` |
 | `--image-url` | Image URL or local file for image-to-video | -- |
 | `--video-url` | Video URL or local file for video-to-video (gen4_aleph, seedance2) | -- |
@@ -69,12 +69,12 @@ Examples:
 
 **Text-to-video (seedance2):**
 ```bash
-uv run scripts/generate_video.py --prompt "A serene mountain landscape at sunrise with mist" --filename "2026-04-14-mountain-sunrise.mp4" --model seedance2 --ratio 16:9
+uv run scripts/generate_video.py --prompt "A serene mountain landscape at sunrise with mist" --filename "2026-04-14-mountain-sunrise.mp4" --model seedance2 --ratio 1280:720
 ```
 
 **Image-to-video (animate a product photo):**
 ```bash
-uv run scripts/generate_video.py --prompt "Camera slowly zooms out, product sparkles" --image-url "product.jpg" --filename "2026-04-14-product-reveal.mp4" --model seedance2 --ratio 9:16
+uv run scripts/generate_video.py --prompt "Camera slowly zooms out, product sparkles" --image-url "product.jpg" --filename "2026-04-14-product-reveal.mp4" --model seedance2 --ratio 720:1280
 ```
 
 **Video-to-video (seedance2):**

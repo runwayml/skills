@@ -249,35 +249,51 @@ def download_file(url, filename):
 # ── Upload helper ────────────────────────────────────────
 
 def upload_file(api_key, local_path):
-    """Upload a local file to Runway and return the runway:// URI."""
+    """Upload a local file to Runway and return the runway:// URI.
+
+    Two-step process:
+    1. POST /v1/uploads with filename to get a presigned uploadUrl + fields + runwayUri
+    2. POST the file to uploadUrl with the returned fields as multipart form data
+    """
     if not os.path.isfile(local_path):
         print(f"Error: File not found: {local_path}", file=sys.stderr)
         sys.exit(1)
 
-    mime_type = mimetypes.guess_type(local_path)[0] or "application/octet-stream"
-    headers = _headers(api_key)
-    del headers["Content-Type"]
+    filename = os.path.basename(local_path)
 
-    with open(local_path, "rb") as f:
-        r = requests.post(
-            f"{API_BASE}/v1/uploads",
-            headers=headers,
-            files={"file": (os.path.basename(local_path), f, mime_type)},
-        )
-
+    r = requests.post(
+        f"{API_BASE}/v1/uploads",
+        headers=_headers(api_key),
+        json={"filename": filename, "type": "ephemeral"},
+    )
     if not r.ok:
         msg = format_api_error(r.status_code, r.text)
-        print(f"Error uploading: {msg}", file=sys.stderr)
+        print(f"Error creating upload: {msg}", file=sys.stderr)
         sys.exit(1)
 
     data = r.json()
-    uri = data.get("runwayUri") or data.get("url")
-    if not uri:
-        print(f"Error: Upload returned no URI: {json.dumps(data)}", file=sys.stderr)
+    upload_url = data.get("uploadUrl")
+    fields = data.get("fields", {})
+    runway_uri = data.get("runwayUri")
+
+    if not upload_url or not runway_uri:
+        print(f"Error: Upload response missing uploadUrl or runwayUri: {json.dumps(data)}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"  Uploaded: {uri}", file=sys.stderr)
-    return uri
+    mime_type = mimetypes.guess_type(local_path)[0] or "application/octet-stream"
+    with open(local_path, "rb") as f:
+        r2 = requests.post(
+            upload_url,
+            data=fields,
+            files={"file": (filename, f, mime_type)},
+        )
+
+    if not r2.ok:
+        print(f"Error uploading file: {r2.status_code} {r2.text[:500]}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"  Uploaded: {runway_uri}", file=sys.stderr)
+    return runway_uri
 
 
 def ensure_url(path_or_url, api_key):
