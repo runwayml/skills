@@ -40,7 +40,7 @@ uv run scripts/generate_audio.py --type tts --text "Hello world" --filename "gre
 | `--filename` | Output filename (required) | -- |
 | `--text` | Text input (for tts and sfx) | -- |
 | `--audio-url` | Audio URL or local path (for isolate, dub, sts) | -- |
-| `--voice-id` | Voice ID (for tts and sts) | -- |
+| `--voice-id` | Voice preset (for tts and sts, e.g. Maya, Noah, Leslie) | Maya |
 | `--target-language` | Language code (for dub, e.g. "es") | -- |
 | `--output-dir` | Output directory | cwd |
 | `--api-key` | Runway API key | env `RUNWAYML_API_SECRET` |
@@ -60,6 +60,11 @@ uv run scripts/generate_audio.py --type sfx --text "Thunder rolling across a sto
 **Voice isolation:**
 ```bash
 uv run scripts/generate_audio.py --type isolate --audio-url "noisy-recording.mp3" --filename "clean-voice.mp3"
+```
+
+**Speech-to-speech (voice conversion):**
+```bash
+uv run scripts/generate_audio.py --type sts --audio-url "recording.mp3" --voice-id Noah --filename "converted.mp3"
 ```
 
 **Dubbing:**

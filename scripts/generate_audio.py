@@ -85,13 +85,19 @@ def main():
             sys.exit(1)
         body["promptText"] = args.text
 
-    elif args.type in ("isolate", "sts"):
+    elif args.type == "isolate":
         if not args.audio_url:
-            print(f"Error: --audio-url is required for {args.type}.", file=sys.stderr)
+            print("Error: --audio-url is required for isolate.", file=sys.stderr)
             sys.exit(1)
-        body["audio"] = ensure_url(args.audio_url, api_key)
-        if args.type == "sts" and args.voice_id:
-            body["voiceId"] = args.voice_id
+        body["audioUri"] = ensure_url(args.audio_url, api_key)
+
+    elif args.type == "sts":
+        if not args.audio_url:
+            print("Error: --audio-url is required for sts.", file=sys.stderr)
+            sys.exit(1)
+        audio_uri = ensure_url(args.audio_url, api_key)
+        body["media"] = {"type": "audio", "uri": audio_uri}
+        body["voice"] = {"type": "runway-preset", "presetId": args.voice_id or "Maya"}
 
     elif args.type == "dub":
         if not args.audio_url:
@@ -100,8 +106,8 @@ def main():
         if not args.target_language:
             print("Error: --target-language is required for dub.", file=sys.stderr)
             sys.exit(1)
-        body["audio"] = ensure_url(args.audio_url, api_key)
-        body["targetLanguage"] = args.target_language
+        body["audioUri"] = ensure_url(args.audio_url, api_key)
+        body["targetLang"] = args.target_language
 
     print(f"Generating audio ({args.type}) with {model}...", file=sys.stderr)
     task = api_post(api_key, endpoint, body)

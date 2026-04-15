@@ -50,7 +50,7 @@ VIDEO_MODELS = {
         "cost": "40 credits/sec",
         "description": "Premium quality",
         "input": "Text/Image",
-        "durations": [4, 6, 8],
+        "durations": [8],
     },
     "veo3.1": {
         "endpoints": ["text_to_video", "image_to_video"],

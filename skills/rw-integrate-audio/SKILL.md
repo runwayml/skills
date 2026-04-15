@@ -34,8 +34,8 @@ const client = new RunwayML();
 
 const task = await client.textToSpeech.create({
   model: 'eleven_multilingual_v2',
-  text: 'Hello, welcome to our application!',
-  voiceId: 'voice_id_here'  // See voice listing endpoint
+  promptText: 'Hello, welcome to our application!',
+  voice: { type: 'runway-preset', presetId: 'Maya' }
 }).waitForTaskOutput();
 
 const audioUrl = task.output[0];
@@ -50,8 +50,8 @@ client = RunwayML()
 
 task = client.text_to_speech.create(
     model='eleven_multilingual_v2',
-    text='Hello, welcome to our application!',
-    voice_id='voice_id_here'
+    prompt_text='Hello, welcome to our application!',
+    voice={ 'type': 'runway-preset', 'presetId': 'Maya' }
 ).wait_for_task_output()
 
 audio_url = task.output[0]
@@ -87,7 +87,7 @@ const upload = await client.uploads.createEphemeral(
 
 const task = await client.voiceIsolation.create({
   model: 'eleven_voice_isolation',
-  audio: upload.runwayUri
+  audioUri: upload.runwayUri
 }).waitForTaskOutput();
 ```
 
@@ -98,8 +98,8 @@ Dub audio/video into other languages.
 ```javascript
 const task = await client.voiceDubbing.create({
   model: 'eleven_voice_dubbing',
-  audio: 'https://example.com/speech.mp3',
-  targetLanguage: 'es'  // Spanish
+  audioUri: 'https://example.com/speech.mp3',
+  targetLang: 'es'  // Spanish
 }).waitForTaskOutput();
 ```
 
@@ -110,8 +110,8 @@ Convert one voice to another.
 ```javascript
 const task = await client.speechToSpeech.create({
   model: 'eleven_multilingual_sts_v2',
-  audio: 'https://example.com/original-speech.mp3',
-  voiceId: 'target_voice_id'
+  media: { type: 'audio', uri: 'https://example.com/original-speech.mp3' },
+  voice: { type: 'runway-preset', presetId: 'Noah' }
 }).waitForTaskOutput();
 ```
 
@@ -133,8 +133,8 @@ app.post('/api/text-to-speech', async (req, res) => {
 
     const task = await client.textToSpeech.create({
       model: 'eleven_multilingual_v2',
-      text,
-      voiceId
+      promptText: text,
+      voice: { type: 'runway-preset', presetId: voiceId || 'Maya' }
     }).waitForTaskOutput();
 
     res.json({ audioUrl: task.output[0] });

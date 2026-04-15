@@ -128,10 +128,8 @@ Transform an existing video with a text prompt and/or reference image.
 // Node.js SDK — gen4_aleph
 const task = await client.videoToVideo.create({
   model: 'gen4_aleph',
-  promptVideo: 'https://example.com/source.mp4',
+  videoUri: 'https://example.com/source.mp4',
   promptText: 'Transform into an animated cartoon style',
-  ratio: '1280:720',
-  duration: 5
 }).waitForTaskOutput();
 ```
 
@@ -222,7 +220,8 @@ task = client.video_to_video.create(
 | `duration` | number | Yes (TTV/ITV) | Duration in seconds |
 | `ratio` | string | Yes (TTV/ITV) | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9` |
 | `promptImage` | string or array | Yes (ITV) | URI string or array of `{ uri, position? }` objects |
-| `promptVideo` | string | Yes (VTV) | Publicly accessible URL of the input video |
+| `promptVideo` | string | Yes (seedance2 VTV) | Input video URI (seedance2 only) |
+| `videoUri` | string | Yes (gen4_aleph VTV) | Input video URI (gen4_aleph only) |
 | `references` | array | No | Image references — `[{ type: "image", uri: "..." }]` (ITV Mode 2 and VTV only) |
 
 ### Character Performance: `POST /v1/character_performance`

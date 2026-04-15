@@ -72,6 +72,9 @@ def main():
             tag, uri = pair.split("=", 1)
             refs.append({"tag": tag, "uri": uri})
         body["referenceImages"] = refs
+    elif args.model == "gen4_image_turbo":
+        print("Error: gen4_image_turbo requires --reference-images.", file=sys.stderr)
+        sys.exit(1)
 
     print(f"Generating image with {args.model}...", file=sys.stderr)
     task = api_post(api_key, "/v1/text_to_image", body)

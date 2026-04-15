@@ -55,14 +55,18 @@ def main():
             sys.exit(1)
         endpoint = "/v1/video_to_video"
         video_uri = ensure_url(args.video_url, api_key)
-        body = {
-            "model": args.model,
-            "promptVideo": video_uri,
-            "promptText": args.prompt,
-        }
-        if args.model != "seedance2":
-            body["ratio"] = args.ratio
-            body["duration"] = duration
+        if args.model == "seedance2":
+            body = {
+                "model": args.model,
+                "promptVideo": video_uri,
+                "promptText": args.prompt,
+            }
+        else:
+            body = {
+                "model": args.model,
+                "videoUri": video_uri,
+                "promptText": args.prompt,
+            }
     elif args.image_url:
         if "image_to_video" not in model_info["endpoints"]:
             print(f"Error: {args.model} does not support image-to-video.", file=sys.stderr)
