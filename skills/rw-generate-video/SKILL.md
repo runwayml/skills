@@ -84,12 +84,12 @@ uv run scripts/generate_video.py --prompt "Transform into a warm golden sunset s
 
 **Fast draft:**
 ```bash
-uv run scripts/generate_video.py --prompt "A cat playing piano" --filename "draft.mp4" --model veo3.1_fast --duration 3
+uv run scripts/generate_video.py --prompt "A cat playing piano" --filename "draft.mp4" --model veo3.1_fast --ratio 1280:720 --duration 4
 ```
 
 **Premium quality:**
 ```bash
-uv run scripts/generate_video.py --prompt "Cinematic drone shot over Tokyo at night" --filename "tokyo.mp4" --model veo3 --duration 10
+uv run scripts/generate_video.py --prompt "Cinematic drone shot over Tokyo at night" --filename "tokyo.mp4" --model veo3 --ratio 1280:720 --duration 8
 ```
 
 ## Output

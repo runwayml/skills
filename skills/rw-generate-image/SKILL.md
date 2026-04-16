@@ -24,17 +24,18 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 
 ## Available Models
 
-| Model | Best For | Cost | Speed |
-|-------|----------|------|-------|
-| `gen4_image` | Highest quality | 5-8 credits | Standard |
-| `gen4_image_turbo` | Fast and cheap | 2 credits | Fast |
-| `gemini_2.5_flash` | Google Gemini | 5 credits | Standard |
+| Model | Best For | Ref Images | Cost | Speed |
+|-------|----------|------------|------|-------|
+| `gen4_image` | Highest quality | Optional (up to 3) | 5-8 credits | Standard |
+| `gen4_image_turbo` | Fast and cheap | **Required** (1-3) | 2 credits | Fast |
+| `gemini_2.5_flash` | Google Gemini | Optional (up to 3) | 5 credits | Standard |
 
 ## Model Selection Guidance
 
-- "fast", "cheap", "draft" -> `gemini_2.5_flash` (Nano Banana)
+- "fast", "cheap", "draft" -> `gemini_2.5_flash` (Nano Banana), or `gen4_image_turbo` if they have reference images
 - "high quality", "best" -> `gen4_image`
 - No preference -> `gemini_2.5_flash`
+- Has reference images and wants cheap -> `gen4_image_turbo` (2 credits, requires `--reference-images`)
 
 ## Parameters
 
@@ -43,8 +44,8 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 | `--prompt` | Text description (required) | -- |
 | `--filename` | Output filename (required) | -- |
 | `--model` | Image model | `gemini_2.5_flash` |
-| `--ratio` | Aspect ratio (e.g. 1280:720, 1080:1080) | `1280:720` |
-| `--reference-images` | Reference images as Tag=URL pairs | -- |
+| `--ratio` | Aspect ratio. gemini_2.5_flash: `1344:768`, `768:1344`, `1024:1024`, etc. gen4_image: `1280:720`, `1360:768`, `1920:1080`, etc. | Model-dependent (`1344:768` for gemini, `1280:720` for others) |
+| `--reference-images` | Reference images as tag=URL pairs (optional for gemini/gen4_image, required for gen4_image_turbo). Tag: lowercase, 3-16 chars, e.g. `product=URL` | -- |
 | `--output-dir` | Output directory | cwd |
 | `--api-key` | Runway API key | env `RUNWAYML_API_SECRET` |
 
@@ -59,14 +60,14 @@ Pattern: `yyyy-mm-dd-hh-mm-ss-name.png`
 uv run scripts/generate_image.py --prompt "A serene Japanese garden with cherry blossoms" --filename "2026-04-14-japanese-garden.png"
 ```
 
-**With reference images:**
+**With reference images (gen4_image):**
 ```bash
-uv run scripts/generate_image.py --prompt "@Product on a marble counter, lifestyle photo" --reference-images Product=https://example.com/product.jpg --filename "2026-04-14-product-lifestyle.png"
+uv run scripts/generate_image.py --prompt "@product on a marble counter, lifestyle photo" --model gen4_image --reference-images product=https://example.com/product.jpg --filename "2026-04-14-product-lifestyle.png"
 ```
 
-**Fast draft:**
+**Fast with reference images (gen4_image_turbo — requires reference images):**
 ```bash
-uv run scripts/generate_image.py --prompt "A neon sign reading SALE" --filename "draft.png" --model gen4_image_turbo
+uv run scripts/generate_image.py --prompt "A neon sign reading SALE in @style" --model gen4_image_turbo --reference-images style=https://example.com/style.jpg --filename "draft.png"
 ```
 
 ## Output
