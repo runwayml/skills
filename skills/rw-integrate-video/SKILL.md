@@ -128,10 +128,8 @@ Transform an existing video with a text prompt and/or reference image.
 // Node.js SDK — gen4_aleph
 const task = await client.videoToVideo.create({
   model: 'gen4_aleph',
-  promptVideo: 'https://example.com/source.mp4',
+  videoUri: 'https://example.com/source.mp4',
   promptText: 'Transform into an animated cartoon style',
-  ratio: '1280:720',
-  duration: 5
 }).waitForTaskOutput();
 ```
 
@@ -149,7 +147,7 @@ const task = await client.videoToVideo.create({
 
 ### Seedance 2
 
-Seedance 2 supports text-to-video, image-to-video (two modes), and video-to-video. It uses aspect ratio shorthands — pixel-based ratios (e.g. `1280:720`) are **not** supported.
+Seedance 2 supports text-to-video, image-to-video (two modes), and video-to-video. It uses pixel-based ratios: `1280:720`, `720:1280`, `960:960`, `1112:834`, `834:1112`, `1470:630`, `992:432`, `864:496`, `752:560`, `640:640`, `560:752`, `496:864`.
 
 #### Text-to-Video
 
@@ -158,7 +156,7 @@ const task = await client.textToVideo.create({
   model: 'seedance2',
   promptText: 'A calm ocean wave gently crashing on a sandy beach at sunset',
   duration: 5,
-  ratio: '16:9'
+  ratio: '1280:720'
 }).waitForTaskOutput();
 ```
 
@@ -175,7 +173,7 @@ const task = await client.imageToVideo.create({
     { uri: 'https://example.com/image2.jpg', position: 'last' }
   ],
   duration: 4,
-  ratio: '16:9'
+  ratio: '1280:720'
 }).waitForTaskOutput();
 ```
 
@@ -192,7 +190,7 @@ const task = await client.imageToVideo.create({
   promptImage: 'https://example.com/image.jpg',
   references: [{ type: 'image', uri: 'https://example.com/reference.jpg' }],
   duration: 4,
-  ratio: '16:9'
+  ratio: '1280:720'
 }).waitForTaskOutput();
 ```
 
@@ -220,9 +218,10 @@ task = client.video_to_video.create(
 | `model` | string | Yes | Must be `"seedance2"` |
 | `promptText` | string | Yes | Text description of the desired video |
 | `duration` | number | Yes (TTV/ITV) | Duration in seconds |
-| `ratio` | string | Yes (TTV/ITV) | `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9` |
+| `ratio` | string | Yes (TTV/ITV) | `1280:720`, `720:1280`, `960:960`, `1112:834`, `834:1112`, `1470:630` |
 | `promptImage` | string or array | Yes (ITV) | URI string or array of `{ uri, position? }` objects |
-| `promptVideo` | string | Yes (VTV) | Publicly accessible URL of the input video |
+| `promptVideo` | string | Yes (seedance2 VTV) | Input video URI (seedance2 only) |
+| `videoUri` | string | Yes (gen4_aleph VTV) | Input video URI (gen4_aleph only) |
 | `references` | array | No | Image references — `[{ type: "image", uri: "..." }]` (ITV Mode 2 and VTV only) |
 
 ### Character Performance: `POST /v1/character_performance`

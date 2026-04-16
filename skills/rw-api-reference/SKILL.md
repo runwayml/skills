@@ -33,12 +33,12 @@ X-Runway-Version: 2024-11-06
 | `veo3.1_fast` | `POST /v1/image_to_video` or `POST /v1/text_to_video` | Text/Image | 10-15 |
 | `seedance2` | `POST /v1/text_to_video`, `POST /v1/image_to_video`, or `POST /v1/video_to_video` | Text, Image, and/or Video | 36 |
 
-Video duration: **2-15 seconds** (model-dependent). Aspect ratios: `1280:720`, `720:1280`, `1104:832`, `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9`, etc.
+Video duration: **2-15 seconds** (model-dependent). Aspect ratios are pixel-based: `1280:720`, `720:1280`, `1104:832`, `960:960`, `832:1104`, `1584:672`, etc.
 
 **Seedance 2 specifics:**
 - Modes: text-to-video, image-to-video (first/last frame or image reference), video-to-video
 - Duration: required for TTV and ITV (in seconds)
-- Aspect ratios: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `21:9` — pixel-based ratios (e.g. `1280:720`) are **not** supported
+- Aspect ratios (pixel-based): `1280:720`, `720:1280`, `960:960`, `1112:834`, `834:1112`, `1470:630`, `992:432`, `864:496`, `752:560`, `640:640`, `560:752`, `496:864`
 - ITV supports two mutually exclusive modes: first/last frame (`promptImage` array with `position`) or image reference (`references` array)
 - VTV input requirements: max 15 seconds, max 32 MB, min 720p resolution, MP4 recommended
 

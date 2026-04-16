@@ -26,3 +26,6 @@ __pycache__/
 
 # Dependencies
 node_modules/
+
+# Test output files
+test-*
