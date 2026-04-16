@@ -22,17 +22,9 @@
     "gen4",
     "veo3",
     "media-generation",
-    "agent-first",
     "batch"
   ],
   "category": "ai-tools",
-  "tags": [
-    "media-generation",
-    "agent-first",
-    "video",
-    "image",
-    "audio",
-    "api-integration"
-  ],
+  "tags": ["media-generation", "video", "image", "audio", "api-integration"],
   "skills": "./skills/"
 }

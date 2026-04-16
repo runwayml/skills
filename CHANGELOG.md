@@ -2,10 +2,9 @@
 
 ## 2.0.0
 
-- **Agent-first generation:** New `rw-generate-video`, `rw-generate-image`, `rw-generate-audio` skills that run Python scripts directly via `uv run` — no SDK setup required
+- **Media generation:** New `rw-generate-video`, `rw-generate-image`, `rw-generate-audio` skills that run Python scripts directly via `uv run` — no SDK setup required
 - **Runnable scripts:** Added `scripts/` directory with `generate_video.py`, `generate_image.py`, `generate_audio.py`, `list_models.py`, `get_task.py`, and shared `runway_helpers.py`
 - **Seedance 2 support:** Added `seedance2` model across all generation scripts and skills (TTV, ITV, VTV, 36 credits/sec)
-- **README rebrand:** Repositioned as "agent-first media generation at scale" with generation-first use case ordering
 - **Plugin metadata:** Updated descriptions and keywords for both Claude and Cursor plugins
 
 ## 1.1.0
