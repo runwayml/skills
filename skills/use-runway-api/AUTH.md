@@ -11,14 +11,14 @@ Use environment variables for direct Runway API actions. The API key must never 
 Current shell before launching the editor:
 
 ```bash
-export RUNWAYML_API_SECRET=YOUR_KEY_HERE
+export RUNWAY_SKILLS_API_SECRET=YOUR_KEY_HERE
 cursor .
 ```
 
 Or add it to your shell profile, then restart the editor:
 
 ```bash
-echo 'export RUNWAYML_API_SECRET=YOUR_KEY_HERE' >> ~/.zshrc
+echo 'export RUNWAY_SKILLS_API_SECRET=YOUR_KEY_HERE' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -27,21 +27,26 @@ Replace `YOUR_KEY_HERE` locally in the terminal. Never paste the key into the ch
 ## Verify
 
 ```bash
-node <path-to-skills-repo>/scripts/runway-api.mjs auth status
+node <skill-dir>/scripts/runway-api.mjs auth status
 ```
 
-If `authenticated` is still `false`, restart the editor or launch it from a shell that already has `RUNWAYML_API_SECRET` set.
+`<skill-dir>` is the absolute directory of the `SKILL.md` you are reading — see the **Runtime Location** section in `SKILL.md` for how to resolve it.
+
+If `authenticated` is still `false`, restart the editor or launch it from a shell that already has `RUNWAY_SKILLS_API_SECRET` set.
 
 ## Non-production environments
 
-Set `RUNWAYML_BASE_URL` alongside the API key:
+Set a stage-specific key (preferred) and/or override the base URL:
 
 ```bash
-export RUNWAYML_BASE_URL=https://api.dev-stage.runwayml.com
+export RUNWAY_SKILLS_API_SECRET_STAGE=YOUR_STAGE_KEY
+export RUNWAY_SKILLS_BASE_URL=https://api.dev-stage.runwayml.com
 ```
+
+With `--stage` on any command, the CLI prefers `RUNWAY_SKILLS_API_SECRET_STAGE` and falls back to `RUNWAY_SKILLS_API_SECRET`.
 
 ## Notes
 
 - API keys require prepaid credits to work.
-- `RUNWAYML_BASE_URL` defaults to `https://api.dev.runwayml.com`.
+- `RUNWAY_SKILLS_BASE_URL` defaults to `https://api.dev.runwayml.com` (production) or `https://api.dev-stage.runwayml.com` when `--stage` is passed.
 - `auth status` verifies that the current environment can reach the API successfully.
