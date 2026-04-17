@@ -102,6 +102,154 @@ Video duration: **2-15 seconds** (model-dependent). Aspect ratios are pixel-base
 
 Each Avatar supports up to **50,000 tokens** of knowledge. Link documents to an Avatar via `client.avatars.update(id, { documentIds: [...] })`.
 
+---
+
+## Request Body Reference (raw JSON)
+
+Use these when calling the API directly (e.g. through `use-runway-api`'s `request` command) rather than via an SDK. Only required + common fields shown — consult `+rw-fetch-api-reference` for the full schema.
+
+### `POST /v1/text_to_image`
+
+```json
+{
+  "model": "gen4_image",
+  "promptText": "A serene Japanese garden with cherry blossoms",
+  "ratio": "1920:1080"
+}
+```
+
+- `model`: `gen4_image` | `gen4_image_turbo` | `gemini_2.5_flash` (required)
+- `promptText`: string, up to ~1000 chars (required)
+- `ratio`: one of `1920:1080`, `1080:1920`, `1024:1024`, `1360:768`, `1080:1080`, `1168:880`, `1440:1080`, `1080:1440`, `1808:768`, `2112:912` (required; 720p or 1080p variants depending on model)
+- `referenceImages`: optional `[{ "uri": "https://...", "tag": "MyTag" }]` — reference by `@MyTag` in `promptText`
+- `seed`: optional integer for reproducibility
+
+### `POST /v1/text_to_video`
+
+```json
+{
+  "model": "gen4.5",
+  "promptText": "A golden retriever running through wildflowers at sunset",
+  "ratio": "1280:720",
+  "duration": 5
+}
+```
+
+- `model`: `gen4.5` | `veo3` | `veo3.1` | `veo3.1_fast` | `seedance2` (required)
+- `duration`: integer seconds, 2–10 (required; model-specific valid values — e.g. veo3 only accepts 8)
+- `ratio`: e.g. `1280:720`, `720:1280`, `1104:832`, `832:1104`, `960:960` (required)
+
+### `POST /v1/image_to_video`
+
+```json
+{
+  "model": "gen4.5",
+  "promptImage": "https://example.com/cover.jpg",
+  "promptText": "A slow dolly-in shot",
+  "ratio": "1280:720",
+  "duration": 5
+}
+```
+
+- `model`: `gen4.5` | `gen4_turbo` | `veo3` | `veo3.1` | `veo3.1_fast` | `seedance2` (required)
+- `promptImage`: HTTPS URL, data URI, or `runway://` URI (required). Can also be `[{ "uri": "...", "position": "first" | "last" }]` for keyframes.
+- `promptText`: optional for most models, required for `gen4_turbo` when no image motion is obvious
+
+### `POST /v1/video_to_video`
+
+```json
+{
+  "model": "gen4_aleph",
+  "videoUri": "https://example.com/source.mp4",
+  "promptText": "Change the season to winter with snowfall",
+  "ratio": "1280:720"
+}
+```
+
+### `POST /v1/text_to_speech`
+
+```json
+{
+  "model": "eleven_multilingual_v2",
+  "text": "Hello, welcome to Runway.",
+  "voice": { "type": "runway-preset", "presetId": "clara" }
+}
+```
+
+- `voice`: `{ type: "runway-preset", presetId: "clara" | "victoria" | "vincent" | ... }` or a provider-specific voice object
+- `languageCode`: optional ISO code (auto-detected by default)
+
+### `POST /v1/sound_effect`
+
+```json
+{
+  "model": "eleven_text_to_sound_v2",
+  "promptText": "Thunderclap followed by heavy rain",
+  "duration": 5
+}
+```
+
+### `POST /v1/voice_isolation`
+
+```json
+{
+  "model": "eleven_voice_isolation",
+  "audioUri": "https://example.com/noisy.mp3"
+}
+```
+
+### `POST /v1/voice_dubbing`
+
+```json
+{
+  "model": "eleven_voice_dubbing",
+  "audioUri": "https://example.com/english.mp3",
+  "targetLanguage": "es"
+}
+```
+
+### `POST /v1/speech_to_speech`
+
+```json
+{
+  "model": "eleven_multilingual_sts_v2",
+  "audioUri": "https://example.com/source.mp3",
+  "voice": { "type": "runway-preset", "presetId": "victoria" }
+}
+```
+
+### `POST /v1/avatars`
+
+```json
+{
+  "name": "Support Agent",
+  "referenceImage": "https://example.com/portrait.jpg",
+  "voice": { "type": "runway-live-preset", "presetId": "clara" },
+  "personality": "You are a friendly support agent.",
+  "documentIds": []
+}
+```
+
+### `POST /v1/documents`
+
+```json
+{
+  "avatarId": "<avatar-id>",
+  "name": "FAQ",
+  "content": "Q: What is your return policy?\nA: 30 days, no questions asked."
+}
+```
+
+### `POST /v1/realtime_sessions`
+
+```json
+{
+  "avatarId": "<avatar-id>"
+}
+```
+
+---
+
 ### Management Endpoints
 
 | Method | Endpoint | Description |
