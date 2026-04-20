@@ -23,6 +23,15 @@ Help users add Runway image generation to their server-side code.
 - Default recommendation: **`gen4_image`** — best quality
 - Budget/speed: **`gen4_image_turbo`** — cheapest and fastest
 
+## Security
+
+`referenceImages[].uri` is **fetched server-side by the Runway API**. Treat it like any server-side fetch:
+
+- **Prefer `runway://` URIs** via `+rw-integrate-uploads`. These are scoped to the account and avoid ingesting arbitrary public web content.
+- **If you accept URLs from clients**, validate before forwarding: require `https://`, allowlist trusted hosts, and reject private/internal addresses. See the hardened pattern in the Express.js example below.
+- **Never forward unvalidated `req.body` fields** (e.g. `referenceImages`) straight into `textToImage.create` in production. The SDK examples below use raw URLs for brevity — they are not production templates.
+- Generated images are influenced by ingested references. Treat outputs as untrusted when piping into downstream automations.
+
 ## Endpoint: `POST /v1/text_to_image`
 
 ### Basic Text-to-Image
@@ -61,31 +70,7 @@ image_url = task.output[0]
 
 Reference images let you guide the generation with visual references. Use `@Tag` syntax in the prompt to reference specific images.
 
-```javascript
-const task = await client.textToImage.create({
-  model: 'gen4_image',
-  promptText: '@EiffelTower painted in the style of @StarryNight',
-  referenceImages: [
-    { uri: 'https://example.com/eiffel-tower.jpg', tag: 'EiffelTower' },
-    { uri: 'https://example.com/starry-night.jpg', tag: 'StarryNight' }
-  ],
-  ratio: '1280:720'
-}).waitForTaskOutput();
-```
-
-```python
-task = client.text_to_image.create(
-    model='gen4_image',
-    prompt_text='@EiffelTower painted in the style of @StarryNight',
-    reference_images=[
-        {"uri": "https://example.com/eiffel-tower.jpg", "tag": "EiffelTower"},
-        {"uri": "https://example.com/starry-night.jpg", "tag": "StarryNight"}
-    ],
-    ratio='1280:720'
-).wait_for_task_output()
-```
-
-**If the user has local reference images**, upload them first with `+rw-integrate-uploads`:
+**Recommended:** upload local files via `+rw-integrate-uploads` and pass the returned `runway://` URI. This keeps you out of the "fetch arbitrary third-party URL" threat model entirely.
 
 ```javascript
 import fs from 'fs';
@@ -104,6 +89,32 @@ const task = await client.textToImage.create({
 }).waitForTaskOutput();
 ```
 
+External URLs work too, but only pass them when the origin is one you control or explicitly allowlist (see Security above):
+
+```javascript
+const task = await client.textToImage.create({
+  model: 'gen4_image',
+  promptText: '@EiffelTower painted in the style of @StarryNight',
+  referenceImages: [
+    { uri: 'https://cdn.yourapp.com/eiffel-tower.jpg', tag: 'EiffelTower' },
+    { uri: 'https://cdn.yourapp.com/starry-night.jpg', tag: 'StarryNight' }
+  ],
+  ratio: '1280:720'
+}).waitForTaskOutput();
+```
+
+```python
+task = client.text_to_image.create(
+    model='gen4_image',
+    prompt_text='@EiffelTower painted in the style of @StarryNight',
+    reference_images=[
+        {"uri": "https://cdn.yourapp.com/eiffel-tower.jpg", "tag": "EiffelTower"},
+        {"uri": "https://cdn.yourapp.com/starry-night.jpg", "tag": "StarryNight"}
+    ],
+    ratio='1280:720'
+).wait_for_task_output()
+```
+
 ## Common Parameters
 
 | Parameter | Type | Description |
@@ -115,6 +126,13 @@ const task = await client.textToImage.create({
 
 ## Integration Pattern
 
+When helping the user integrate, follow this pattern:
+
+1. **Prefer uploads over URLs** — Default to `+rw-integrate-uploads` for any user-supplied reference image so inputs are `runway://` URIs. Only accept external URLs when the origin is one you control or allowlist (see Security above).
+2. **Write the server-side handler** — Create an API route or server function.
+3. **Handle the output** — Download and store the image, don't serve signed URLs to clients.
+4. **Add error handling** — Wrap in try/catch.
+
 ### Example: Express.js API Route
 
 ```javascript
@@ -125,6 +143,24 @@ const client = new RunwayML();
 const app = express();
 app.use(express.json());
 
+// Only allow URLs from origins you control. Reject everything else.
+// `runway://` URIs from `+rw-integrate-uploads` bypass this check and are preferred.
+const ALLOWED_MEDIA_HOSTS = new Set(['cdn.yourapp.com', 'uploads.yourapp.com']);
+
+function validateReferenceImages(refs) {
+  if (!Array.isArray(refs)) throw new Error('referenceImages must be an array');
+  return refs.map(({ uri, tag }) => {
+    if (typeof uri !== 'string' || typeof tag !== 'string') {
+      throw new Error('each reference needs a uri and tag');
+    }
+    if (uri.startsWith('runway://')) return { uri, tag };
+    const u = new URL(uri);
+    if (u.protocol !== 'https:') throw new Error('https required');
+    if (!ALLOWED_MEDIA_HOSTS.has(u.hostname)) throw new Error('untrusted media host');
+    return { uri: u.toString(), tag };
+  });
+}
+
 app.post('/api/generate-image', async (req, res) => {
   try {
     const { prompt, model = 'gen4_image', ratio = '1280:720', referenceImages } = req.body;
@@ -133,16 +169,18 @@ app.post('/api/generate-image', async (req, res) => {
       model,
       promptText: prompt,
       ratio,
-      ...(referenceImages && { referenceImages })
+      ...(referenceImages && { referenceImages: validateReferenceImages(referenceImages) })
     }).waitForTaskOutput();
 
     res.json({ imageUrl: task.output[0] });
   } catch (error) {
     console.error('Image generation failed:', error);
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 ```
+
+> For browser-uploaded references, have the client POST the file to your own endpoint, upload it via `+rw-integrate-uploads`, and pass the returned `runway://` URI. Don't accept raw URLs from the browser.
 
 ### Example: Next.js API Route
 

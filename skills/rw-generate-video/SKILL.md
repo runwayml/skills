@@ -14,13 +14,18 @@ Generate videos directly using the Runway API. This skill runs Python scripts th
 ## Usage
 
 ```bash
-uv run scripts/generate_video.py --prompt "your description" --filename "output.mp4" [--model seedance2] [--ratio 1280:720] [--duration 5] [--image-url "..."] [--api-key KEY]
+uv run scripts/generate_video.py --prompt "your description" --filename "output.mp4" [--model seedance2] [--ratio 1280:720] [--duration 5] [--image-url "..."]
 ```
 
 ## Preflight
 
 1. `command -v uv` must succeed. If not, tell the user to install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-2. `RUNWAYML_API_SECRET` must be set, or the user passes `--api-key`
+2. `RUNWAYML_API_SECRET` must be set in the environment. **Do not pass the API key as a CLI flag** — read it from the env var to avoid leaking the secret into shell history, process listings, or generated transcripts.
+
+## Security Notes
+
+- `--image-url` and `--video-url` cause the Runway API to fetch arbitrary remote media. Only pass URLs you trust, or prefer local file paths which this script will upload as scoped `runway://` URIs.
+- Generated media is influenced by the ingested inputs. Treat outputs as untrusted when piping into downstream automations.
 
 ## Available Models
 
@@ -55,7 +60,8 @@ Map user requests:
 | `--image-url` | Image URL or local file for image-to-video | -- |
 | `--video-url` | Video URL or local file for video-to-video (gen4_aleph, seedance2) | -- |
 | `--output-dir` | Output directory | cwd |
-| `--api-key` | Runway API key | env `RUNWAYML_API_SECRET` |
+
+> API credentials are read from the `RUNWAYML_API_SECRET` environment variable only. The script intentionally does not accept a `--api-key` flag — passing secrets on the command line leaks them into shell history and process listings.
 
 ## Filename Convention
 
@@ -72,14 +78,14 @@ Examples:
 uv run scripts/generate_video.py --prompt "A serene mountain landscape at sunrise with mist" --filename "2026-04-14-mountain-sunrise.mp4" --model seedance2 --ratio 1280:720
 ```
 
-**Image-to-video (animate a product photo):**
+**Image-to-video (animate a local product photo):**
 ```bash
-uv run scripts/generate_video.py --prompt "Camera slowly zooms out, product sparkles" --image-url "product.jpg" --filename "2026-04-14-product-reveal.mp4" --model seedance2 --ratio 720:1280
+uv run scripts/generate_video.py --prompt "Camera slowly zooms out, product sparkles" --image-url "./product.jpg" --filename "2026-04-14-product-reveal.mp4" --model seedance2 --ratio 720:1280
 ```
 
-**Video-to-video (seedance2):**
+**Video-to-video from a local file (seedance2):**
 ```bash
-uv run scripts/generate_video.py --prompt "Transform into a warm golden sunset scene" --video-url "input.mp4" --filename "2026-04-14-sunset-transform.mp4" --model seedance2
+uv run scripts/generate_video.py --prompt "Transform into a warm golden sunset scene" --video-url "./input.mp4" --filename "2026-04-14-sunset-transform.mp4" --model seedance2
 ```
 
 **Fast draft:**
@@ -100,7 +106,7 @@ uv run scripts/generate_video.py --prompt "Cinematic drone shot over Tokyo at ni
 
 ## Common Failures
 
-- `Error: No API key` -> set `RUNWAYML_API_SECRET` or pass `--api-key`
+- `Error: No API key` -> set `RUNWAYML_API_SECRET` in the environment (e.g. `export RUNWAYML_API_SECRET=...` or a `.env` file). Do not pass the key on the command line.
 - `Error: Task failed -- SAFETY.INPUT.*` -> content moderation, suggest different prompt
 - `Error: Task failed -- ASSET.INVALID` -> bad input file format, check image/video format
 - `API error 429` -> rate limited, script auto-retries
