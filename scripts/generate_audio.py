@@ -62,10 +62,9 @@ def main():
     parser.add_argument("--voice-id", help="Voice ID (for tts and sts)")
     parser.add_argument("--target-language", help="Target language code (for dub, e.g. 'es')")
     parser.add_argument("--output-dir", help="Output directory (default: cwd)")
-    parser.add_argument("--api-key", help="Runway API key (or set RUNWAYML_API_SECRET)")
     args = parser.parse_args()
 
-    api_key = get_api_key(args.api_key)
+    api_key = get_api_key()
     audio_type = AUDIO_TYPES[args.type]
     endpoint = audio_type["endpoint"]
     model = audio_type["model"]

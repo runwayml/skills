@@ -15,6 +15,7 @@ from runway_helpers import (
     api_post,
     poll_task,
     download_file,
+    ensure_url,
     output_path,
     IMAGE_MODELS,
 )
@@ -42,10 +43,9 @@ def main():
         help="Reference images as Tag=URL pairs (e.g. Style=https://...)",
     )
     parser.add_argument("--output-dir", help="Output directory (default: cwd)")
-    parser.add_argument("--api-key", help="Runway API key (or set RUNWAYML_API_SECRET)")
     args = parser.parse_args()
 
-    api_key = get_api_key(args.api_key)
+    api_key = get_api_key()
 
     if args.ratio:
         ratio = args.ratio
@@ -69,8 +69,8 @@ def main():
                     file=sys.stderr,
                 )
                 sys.exit(1)
-            tag, uri = pair.split("=", 1)
-            refs.append({"tag": tag, "uri": uri})
+            tag, source = pair.split("=", 1)
+            refs.append({"tag": tag, "uri": ensure_url(source, api_key)})
         body["referenceImages"] = refs
     elif args.model == "gen4_image_turbo":
         print("Error: gen4_image_turbo requires --reference-images.", file=sys.stderr)
