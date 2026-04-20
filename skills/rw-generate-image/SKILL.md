@@ -20,12 +20,12 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 ## Preflight
 
 1. `command -v uv` must succeed
-2. `RUNWAYML_API_SECRET` must be set in the environment. **Do not pass the API key as a CLI flag** — read it from the env var to avoid leaking the secret into shell history, process listings, or generated transcripts.
+2. `RUNWAYML_API_SECRET` must be set in the environment. **Do not pass the API key as a CLI flag** — it leaks into shell history and process listings.
 
 ## Security Notes
 
-- `--reference-images Tag=URL` causes the Runway API to fetch arbitrary remote images. Only pass URLs you trust, or prefer local file paths which this script will upload as scoped `runway://` URIs.
-- Generated images are influenced by ingested references. Treat outputs as untrusted when piping into downstream automations.
+- `--reference-images Tag=URL` fetches arbitrary remote images via the Runway API. Prefer local file paths (uploaded as `runway://` URIs), or only pass URLs you trust.
+- Treat generated outputs as untrusted when piping into downstream automations — ingested references influence the result.
 
 ## Available Models
 
@@ -53,7 +53,7 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 | `--reference-images` | Reference images as tag=URL pairs (optional for gemini/gen4_image, required for gen4_image_turbo). Tag: lowercase, 3-16 chars, e.g. `product=URL` | -- |
 | `--output-dir` | Output directory | cwd |
 
-> API credentials are read from the `RUNWAYML_API_SECRET` environment variable only. The script intentionally does not accept a `--api-key` flag — passing secrets on the command line leaks them into shell history and process listings.
+> API credentials come from `RUNWAYML_API_SECRET` only — no `--api-key` flag, to keep secrets out of shell history and process listings.
 
 ## Filename Convention
 
@@ -84,6 +84,6 @@ uv run scripts/generate_image.py --prompt "A neon sign reading SALE in @style" -
 
 ## Common Failures
 
-- `Error: No API key` -> set `RUNWAYML_API_SECRET` in the environment (e.g. `export RUNWAYML_API_SECRET=...` or a `.env` file). Do not pass the key on the command line.
+- `Error: No API key` -> set `RUNWAYML_API_SECRET` in the environment (e.g. `export RUNWAYML_API_SECRET=...` or a `.env` file).
 - `Error: Task failed -- SAFETY.INPUT.*` -> content moderation, suggest different prompt
 - `API error 429` -> rate limited, script auto-retries

@@ -32,12 +32,12 @@ Help users add Runway video generation to their server-side code.
 
 ## Security
 
-`promptImage`, `promptVideo`, `videoUri`, and `references[].uri` are **fetched server-side by the Runway API**. Treat them like any server-side fetch:
+`promptImage`, `promptVideo`, `videoUri`, and `references[].uri` are **fetched server-side by the Runway API** — treat them like any outbound fetch:
 
-- **Prefer `runway://` URIs** via `+rw-integrate-uploads`. These are scoped to the account and avoid ingesting arbitrary public web content.
-- **If you accept URLs from clients**, validate before forwarding: require `https://`, allowlist trusted hosts, and reject private/internal addresses. See the hardened pattern in the Express.js example below.
-- **Never forward unvalidated `req.body` fields** (e.g. `imageUrl`) straight into `promptImage` / `promptVideo` in production. The SDK examples below use raw URLs for brevity — they are not production templates.
-- Generated media is influenced by ingested inputs. Treat outputs as untrusted when piping into downstream automations.
+- **Prefer `runway://` URIs** from `+rw-integrate-uploads` — scoped to your account, no arbitrary web content.
+- **If accepting URLs from clients**, validate first: require `https://`, allowlist trusted hosts, reject private addresses. See the Express.js example below.
+- **Never forward `req.body.imageUrl`** (or similar) straight into `promptImage` / `promptVideo`. The SDK snippets below use raw URLs for brevity — they aren't production templates.
+- Treat generated outputs as untrusted when piping into downstream automations — ingested media influences the result.
 
 ## Endpoints
 
@@ -86,7 +86,7 @@ Animate a still image into a video.
 
 **Compatible models:** `seedance2`, `gen4.5`, `gen4_turbo`, `veo3`, `veo3.1`, `veo3.1_fast`
 
-**Recommended:** upload the source image via `+rw-integrate-uploads` and pass the returned `runway://` URI. This keeps you out of the "fetch arbitrary third-party URL" threat model entirely.
+**Recommended:** upload via `+rw-integrate-uploads` and pass the returned `runway://` URI.
 
 ```javascript
 // Node.js SDK — preferred flow
@@ -105,7 +105,7 @@ const task = await client.imageToVideo.create({
 }).waitForTaskOutput();
 ```
 
-External URLs work too, but only pass them when the origin is one you control or explicitly allowlist (see Security above):
+External URLs also work — only pass origins you control (see Security):
 
 ```javascript
 const task = await client.imageToVideo.create({
@@ -265,7 +265,7 @@ const task = await client.characterPerformance.create({
 When helping the user integrate, follow this pattern:
 
 1. **Determine the use case** — What type of video generation? (text-to-video, image-to-video, etc.)
-2. **Prefer uploads over URLs** — Default to `+rw-integrate-uploads` for any user-supplied media so inputs are `runway://` URIs. Only accept external URLs when the origin is one you control or allowlist (see Security above).
+2. **Prefer uploads over URLs** — Default to `+rw-integrate-uploads` so inputs are `runway://` URIs. External URLs only from origins you control (see Security).
 3. **Select the model** — Recommend based on quality/cost/speed needs
 4. **Write the server-side handler** — Create an API route or server function
 5. **Handle the output** — Download and store the video, don't serve signed URLs to clients
@@ -281,7 +281,7 @@ const client = new RunwayML();
 const app = express();
 app.use(express.json());
 
-// Only allow URLs from origins you control. Reject everything else.
+// `runway://` URIs bypass this check; external URLs must match the allowlist.
 const ALLOWED_MEDIA_HOSTS = new Set(['cdn.yourapp.com', 'uploads.yourapp.com']);
 
 function assertTrustedMediaUrl(raw) {
@@ -320,7 +320,7 @@ app.post('/api/generate-video', async (req, res) => {
 });
 ```
 
-> For user uploads from a browser, have the client POST the file to your own endpoint, upload it via `+rw-integrate-uploads`, then pass the returned `runway://` URI to `promptImage`. Don't accept raw URLs from the browser.
+> For browser uploads: POST files to your server, upload via `+rw-integrate-uploads`, and pass the `runway://` URI. Don't accept raw URLs from the browser.
 
 ### Example: Next.js API Route
 
