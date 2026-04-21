@@ -36,10 +36,9 @@ def main():
     parser.add_argument("--image-url", help="Input image URL or local path for image-to-video")
     parser.add_argument("--video-url", help="Input video URL or local path for video-to-video (gen4_aleph, seedance2)")
     parser.add_argument("--output-dir", help="Output directory (default: cwd)")
-    parser.add_argument("--api-key", help="Runway API key (or set RUNWAYML_API_SECRET)")
     args = parser.parse_args()
 
-    api_key = get_api_key(args.api_key)
+    api_key = get_api_key()
     model_info = VIDEO_MODELS[args.model]
 
     valid_durations = model_info.get("durations")

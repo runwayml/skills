@@ -30,6 +30,15 @@ Help users add Runway video generation to their server-side code.
 - Highest quality: **`veo3`** (most expensive)
 - Video-to-video editing: **`gen4_aleph`** or **`seedance2`**
 
+## Security
+
+`promptImage`, `promptVideo`, `videoUri`, and `references[].uri` are **fetched server-side by the Runway API** — treat them like any outbound fetch:
+
+- **Prefer `runway://` URIs** from `+rw-integrate-uploads` — scoped to your account, no arbitrary web content.
+- **If accepting URLs from clients**, validate first: require `https://`, allowlist trusted hosts, reject private addresses. See the Express.js example below.
+- **Never forward `req.body.imageUrl`** (or similar) straight into `promptImage` / `promptVideo`. The SDK snippets below use raw URLs for brevity — they aren't production templates.
+- Treat generated outputs as untrusted when piping into downstream automations — ingested media influences the result.
+
 ## Endpoints
 
 ### Text-to-Video: `POST /v1/text_to_video`
@@ -77,11 +86,31 @@ Animate a still image into a video.
 
 **Compatible models:** `seedance2`, `gen4.5`, `gen4_turbo`, `veo3`, `veo3.1`, `veo3.1_fast`
 
+**Recommended:** upload via `+rw-integrate-uploads` and pass the returned `runway://` URI.
+
 ```javascript
-// Node.js SDK
+// Node.js SDK — preferred flow
+import fs from 'fs';
+
+const upload = await client.uploads.createEphemeral(
+  fs.createReadStream('/path/to/image.jpg')
+);
+
 const task = await client.imageToVideo.create({
   model: 'gen4.5',
-  promptImage: 'https://example.com/landscape.jpg',
+  promptImage: upload.runwayUri,
+  promptText: 'The scene comes to life with gentle wind',
+  ratio: '1280:720',
+  duration: 5
+}).waitForTaskOutput();
+```
+
+External URLs also work — only pass origins you control (see Security):
+
+```javascript
+const task = await client.imageToVideo.create({
+  model: 'gen4.5',
+  promptImage: 'https://cdn.yourapp.com/landscape.jpg',
   promptText: 'Camera slowly pans right revealing a mountain range',
   ratio: '1280:720',
   duration: 5
@@ -92,30 +121,11 @@ const task = await client.imageToVideo.create({
 # Python SDK
 task = client.image_to_video.create(
     model='gen4.5',
-    prompt_image='https://example.com/landscape.jpg',
+    prompt_image='https://cdn.yourapp.com/landscape.jpg',
     prompt_text='Camera slowly pans right revealing a mountain range',
     ratio='1280:720',
     duration=5
 ).wait_for_task_output()
-```
-
-**If the user has a local image file**, use `+rw-integrate-uploads` first to upload it:
-
-```javascript
-// Upload local file first
-import fs from 'fs';
-
-const upload = await client.uploads.createEphemeral(
-  fs.createReadStream('/path/to/image.jpg')
-);
-
-const task = await client.imageToVideo.create({
-  model: 'gen4.5',
-  promptImage: upload.runwayUri,  // Use the runway:// URI
-  promptText: 'The scene comes to life with gentle wind',
-  ratio: '1280:720',
-  duration: 5
-}).waitForTaskOutput();
 ```
 
 ### Video-to-Video: `POST /v1/video_to_video`
@@ -128,7 +138,7 @@ Transform an existing video with a text prompt and/or reference image.
 // Node.js SDK — gen4_aleph
 const task = await client.videoToVideo.create({
   model: 'gen4_aleph',
-  videoUri: 'https://example.com/source.mp4',
+  videoUri: 'https://cdn.yourapp.com/source.mp4',
   promptText: 'Transform into an animated cartoon style',
 }).waitForTaskOutput();
 ```
@@ -137,9 +147,9 @@ const task = await client.videoToVideo.create({
 // Node.js SDK — seedance2 video-to-video (with optional image reference)
 const task = await client.videoToVideo.create({
   model: 'seedance2',
-  promptVideo: 'https://example.com/input.mp4',
+  promptVideo: 'https://cdn.yourapp.com/input.mp4',
   promptText: 'Transform into a warm golden sunset scene',
-  references: [{ type: 'image', uri: 'https://example.com/style_ref.jpg' }]
+  references: [{ type: 'image', uri: 'https://cdn.yourapp.com/style_ref.jpg' }]
 }).waitForTaskOutput();
 ```
 
@@ -169,8 +179,8 @@ const task = await client.imageToVideo.create({
   model: 'seedance2',
   promptText: 'Smooth transition from day to night in a cozy mountain cabin',
   promptImage: [
-    { uri: 'https://example.com/image.jpg', position: 'first' },
-    { uri: 'https://example.com/image2.jpg', position: 'last' }
+    { uri: 'https://cdn.yourapp.com/image.jpg', position: 'first' },
+    { uri: 'https://cdn.yourapp.com/image2.jpg', position: 'last' }
   ],
   duration: 4,
   ratio: '1280:720'
@@ -187,8 +197,8 @@ Use an image as a stylistic/content reference rather than a literal frame. `prom
 const task = await client.imageToVideo.create({
   model: 'seedance2',
   promptText: 'Smooth transition from day to night in a cozy mountain cabin',
-  promptImage: 'https://example.com/image.jpg',
-  references: [{ type: 'image', uri: 'https://example.com/reference.jpg' }],
+  promptImage: 'https://cdn.yourapp.com/image.jpg',
+  references: [{ type: 'image', uri: 'https://cdn.yourapp.com/reference.jpg' }],
   duration: 4,
   ratio: '1280:720'
 }).waitForTaskOutput();
@@ -203,9 +213,9 @@ Transform an existing video guided by a text prompt, optionally with an image re
 ```python
 task = client.video_to_video.create(
     model='seedance2',
-    prompt_video='https://example.com/input.mp4',
+    prompt_video='https://cdn.yourapp.com/input.mp4',
     prompt_text='Transform into a warm golden sunset scene',
-    references=[{'type': 'image', 'uri': 'https://example.com/style_ref.jpg'}]
+    references=[{'type': 'image', 'uri': 'https://cdn.yourapp.com/style_ref.jpg'}]
 ).wait_for_task_output()
 ```
 
@@ -233,8 +243,8 @@ Animate a character with facial/body performance.
 ```javascript
 const task = await client.characterPerformance.create({
   model: 'act_two',
-  promptImage: 'https://example.com/character.jpg',
-  promptPerformance: 'https://example.com/performance.mp4',
+  promptImage: 'https://cdn.yourapp.com/character.jpg',
+  promptPerformance: 'https://cdn.yourapp.com/performance.mp4',
   ratio: '1280:720',
   duration: 5
 }).waitForTaskOutput();
@@ -255,7 +265,7 @@ const task = await client.characterPerformance.create({
 When helping the user integrate, follow this pattern:
 
 1. **Determine the use case** — What type of video generation? (text-to-video, image-to-video, etc.)
-2. **Check for local files** — If the user has local images/videos, use `+rw-integrate-uploads` first
+2. **Prefer uploads over URLs** — Default to `+rw-integrate-uploads` so inputs are `runway://` URIs. External URLs only from origins you control (see Security).
 3. **Select the model** — Recommend based on quality/cost/speed needs
 4. **Write the server-side handler** — Create an API route or server function
 5. **Handle the output** — Download and store the video, don't serve signed URLs to clients
@@ -270,6 +280,16 @@ import express from 'express';
 const client = new RunwayML();
 const app = express();
 app.use(express.json());
+
+// `runway://` URIs bypass this check; external URLs must match the allowlist.
+const ALLOWED_MEDIA_HOSTS = new Set(['cdn.yourapp.com', 'uploads.yourapp.com']);
+
+function assertTrustedMediaUrl(raw) {
+  const u = new URL(raw);
+  if (u.protocol !== 'https:') throw new Error('https required');
+  if (!ALLOWED_MEDIA_HOSTS.has(u.hostname)) throw new Error('untrusted media host');
+  return u.toString();
+}
 
 app.post('/api/generate-video', async (req, res) => {
   try {
@@ -286,7 +306,7 @@ app.post('/api/generate-video', async (req, res) => {
     if (imageUrl) {
       task = await client.imageToVideo.create({
         ...params,
-        promptImage: imageUrl
+        promptImage: assertTrustedMediaUrl(imageUrl)
       }).waitForTaskOutput();
     } else {
       task = await client.textToVideo.create(params).waitForTaskOutput();
@@ -295,10 +315,12 @@ app.post('/api/generate-video', async (req, res) => {
     res.json({ videoUrl: task.output[0] });
   } catch (error) {
     console.error('Video generation failed:', error);
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 ```
+
+> For browser uploads: POST files to your server, upload via `+rw-integrate-uploads`, and pass the `runway://` URI. Don't accept raw URLs from the browser.
 
 ### Example: Next.js API Route
 

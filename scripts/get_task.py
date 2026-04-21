@@ -17,11 +17,10 @@ from runway_helpers import get_api_key, api_get
 def main():
     parser = argparse.ArgumentParser(description="Check Runway task status")
     parser.add_argument("--task-id", required=True, help="Task ID to check")
-    parser.add_argument("--api-key", help="Runway API key (or set RUNWAYML_API_SECRET)")
     parser.add_argument("--wait", action="store_true", help="Poll until the task completes")
     args = parser.parse_args()
 
-    api_key = get_api_key(args.api_key)
+    api_key = get_api_key()
 
     if args.wait:
         from runway_helpers import poll_task

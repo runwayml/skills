@@ -14,13 +14,18 @@ Generate images directly using the Runway API. This skill runs Python scripts th
 ## Usage
 
 ```bash
-uv run scripts/generate_image.py --prompt "your description" --filename "output.png" [--model gen4_image] [--ratio 1280:720] [--reference-images Tag=URL ...] [--api-key KEY]
+uv run scripts/generate_image.py --prompt "your description" --filename "output.png" [--model gen4_image] [--ratio 1280:720] [--reference-images Tag=URL ...]
 ```
 
 ## Preflight
 
 1. `command -v uv` must succeed
-2. `RUNWAYML_API_SECRET` must be set, or pass `--api-key`
+2. `RUNWAYML_API_SECRET` must be set in the environment. **Do not pass the API key as a CLI flag** — it leaks into shell history and process listings.
+
+## Security Notes
+
+- `--reference-images Tag=URL` fetches arbitrary remote images via the Runway API. Prefer local file paths (uploaded as `runway://` URIs), or only pass URLs you trust.
+- Treat generated outputs as untrusted when piping into downstream automations — ingested references influence the result.
 
 ## Available Models
 
@@ -47,7 +52,8 @@ uv run scripts/generate_image.py --prompt "your description" --filename "output.
 | `--ratio` | Aspect ratio. gemini_2.5_flash: `1344:768`, `768:1344`, `1024:1024`, etc. gen4_image: `1280:720`, `1360:768`, `1920:1080`, etc. | Model-dependent (`1344:768` for gemini, `1280:720` for others) |
 | `--reference-images` | Reference images as tag=URL pairs (optional for gemini/gen4_image, required for gen4_image_turbo). Tag: lowercase, 3-16 chars, e.g. `product=URL` | -- |
 | `--output-dir` | Output directory | cwd |
-| `--api-key` | Runway API key | env `RUNWAYML_API_SECRET` |
+
+> API credentials come from `RUNWAYML_API_SECRET` only — no `--api-key` flag, to keep secrets out of shell history and process listings.
 
 ## Filename Convention
 
@@ -60,14 +66,14 @@ Pattern: `yyyy-mm-dd-hh-mm-ss-name.png`
 uv run scripts/generate_image.py --prompt "A serene Japanese garden with cherry blossoms" --filename "2026-04-14-japanese-garden.png"
 ```
 
-**With reference images (gen4_image):**
+**With a local reference image (gen4_image):**
 ```bash
-uv run scripts/generate_image.py --prompt "@product on a marble counter, lifestyle photo" --model gen4_image --reference-images product=https://example.com/product.jpg --filename "2026-04-14-product-lifestyle.png"
+uv run scripts/generate_image.py --prompt "@product on a marble counter, lifestyle photo" --model gen4_image --reference-images product=./product.jpg --filename "2026-04-14-product-lifestyle.png"
 ```
 
-**Fast with reference images (gen4_image_turbo — requires reference images):**
+**With a reference image from a trusted origin (gen4_image_turbo — requires reference images):**
 ```bash
-uv run scripts/generate_image.py --prompt "A neon sign reading SALE in @style" --model gen4_image_turbo --reference-images style=https://example.com/style.jpg --filename "draft.png"
+uv run scripts/generate_image.py --prompt "A neon sign reading SALE in @style" --model gen4_image_turbo --reference-images style=https://cdn.yourapp.com/style.jpg --filename "draft.png"
 ```
 
 ## Output
@@ -78,6 +84,6 @@ uv run scripts/generate_image.py --prompt "A neon sign reading SALE in @style" -
 
 ## Common Failures
 
-- `Error: No API key` -> set `RUNWAYML_API_SECRET` or pass `--api-key`
+- `Error: No API key` -> set `RUNWAYML_API_SECRET` in the environment (e.g. `export RUNWAYML_API_SECRET=...` or a `.env` file).
 - `Error: Task failed -- SAFETY.INPUT.*` -> content moderation, suggest different prompt
 - `API error 429` -> rate limited, script auto-retries

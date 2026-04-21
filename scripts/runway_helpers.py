@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 import mimetypes
+from urllib.parse import urlparse
 import requests
 
 API_BASE = "https://api.dev.runwayml.com"
@@ -116,11 +117,14 @@ AUDIO_MODELS = {
 
 # ── API key ──────────────────────────────────────────────
 
-def get_api_key(args_key=None):
-    key = args_key or os.environ.get("RUNWAYML_API_SECRET")
+def get_api_key():
+    """Read the API key from RUNWAYML_API_SECRET. CLI flags are not supported to avoid exposing
+    the secret in shell history or process lists."""
+    key = os.environ.get("RUNWAYML_API_SECRET")
     if not key:
         print(
-            "Error: No API key. Set RUNWAYML_API_SECRET or pass --api-key.\n"
+            "Error: RUNWAYML_API_SECRET is not set.\n"
+            "Export it in your shell (e.g. `export RUNWAYML_API_SECRET=...`) — do not pass keys as CLI flags.\n"
             "Get your key at https://dev.runwayml.com/",
             file=sys.stderr,
         )
@@ -296,11 +300,56 @@ def upload_file(api_key, local_path):
     return runway_uri
 
 
+def _assert_safe_media_url(url):
+    """Validate an external media URL before sending it to the Runway API.
+
+    Rejects non-http(s) schemes (e.g. file://, data:) and, when
+    RUNWAY_ALLOWED_MEDIA_HOSTS is set, enforces a comma-separated host allowlist.
+    Prefer uploading local files (which produce runway:// URIs) over passing
+    arbitrary external URLs — see the `rw-integrate-uploads` skill.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        print(
+            f"Error: Unsupported URL scheme '{parsed.scheme}://'. "
+            "Only http(s) URLs or runway:// URIs from uploads are allowed.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if not parsed.netloc:
+        print(f"Error: URL has no host: {url}", file=sys.stderr)
+        sys.exit(1)
+
+    allowlist = os.environ.get("RUNWAY_ALLOWED_MEDIA_HOSTS", "").strip()
+    if allowlist:
+        allowed = {h.strip().lower() for h in allowlist.split(",") if h.strip()}
+        host = parsed.hostname.lower() if parsed.hostname else ""
+        if host not in allowed:
+            print(
+                f"Error: Host '{host}' is not in RUNWAY_ALLOWED_MEDIA_HOSTS.\n"
+                f"Allowed: {', '.join(sorted(allowed))}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+    if parsed.scheme == "http":
+        print(
+            f"  Warning: Using insecure http:// URL ({parsed.hostname}). Prefer https or upload the file.",
+            file=sys.stderr,
+        )
+
+
 def ensure_url(path_or_url, api_key):
-    """If input is a local file, upload it. Otherwise return as-is."""
-    if path_or_url.startswith("http://") or path_or_url.startswith("https://"):
-        return path_or_url
+    """Resolve a user-supplied input to a URI the API can fetch.
+
+    - runway:// URIs pass through.
+    - http(s) URLs are validated (see `_assert_safe_media_url`) then passed through.
+    - Anything else is treated as a local file path and uploaded.
+    """
     if path_or_url.startswith("runway://"):
+        return path_or_url
+    if path_or_url.startswith("http://") or path_or_url.startswith("https://"):
+        _assert_safe_media_url(path_or_url)
         return path_or_url
     return upload_file(api_key, path_or_url)
 
