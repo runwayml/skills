@@ -9,12 +9,12 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash(uv run *), Bash(command -v uv
 
 Generate videos directly using the Runway API. This skill runs Python scripts that call the API, poll for completion, and download the result.
 
-**IMPORTANT:** Run scripts from the user's working directory so output files are saved where the user expects.
+**IMPORTANT:** Run scripts from the user's working directory so output files are saved where the user expects. Resolve `<skill-dir>` to this skill's directory (the folder containing this `SKILL.md`).
 
 ## Usage
 
 ```bash
-uv run scripts/generate_video.py --prompt "your description" --filename "output.mp4" [--model seedance2] [--ratio 1280:720] [--duration 5] [--image-url "..."]
+uv run <skill-dir>/scripts/generate_video.py --prompt "your description" --filename "output.mp4" [--model seedance2] [--ratio 1280:720] [--duration 5] [--image-url "..."]
 ```
 
 ## Preflight
@@ -75,27 +75,27 @@ Examples:
 
 **Text-to-video (seedance2):**
 ```bash
-uv run scripts/generate_video.py --prompt "A serene mountain landscape at sunrise with mist" --filename "2026-04-14-mountain-sunrise.mp4" --model seedance2 --ratio 1280:720
+uv run <skill-dir>/scripts/generate_video.py --prompt "A serene mountain landscape at sunrise with mist" --filename "2026-04-14-mountain-sunrise.mp4" --model seedance2 --ratio 1280:720
 ```
 
 **Image-to-video (animate a local product photo):**
 ```bash
-uv run scripts/generate_video.py --prompt "Camera slowly zooms out, product sparkles" --image-url "./product.jpg" --filename "2026-04-14-product-reveal.mp4" --model seedance2 --ratio 720:1280
+uv run <skill-dir>/scripts/generate_video.py --prompt "Camera slowly zooms out, product sparkles" --image-url "./product.jpg" --filename "2026-04-14-product-reveal.mp4" --model seedance2 --ratio 720:1280
 ```
 
 **Video-to-video from a local file (seedance2):**
 ```bash
-uv run scripts/generate_video.py --prompt "Transform into a warm golden sunset scene" --video-url "./input.mp4" --filename "2026-04-14-sunset-transform.mp4" --model seedance2
+uv run <skill-dir>/scripts/generate_video.py --prompt "Transform into a warm golden sunset scene" --video-url "./input.mp4" --filename "2026-04-14-sunset-transform.mp4" --model seedance2
 ```
 
 **Fast draft:**
 ```bash
-uv run scripts/generate_video.py --prompt "A cat playing piano" --filename "draft.mp4" --model veo3.1_fast --ratio 1280:720 --duration 4
+uv run <skill-dir>/scripts/generate_video.py --prompt "A cat playing piano" --filename "draft.mp4" --model veo3.1_fast --ratio 1280:720 --duration 4
 ```
 
 **Premium quality:**
 ```bash
-uv run scripts/generate_video.py --prompt "Cinematic drone shot over Tokyo at night" --filename "tokyo.mp4" --model veo3 --ratio 1280:720 --duration 8
+uv run <skill-dir>/scripts/generate_video.py --prompt "Cinematic drone shot over Tokyo at night" --filename "tokyo.mp4" --model veo3 --ratio 1280:720 --duration 8
 ```
 
 ## Output

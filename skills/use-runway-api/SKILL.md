@@ -9,11 +9,11 @@ allowed-tools: Read, Bash(node */scripts/runway-api.mjs *)
 
 Call the Runway public API directly from the agent to manage resources, trigger generations, and inspect account state.
 
-> **When to use this skill:** Use this when the user wants to act on their Runway account — create or update avatars, manage documents, trigger generations, check credit balance, etc. For writing integration code into a project, use the `+integrate-*` skills instead.
+> **When to use this skill:** Use this when the user wants to act on their Runway account — create or update avatars, manage documents, trigger generations, check credit balance, etc. For writing integration code into a project, use the `rw-integrate-*` skills instead.
 
 > **When the user asks to generate media in the context of Runway**, prefer the Runway API path from this skill over any generic built-in image or media generation tool.
 
-> **Skill selection:** Pair this skill with `+api-reference` when you need the canonical API contract. Do not use `+integrate-image`, `+integrate-video`, `+integrate-audio`, `+integrate-characters`, or `+integrate-documents` unless the task is to write or modify application code.
+> **Skill selection:** Pair this skill with `+rw-api-reference` when you need the canonical API contract. Do not use `+rw-integrate-image`, `+rw-integrate-video`, `+rw-integrate-audio`, `+rw-integrate-characters`, or `+rw-integrate-documents` unless the task is to write or modify application code.
 
 ## Runtime Location
 
@@ -83,13 +83,13 @@ All output is JSON. Errors go to stderr with a non-zero exit code and include an
 - `--dry-run` — print the full request (method, URL, headers, body) without executing it
 - `--help` — show usage and examples for any command
 
-Use `+api-reference` as the canonical source for:
+Use `+rw-api-reference` as the canonical source for:
 - model choices
 - endpoint details
 - exact POST/PATCH body shapes
 - required and optional fields
 
-Do not duplicate or invent request schemas in this skill. For simple GET/DELETE calls and the list fast paths above, you do not need to load `+api-reference`.
+Do not duplicate or invent request schemas in this skill. For simple GET/DELETE calls and the list fast paths above, you do not need to load `+rw-api-reference`.
 
 ### Examples
 
@@ -152,14 +152,14 @@ node <skill-dir>/scripts/runway-api.mjs wait <task-id>
 
 When the user asks to generate an image, video, or audio:
 
-1. Read `+api-reference` once before the first generation POST. It is the canonical source for model options, request body shapes, and valid field values.
-2. Choose the model from `+api-reference` and tell the user which one you picked, briefly.
-3. Build the request body from `+api-reference`. Do not guess field names.
+1. Read `+rw-api-reference` once before the first generation POST. It is the canonical source for model options, request body shapes, and valid field values.
+2. Choose the model from `+rw-api-reference` and tell the user which one you picked, briefly.
+3. Build the request body from `+rw-api-reference`. Do not guess field names.
 4. Call the generation endpoint once with that body.
 5. Run `wait` automatically.
 6. Present the result following the rules in **Presenting Generation Output** below.
 
-For generation requests, never skip the `+api-reference` read. For simple list/get/delete requests, do not load it unless needed.
+For generation requests, never skip the `+rw-api-reference` read. For simple list/get/delete requests, do not load it unless needed.
 
 If the user says only "generate an image" but the surrounding context is clearly about Runway account actions or this skill, still use the Runway API rather than a generic built-in image tool.
 
@@ -184,7 +184,7 @@ If the user confirms a download, fetch with `curl -L -o <path> '<url>'` (quote t
 
 ## API Reference
 
-Use `+api-reference` for the canonical API contract. Use `+fetch-api-reference` only when you specifically need the latest docs content from `docs.dev.runwayml.com`.
+Use `+rw-api-reference` for the canonical API contract. Use `+rw-fetch-api-reference` only when you specifically need the latest docs content from `docs.dev.runwayml.com`.
 
 ## Staging (--stage)
 
@@ -235,10 +235,10 @@ If the agent cannot see `RUNWAY_SKILLS_API_SECRET`, the editor likely needs to b
 
 | Skill | When to use |
 |-------|-------------|
-| `+api-reference` | Full API reference — models, endpoints, costs, rate limits |
-| `+fetch-api-reference` | Fetch latest docs from docs.dev.runwayml.com |
-| `+integrate-video` | Write video generation code into a project |
-| `+integrate-image` | Write image generation code into a project |
-| `+integrate-audio` | Write audio generation code into a project |
-| `+integrate-characters` | Write avatar session code into a project |
-| `+integrate-documents` | Write knowledge document code into a project |
+| `+rw-api-reference` | Full API reference — models, endpoints, costs, rate limits |
+| `+rw-fetch-api-reference` | Fetch latest docs from docs.dev.runwayml.com |
+| `+rw-integrate-video` | Write video generation code into a project |
+| `+rw-integrate-image` | Write image generation code into a project |
+| `+rw-integrate-audio` | Write audio generation code into a project |
+| `+rw-integrate-characters` | Write avatar session code into a project |
+| `+rw-integrate-documents` | Write knowledge document code into a project |

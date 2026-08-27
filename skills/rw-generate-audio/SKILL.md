@@ -9,18 +9,18 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash(uv run *), Bash(command -v uv
 
 Generate audio directly using the Runway API. Supports text-to-speech, sound effects, voice isolation, dubbing, and speech-to-speech voice conversion.
 
-**IMPORTANT:** Run scripts from the user's working directory so output files are saved where the user expects.
+**IMPORTANT:** Run scripts from the user's working directory so output files are saved where the user expects. Resolve `<skill-dir>` to this skill's directory (the folder containing this `SKILL.md`).
 
 ## Usage
 
 ```bash
-uv run scripts/generate_audio.py --type tts --text "Hello world" --filename "greeting.mp3" [--voice-id ID] [--api-key KEY]
+uv run <skill-dir>/scripts/generate_audio.py --type tts --text "Hello world" --filename "greeting.mp3" [--voice-id ID]
 ```
 
 ## Preflight
 
 1. `command -v uv` must succeed
-2. `RUNWAYML_API_SECRET` must be set, or pass `--api-key`
+2. `RUNWAYML_API_SECRET` must be set in the environment. **Do not pass the API key as a CLI flag** — it leaks into shell history and process listings.
 
 ## Audio Types
 
@@ -43,33 +43,34 @@ uv run scripts/generate_audio.py --type tts --text "Hello world" --filename "gre
 | `--voice-id` | Voice preset (for tts and sts, e.g. Maya, Noah, Leslie) | Maya |
 | `--target-language` | Language code (for dub, e.g. "es") | -- |
 | `--output-dir` | Output directory | cwd |
-| `--api-key` | Runway API key | env `RUNWAYML_API_SECRET` |
+
+> API credentials come from `RUNWAYML_API_SECRET` only — no `--api-key` flag.
 
 ## Examples
 
 **Text-to-speech:**
 ```bash
-uv run scripts/generate_audio.py --type tts --text "Welcome to our product showcase" --filename "voiceover.mp3"
+uv run <skill-dir>/scripts/generate_audio.py --type tts --text "Welcome to our product showcase" --filename "voiceover.mp3"
 ```
 
 **Sound effect:**
 ```bash
-uv run scripts/generate_audio.py --type sfx --text "Thunder rolling across a stormy sky" --filename "thunder.mp3"
+uv run <skill-dir>/scripts/generate_audio.py --type sfx --text "Thunder rolling across a stormy sky" --filename "thunder.mp3"
 ```
 
 **Voice isolation:**
 ```bash
-uv run scripts/generate_audio.py --type isolate --audio-url "noisy-recording.mp3" --filename "clean-voice.mp3"
+uv run <skill-dir>/scripts/generate_audio.py --type isolate --audio-url "noisy-recording.mp3" --filename "clean-voice.mp3"
 ```
 
 **Speech-to-speech (voice conversion):**
 ```bash
-uv run scripts/generate_audio.py --type sts --audio-url "recording.mp3" --voice-id Noah --filename "converted.mp3"
+uv run <skill-dir>/scripts/generate_audio.py --type sts --audio-url "recording.mp3" --voice-id Noah --filename "converted.mp3"
 ```
 
 **Dubbing:**
 ```bash
-uv run scripts/generate_audio.py --type dub --audio-url "english-narration.mp3" --target-language es --filename "spanish-dub.mp3"
+uv run <skill-dir>/scripts/generate_audio.py --type dub --audio-url "english-narration.mp3" --target-language es --filename "spanish-dub.mp3"
 ```
 
 ## Output

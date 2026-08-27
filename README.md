@@ -32,22 +32,27 @@ Set up Runway video generation in my Next.js app
 
 ## Installation
 
-### Claude Code (community marketplace)
+### Claude Code (official plugin)
 
 ```bash
-claude plugin marketplace add anthropics/claude-plugins-community
-claude plugin install runway-api-skills@claude-community
+claude plugin install runway-api@claude-plugins-official
 ```
 
-You can also run `/plugin` in Claude Code, open **Discover**, search for **runway-api-skills**, and install from there. After installing or updating plugins, run `/reload-plugins` if skills do not appear immediately.
+You can also run `/plugin` in Claude Code, open **Discover**, search for **runway-api**, and install from there. After installing or updating plugins, run `/reload-plugins` if skills do not appear immediately.
 
 ### Other agents (`npx skills`)
 
+Install only what you need — do not install the full catalog unless you want every skill:
+
 ```bash
-npx skills add runwayml/skills
+# One-off media generation from the agent
+npx skills add runwayml/skills --skill rw-generate-video --agent cursor claude-code codex -y
+
+# App integration (framework-specific routes)
+npx skills add runwayml/skills --skill rw-integrate-video --agent cursor claude-code codex -y
 ```
 
-Select all the skills with your keyboard (Space to select, arrow keys to navigate), then press Enter to install.
+Use `--list` to browse skills before installing. Repeat `--skill` for each skill you want.
 
 ## Prerequisites
 

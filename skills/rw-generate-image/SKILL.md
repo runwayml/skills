@@ -9,12 +9,12 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash(uv run *), Bash(command -v uv
 
 Generate images directly using the Runway API. This skill runs Python scripts that call the API, poll for completion, and download the result.
 
-**IMPORTANT:** Run scripts from the user's working directory so output files are saved where the user expects.
+**IMPORTANT:** Run scripts from the user's working directory so output files are saved where the user expects. Resolve `<skill-dir>` to this skill's directory (the folder containing this `SKILL.md`).
 
 ## Usage
 
 ```bash
-uv run scripts/generate_image.py --prompt "your description" --filename "output.png" [--model gen4_image] [--ratio 1280:720] [--reference-images Tag=URL ...]
+uv run <skill-dir>/scripts/generate_image.py --prompt "your description" --filename "output.png" [--model gen4_image] [--ratio 1280:720] [--reference-images Tag=URL ...]
 ```
 
 ## Preflight
@@ -63,17 +63,17 @@ Pattern: `yyyy-mm-dd-hh-mm-ss-name.png`
 
 **Basic image:**
 ```bash
-uv run scripts/generate_image.py --prompt "A serene Japanese garden with cherry blossoms" --filename "2026-04-14-japanese-garden.png"
+uv run <skill-dir>/scripts/generate_image.py --prompt "A serene Japanese garden with cherry blossoms" --filename "2026-04-14-japanese-garden.png"
 ```
 
 **With a local reference image (gen4_image):**
 ```bash
-uv run scripts/generate_image.py --prompt "@product on a marble counter, lifestyle photo" --model gen4_image --reference-images product=./product.jpg --filename "2026-04-14-product-lifestyle.png"
+uv run <skill-dir>/scripts/generate_image.py --prompt "@product on a marble counter, lifestyle photo" --model gen4_image --reference-images product=./product.jpg --filename "2026-04-14-product-lifestyle.png"
 ```
 
 **With a reference image from a trusted origin (gen4_image_turbo — requires reference images):**
 ```bash
-uv run scripts/generate_image.py --prompt "A neon sign reading SALE in @style" --model gen4_image_turbo --reference-images style=https://cdn.yourapp.com/style.jpg --filename "draft.png"
+uv run <skill-dir>/scripts/generate_image.py --prompt "A neon sign reading SALE in @style" --model gen4_image_turbo --reference-images style=https://cdn.yourapp.com/style.jpg --filename "draft.png"
 ```
 
 ## Output
