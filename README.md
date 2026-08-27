@@ -49,6 +49,12 @@ npx skills add runwayml/skills
 
 Select all the skills with your keyboard (Space to select, arrow keys to navigate), then press Enter to install.
 
+For Dev Platform integration, install the foundation plus the skill for your surface:
+
+```bash
+npx skills add runwayml/skills --skill runway-dev --skill runway-dev-models --agent cursor claude-code codex -y
+```
+
 ## Prerequisites
 
 - A [Runway developer account](https://dev.runwayml.com/) with prepaid credits ($10 minimum)
@@ -56,6 +62,19 @@ Select all the skills with your keyboard (Space to select, arrow keys to navigat
 - For integration skills: a server-side project — Node.js 18+ or Python 3.8+ with a backend framework
 
 ## Available Skills
+
+### Dev Platform (integrate via Dev MCP + SDK)
+
+These skills use Dev MCP for live project context and the SDK for server-side integration.
+
+| Skill                      | Description                                            |
+| -------------------------- | ------------------------------------------------------ |
+| `runway-dev`               | Shared MCP, docs, auth, task polling, and error flow   |
+| `runway-dev-models`        | Model endpoint integration                             |
+| `runway-dev-model-routers` | Model Router setup and routed SDK calls                |
+| `runway-dev-characters`    | Characters and realtime avatar sessions                |
+| `runway-dev-recipes`       | Recipe pipeline integration                            |
+| `runway-dev-workflows`     | Runway app workflows exposed through API endpoints     |
 
 ### Generation (run directly)
 
