@@ -1,6 +1,6 @@
 ---
 name: runway-dev-workflows
-description: "Link Runway app workflows to API endpoints via get_workflows_setup_guide MCP tool. Use with +runway-dev. Not for model generation, routers, or Characters sessions."
+description: "Build, modify, debug, or verify integrations that expose Runway app workflows as API endpoints. Use get_workflows_setup_guide for current setup and API guidance. Use with +runway-dev. Not for model generation, routers, or Characters sessions."
 user-invocable: true
 ---
 
@@ -10,13 +10,13 @@ user-invocable: true
 
 ## Goal
 
-Help the user publish Runway app workflows as callable API endpoints.
+Keep the connection between Runway app workflows and callable API endpoints correct.
 
 ## Workflow
 
 1. Call MCP `get_workflows_setup_guide` — returns markdown with connections URL, help article, and API reference links.
 2. Follow that guide; do not invent workflow publishing steps.
-3. If integrating into an app, inspect workspace and wire server-side call per returned API docs.
+3. Inspect any existing integration, then implement, modify, debug, or verify its server-side call per returned API docs.
 
 ## Docs
 

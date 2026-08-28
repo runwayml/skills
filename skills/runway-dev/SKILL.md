@@ -1,14 +1,14 @@
 ---
 name: runway-dev
-description: "Foundation for Runway Dev Platform integration: connect Dev MCP, use llms.txt, pick projects, submit once, poll tasks, handle errors. Load before runway-dev-* surface skills. Not for direct media generation scripts or REST CLI shortcuts."
+description: "Foundation for building, modifying, debugging, or verifying Runway Dev Platform integrations: connect Dev MCP, use llms.txt, resolve project context, submit safely, poll tasks, and handle errors. Load with relevant runway-dev-* surface skills. Not for direct media generation scripts or REST CLI shortcuts."
 user-invocable: true
 ---
 
 # Runway Dev Platform
 
-Durable workflow for integrating Runway into a server-side project. MCP supplies live account state; the SDK submits billable work; `llms.txt` is the API contract.
+Durable workflow for working with Runway in a server-side project. MCP supplies live account state; the SDK submits billable work; `llms.txt` is the API contract.
 
-> **When to use:** Dev Portal quickstart, wiring Runway into an app, or any task that needs project/model/credit context before coding.
+> **When to use:** Building, modifying, debugging, or verifying a Runway integration, including work started from Dev Portal.
 >
 > **Do not use for:** one-off media generation from the agent (`rw-generate-*` skills), direct REST CLI actions (`+use-runway-api`), or writing framework-specific integration code without Dev MCP (`rw-integrate-*` skills).
 
@@ -63,4 +63,4 @@ MCP uses OAuth. Generation SDK calls use `RUNWAYML_API_SECRET` in server-side en
 | `+runway-dev-recipes` | Recipe pipelines |
 | `+runway-dev-workflows` | Runway app workflows → API endpoints |
 
-Load `+runway-dev` first, then exactly one surface skill (`runway-dev-models`, `runway-dev-model-routers`, etc.) matching the user's goal.
+Load `+runway-dev` first, then the relevant surface skill or skills. Usually one surface skill matches the user's goal; load more when the task crosses surfaces.

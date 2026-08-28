@@ -1,6 +1,6 @@
 ---
 name: runway-dev-characters
-description: "Integrate Runway Characters: preset or custom avatar live Sessions via SDK. Use with +runway-dev. UI says Characters; MCP/API use avatars. Not for avatar video generation endpoints or embed-only UI without server session."
+description: "Build, modify, debug, or verify Runway Characters integrations: inspect preset or custom avatars with MCP and manage live Sessions via SDK. Use with +runway-dev. UI says Characters; MCP/API use avatars. Not for avatar video generation endpoints or embed-only UI without server sessions."
 user-invocable: true
 ---
 
@@ -8,23 +8,27 @@ user-invocable: true
 
 > **Prerequisite:** Load and follow `+runway-dev` first.
 
+## Goal
+
+Keep a Characters integration and its live Session lifecycle correct. Verify changes end-to-end when safe.
+
 ## Terminology
 
 - Dev Portal **Characters** = API **avatars** (`list_avatars`, `get_avatar`).
-- **Character ID** in quickstart = avatar UUID.
+- **Character ID** = avatar UUID.
 - **live Session** = realtime conversation via `POST /v1/realtime_sessions`.
-- Default preset when none pinned: `influencer` (`{ type: 'runway-preset', presetId: 'influencer' }`).
+- Default preset when none specified: `influencer` (`{ type: 'runway-preset', presetId: 'influencer' }`).
 
-## List surface (no pinned character)
+## No character specified
 
 1. Do not ask preset vs create vs video vs embed unless user already specified another path.
 2. Start with preset `influencer`; follow Characters session docs from `llms.txt`.
-3. One working Session end-to-end: create session, poll for `sessionKey`, confirm lifecycle.
+3. Implement, modify, debug, or verify the Session flow based on the user's goal. For end-to-end verification, create one session, poll for `sessionKey`, and confirm lifecycle.
 
-## Detail surface (pinned avatar UUID)
+## Character specified
 
 1. `get_avatar` for status and attached knowledge document ids.
-2. Start Session with that character id; do not substitute another avatar.
+2. Use that character id; do not substitute another avatar.
 3. If status is `PROCESSING`, poll until `READY` or stop on `FAILED`.
 
 ## Optional MCP resources
