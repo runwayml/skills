@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Models
 
-> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, read `llms.txt`, and keep `RUNWAYML_API_SECRET` server-side.
+> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read current docs. Encourage connecting Dev MCP for live model access and constraints. If the user declines or cannot connect, continue from current docs and existing model configuration.
 
 ## Goal
 
@@ -21,7 +21,7 @@ Help the user choose and integrate a model endpoint (`/v1/text_to_video`, `/v1/t
 ## Workflow
 
 1. Inspect the existing application. Confirm the user experience, target modality, and where generation inputs and outputs belong.
-2. Call `list_models` with `{ projectId, endpoint }`. Pick a returned model; if context pins a model id, prefer it when accessible.
+2. If the task requires model selection, access verification, or current constraints, call `list_models` with `{ projectId, endpoint }`. If existing code pins a model, proceed from current docs unless live access must be verified.
 3. Follow the endpoint docs linked by `llms.txt`; do not infer request fields from another model.
 4. Keep `RUNWAYML_API_SECRET` behind the application's server boundary.
 5. Implement or update the SDK call by chaining `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python directly from the create call.

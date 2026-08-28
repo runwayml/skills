@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Workflows
 
-> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, follow the returned setup guide, and keep `RUNWAYML_API_SECRET` server-side.
+> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read current docs. Encourage connecting Dev MCP for project-specific setup guidance. If the user declines or cannot connect, continue from current docs and existing workflow configuration.
 
 ## Goal
 
@@ -18,8 +18,8 @@ Keep the connection between Runway app workflows and callable API endpoints corr
 
 ## Workflow
 
-1. Call `get_workflows_setup_guide` with the selected `projectId`.
-2. Follow that guide; do not invent workflow publishing steps.
+1. Call `get_workflows_setup_guide` with the selected `projectId` when setup or current project-specific guidance is required. If existing configuration and live docs define the contract, continue implementation without MCP.
+2. When used, follow the returned guide; do not invent workflow publishing steps.
 3. Inspect the existing workflow contract and application integration before changing either.
 4. Implement, modify, debug, or verify the server-side call per the returned API docs. Wire inputs, invocation state, errors, and outputs into the existing UI or consumer.
 5. When verification is appropriate, run one invocation with representative inputs and present the result.

@@ -6,33 +6,55 @@ user-invocable: true
 
 # Runway Dev Platform
 
-Durable workflow for integrating Runway Dev products into an application. MCP supplies live account state, the SDK is the application integration path, and `llms.txt` points to current setup guides and API references.
+Workflow for integrating Runway Dev products into an application. Use MCP for live account state and management, the SDK for application code, and current docs for API contracts.
 
 > **When to use:** Building, modifying, debugging, or verifying a Runway integration, including work started from Dev Portal.
 >
 > **Do not use for:** one-off media generation from the agent or direct REST CLI actions.
 
-## Before you start
+## Start with the work
 
-1. **Connect Dev MCP** if tools are missing. Server: `https://dev.runwayml.com/mcp`. OAuth via Runway developer account — never put an API key in MCP config. Finish login in the user's browser; do not automate OAuth. Docs: https://docs.dev.runwayml.com/guides/mcp
-2. **Fetch** https://docs.dev.runwayml.com/llms.txt and follow linked docs — do not invent endpoints or field names.
-3. **Inspect the workspace.** Existing project → find its backend boundary and user-facing integration point; ask where to wire Runway if unclear. Frontend-only project → add a server route or function before integrating. Empty project → ask what to build; offer a small web app with visible inputs and output.
-4. **Use the official SDK.** Install `@runwayml/sdk` for Node or `runwayml` for Python if the project does not already have it.
+Make useful progress before explaining setup. Inspect the workspace and existing configuration without narrating each check. Ask a question only when missing information blocks the next change.
 
-## MCP context
+- Existing project: find its server boundary and user-facing integration point. Add a server route or function before integrating a frontend-only project.
+- Empty workspace: ask what the user wants to build. You may recommend a small web app with visible inputs and output as a Runway starting point, but do not claim the user requested one.
+- Before giving credential setup instructions, test whether `RUNWAYML_API_SECRET` is present without printing its value, for example with `test -n "${RUNWAYML_API_SECRET:-}"`. If it is present, skip dotenv instructions.
+- Use the official SDK. Install `@runwayml/sdk` for Node or `runwayml` for Python only if the project needs it and does not already have it.
+- Keep updates short. Do not narrate a long setup sequence or checklist.
 
-1. `whoami` — verify identity.
-2. `list_projects` — pick project; never guess a `projectId`.
-3. For generation: `list_models` with the target endpoint. Honor each model's `inputConstraints`; do not reuse values from another model.
-4. `get_credit_balance` before a billable test.
+## Current contracts
+
+Installed skill prose is workflow guidance, not the canonical API schema. Resolve current contracts in this order:
+
+1. Fetch https://docs.dev.runwayml.com/llms.txt.
+2. Fetch only the exact linked documentation subset relevant to the task.
+3. If that subset does not define the contract, read https://docs.dev.runwayml.com/api.md.
+4. If machine-readable detail is still needed, use https://docs.dev.runwayml.com/openapi.json.
+
+Do not invent endpoints, field names, or model constraints.
+
+## MCP policy
+
+Encourage connecting Dev MCP as the happy path for live account context and management. Connect `https://dev.runwayml.com/mcp` with Runway OAuth. Never put an API key in MCP config or automate browser OAuth.
+
+If the user declines or the connection fails, never block account-independent work. Continue with live docs, existing application config, or environment configuration. SDK and API integration code remain allowed. Stop only when the next requested step requires live account discovery, account or resource mutations, or billable verification.
+
+Never imitate an unavailable MCP account-management or resource-management tool with a REST call. Explain the MCP dependency only when it blocks the requested action.
+
+Call MCP tools only when the result affects the next step:
+
+- `whoami` when identity or access is uncertain.
+- `list_projects` when a live `projectId` must be selected or verified. Never guess one.
+- `list_models` when model access, selection, or current constraints matter.
+- `get_credit_balance` immediately before an approved billable verification.
 
 ## API key (SDK only)
 
-MCP uses OAuth. SDK calls use an organization-scoped API key from Developer Portal settings. The key is shown once: ask the user to store it as `RUNWAYML_API_SECRET` in a server-side env file or secret manager when the SDK call is imminent. Never expose it client-side, in chat, or in source control; ensure local env files are ignored. Confirm prepaid credits with `get_credit_balance` before billable verification.
+MCP uses OAuth. SDK calls use an organization-scoped API key from Developer Portal settings. Probe `RUNWAYML_API_SECRET` without printing it. If missing when a live SDK call is imminent, ask the user to store the key in a server-side environment file or secret manager. Never expose it client-side, in chat, or in source control; ensure local environment files are ignored.
 
 ## SDK requests
 
-1. Build one valid SDK request from the API docs linked by `llms.txt` and MCP `list_models` constraints.
+1. Build one valid SDK request from the current API docs and, when needed, MCP `list_models` constraints.
 2. Chain the wait helper directly from the create call: `await client.<operation>.create({...}).waitForTaskOutput()` in Node or `client.<operation>.create(...).wait_for_task_output()` in Python. Do not await `create()` before calling the helper.
 3. Catch the SDK's `TaskFailedError` and surface its task details. Submit once; do not add a manual polling loop or auto-resubmit.
 4. Use MCP `get_task` only to inspect or debug an existing task outside the application's SDK flow.
@@ -53,7 +75,7 @@ MCP uses OAuth. SDK calls use an organization-scoped API key from Developer Port
 - Auth/permission → stop; ask user to authenticate or pick accessible project.
 - Rate limit → honor retry interval.
 - `FAILED` task → report failure details; do not auto-resubmit.
-- Missing MCP tool → do not invent REST fallbacks for account management.
+- Missing MCP tool → continue account-independent implementation; stop only when live account state or management is required.
 
 ## Surface skills
 
