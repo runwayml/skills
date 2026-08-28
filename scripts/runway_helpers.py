@@ -306,7 +306,7 @@ def _assert_safe_media_url(url):
     Rejects non-http(s) schemes (e.g. file://, data:) and, when
     RUNWAY_ALLOWED_MEDIA_HOSTS is set, enforces a comma-separated host allowlist.
     Prefer uploading local files (which produce runway:// URIs) over passing
-    arbitrary external URLs — see the `rw-integrate-uploads` skill.
+    arbitrary external URLs.
     """
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https"):

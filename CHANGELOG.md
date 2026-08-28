@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+- **Breaking:** Removed legacy `rw-integrate-*`, setup, compatibility, and static API-reference skills. Use `runway-dev` with the relevant `runway-dev-*` surface skill for application integration.
+- **Direct API actions remain separate:** `rw-generate-*`, `use-runway-api`, and `rw-check-org-details` remain available.
+- **Durable guidance:** Moved server-boundary, API-key, uploads, Characters UI, and lifecycle guidance into the new Dev Platform skill set.
+
 ## 2.2.0
 
 - **Dev Platform integration:** Added `runway-dev` foundation plus focused skills for models, Model Routers, Characters, recipes, and workflows using Dev MCP for live context and the SDK for app integration.

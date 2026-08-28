@@ -1,6 +1,6 @@
 ---
 name: runway-dev-characters
-description: "Build, modify, debug, or verify Runway Characters integrations: inspect preset or custom avatars with MCP and manage live Sessions via SDK. Use with +runway-dev. UI says Characters; MCP/API use avatars. Not for avatar video generation endpoints or embed-only UI without server sessions."
+description: "Build, modify, debug, or verify Runway Characters integrations: inspect preset or custom avatars with MCP, manage live Sessions via SDK, and connect the application UI. Use with +runway-dev. UI says Characters; MCP/API use avatars. Not for avatar video generation endpoints."
 user-invocable: true
 ---
 
@@ -39,6 +39,17 @@ Keep a Characters integration and its live Session lifecycle correct across the 
 - `create_avatar` / `update_avatar` / `delete_avatar` — manage custom characters; confirm destructive changes before applying them.
 - `list_avatar_knowledge_documents` / `get_avatar_knowledge_document` — inspect attached knowledge.
 - `create_avatar_knowledge_document` / `update_avatar_knowledge_document` / `delete_avatar_knowledge_document` — manage domain knowledge when requested; confirm deletion first.
+
+## Application UI
+
+- Follow the current Avatar SDK README rather than copying component APIs from memory.
+- In React, use `@runwayml/avatars-react` with its stylesheet. Keep session creation and credential consumption on the server; browser code receives only one-time connection fields.
+- Use the packaged call component for standard UI or the SDK hooks for a custom experience. Handle microphone permission, connecting, active, error, and ended states.
+- A failed connection needs a new Session because consumed credentials cannot be reused.
+
+## Knowledge
+
+Use the MCP knowledge-document tools above for live state and CRUD. Inspect attached documents before updating them, keep content focused and structured, and do not delete knowledge without confirmation.
 
 ## Docs
 

@@ -22,9 +22,9 @@ Generate a video for each of these 5 product photos, 9:16 ratio for Instagram Re
 Create a voiceover for this ad script, then generate a sound effect of applause
 ```
 
-### 2. Integrate into your app
+### 2. Build Runway into your app
 
-Guide your agent through adding Runway capabilities to a server-side project: verify compatibility, set up credentials, write framework-specific routes, and handle edge cases like file uploads and task polling.
+Use Dev MCP for live project context and the official SDK for application code. The agent inspects the existing backend and UI, follows current docs, implements the relevant product surface, and verifies it safely.
 
 ```
 Set up Runway video generation in my Next.js app
@@ -86,41 +86,12 @@ Generate media assets directly — your agent runs the scripts, polls for comple
 | `rw-generate-image`  | Generate images: text-to-image with optional reference images                       |
 | `rw-generate-audio`  | Generate audio: TTS, sound effects, voice isolation, dubbing, voice conversion      |
 
-### Integration (add to your app)
-
-Add Runway generation to your server-side project with framework-specific code.
-
-| Skill                | Description                                                                         |
-| -------------------- | ----------------------------------------------------------------------------------- |
-| `rw-integrate-video` | Text-to-video, image-to-video, video-to-video, and character performance generation |
-| `rw-integrate-image` | Text-to-image generation with optional reference images via `@Tag` syntax           |
-| `rw-integrate-audio` | Text-to-speech, sound effects, voice isolation, dubbing, and speech-to-speech       |
-
-### Getting Started
-
-| Skill                    | Description                                                                                    |
-| ------------------------ | ---------------------------------------------------------------------------------------------- |
-| `rw-recipe-full-setup`   | End-to-end setup: compatibility check → API key → SDK install → integration code → test        |
-| `rw-check-compatibility` | Analyze your project to verify it can safely call the Runway API server-side                   |
-| `rw-setup-api-key`       | Guide through account creation, SDK installation, and environment variable configuration       |
-| `rw-check-org-details`   | Query your organization's rate limits, credit balance, usage tier, and daily generation counts |
-
-### Characters (Real-Time Avatars)
-
-| Skill                          | Description                                                                                |
-| ------------------------------ | ------------------------------------------------------------------------------------------ |
-| `rw-integrate-characters`      | Create GWM-1 avatars and set up server-side session management for real-time conversations |
-| `rw-integrate-character-embed` | Embed avatar call UI in React apps using `@runwayml/avatars-react`                         |
-| `rw-integrate-documents`       | Add knowledge base documents to avatars for domain-specific conversations                  |
-
 ### Utilities
 
-| Skill                    | Description                                                                                                           |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `use-runway-api`         | Call any public API endpoint to manage resources, trigger generations, and inspect state                               |
-| `rw-integrate-uploads`   | Upload local files to get `runway://` URIs for use as generation inputs                                               |
-| `rw-api-reference`       | Complete API reference — models, endpoints, costs, rate limits, and error codes                                       |
-| `rw-fetch-api-reference` | Fetch the latest API docs from [docs.dev.runwayml.com/api](https://docs.dev.runwayml.com/api/) as the source of truth |
+| Skill                  | Description                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------- |
+| `use-runway-api`       | Call public API endpoints directly to manage resources, trigger generations, and inspect state |
+| `rw-check-org-details` | Query organization rate limits, credit balance, usage tier, and generation counts              |
 
 ## Supported Models
 
@@ -178,16 +149,16 @@ Create a voiceover saying "Welcome to our store" and save it as welcome.mp3
 ### Integrate into a project
 
 ```
-Set up Runway video generation in my Next.js app
+Use Dev MCP to add Runway video generation to my existing Next.js app
 ```
 
 ```
-Add an endpoint to generate videos from text prompts
+Add a Runway Character with domain knowledge to this support app
 ```
 
 ## Supported Frameworks
 
-The integration skills generate framework-specific code for:
+The Dev Platform skills inspect and integrate with server-side stacks including:
 
 - **Node.js** — Express, Fastify, Next.js (App Router & Pages Router), Remix, SvelteKit, Nuxt, Astro
 - **Python** — FastAPI, Flask, Django
