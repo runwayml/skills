@@ -35,13 +35,13 @@ Do not invent endpoints, field names, or model constraints.
 
 ## MCP policy
 
-Prefer connecting Dev MCP at the start so live account context and management tools are available. Encourage the user to connect `https://dev.runwayml.com/mcp` with Runway OAuth. Never put an API key in MCP config or automate browser OAuth.
+Encourage connecting Dev MCP as the happy path for live account context and management. Connect `https://dev.runwayml.com/mcp` with Runway OAuth. Never put an API key in MCP config or automate browser OAuth.
 
-If the user declines or cannot connect MCP, continue account-independent implementation with live docs, existing application config, or environment configuration. SDK and API integration code remain allowed. Require MCP only when live account discovery, account or resource mutations, or billable verification blocks the requested work.
+If the user declines or the connection fails, never block account-independent work. Continue with live docs, existing application config, or environment configuration. SDK and API integration code remain allowed. Stop only when the next requested step requires live account discovery, account or resource mutations, or billable verification.
 
 Never imitate an unavailable MCP account-management or resource-management tool with a REST call. Explain the MCP dependency only when it blocks the requested action.
 
-Call tools only when the result affects the next step:
+Call MCP tools only when the result affects the next step:
 
 - `whoami` when identity or access is uncertain.
 - `list_projects` when a live `projectId` must be selected or verified. Never guess one.
