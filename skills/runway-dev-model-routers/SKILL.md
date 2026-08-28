@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Model Routers
 
-> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, read `llms.txt`, and keep `RUNWAYML_API_SECRET` server-side.
+> **Companion:** Use `+runway-dev` for shared guidance when available. When this skill is installed alone, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read current docs. Connect Dev MCP only when live account state or management is required.
 
 ## Goal
 
