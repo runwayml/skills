@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Recipes
 
-> **Companion:** Use `+runway-dev` for shared guidance when available. When this skill is installed alone, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read the Recipes docs linked by `llms.txt`. Connect Dev MCP only when live account state or management is required.
+> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read the Recipes docs linked by `llms.txt`. Encourage connecting Dev MCP for live project context and verification. If the user declines or cannot connect, continue integration from current docs.
 
 ## Goal
 

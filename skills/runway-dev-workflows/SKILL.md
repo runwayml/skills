@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Workflows
 
-> **Companion:** Use `+runway-dev` for shared guidance when available. When this skill is installed alone, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read current docs. Connect Dev MCP only when live account state or management is required.
+> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read current docs. Encourage connecting Dev MCP for project-specific setup guidance. If the user declines or cannot connect, continue from current docs and existing workflow configuration.
 
 ## Goal
 

@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Characters
 
-> **Companion:** Use `+runway-dev` for shared guidance when available. When this skill is installed alone, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read the Characters docs linked by `llms.txt`. Connect Dev MCP only when live account state or management is required.
+> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read the Characters docs linked by `llms.txt`. Encourage connecting Dev MCP to inspect or manage characters and knowledge documents. If the user declines or cannot connect, continue integration from current docs and an existing character ID.
 
 ## Goal
 
