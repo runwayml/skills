@@ -12,9 +12,13 @@ user-invocable: true
 
 Keep the connection between Runway app workflows and callable API endpoints correct.
 
+## MCP tools
+
+- `get_workflows_setup_guide` — get current setup, connections, help, and API reference links.
+
 ## Workflow
 
-1. Call MCP `get_workflows_setup_guide` — returns markdown with connections URL, help article, and API reference links.
+1. Call `get_workflows_setup_guide`.
 2. Follow that guide; do not invent workflow publishing steps.
 3. Inspect any existing integration, then implement, modify, debug, or verify its server-side call per returned API docs.
 

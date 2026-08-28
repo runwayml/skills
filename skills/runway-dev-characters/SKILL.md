@@ -10,19 +10,19 @@ user-invocable: true
 
 ## Goal
 
-Keep a Characters integration and its live Session lifecycle correct. Verify changes end-to-end when safe.
+Keep a Characters integration and its live Session lifecycle correct across the application's backend and UI. Verify changes end-to-end when safe.
 
 ## Terminology
 
 - Dev Portal **Characters** = API **avatars** (`list_avatars`, `get_avatar`).
 - **Character ID** = avatar UUID.
 - **live Session** = realtime conversation via `POST /v1/realtime_sessions`.
-- Default preset when none specified: `influencer` (`{ type: 'runway-preset', presetId: 'influencer' }`).
+- Fallback preset when the user wants a default: `influencer` (`{ type: 'runway-preset', presetId: 'influencer' }`).
 
 ## No character specified
 
-1. Do not ask preset vs create vs video vs embed unless user already specified another path.
-2. Start with preset `influencer`; follow Characters session docs from `llms.txt`.
+1. Ask whether the user wants an existing character, a preset, or a custom character from an image. Do not branch into avatar-video generation unless requested.
+2. For a custom character, ask the user to supply the image and use `create_avatar` according to its live MCP tool schema. If the user wants a default instead, use preset `influencer`.
 3. Implement, modify, debug, or verify the Session flow based on the user's goal. For end-to-end verification, create one session, poll for `sessionKey`, and confirm lifecycle.
 
 ## Character specified
@@ -31,10 +31,12 @@ Keep a Characters integration and its live Session lifecycle correct. Verify cha
 2. Use that character id; do not substitute another avatar.
 3. If status is `PROCESSING`, poll until `READY` or stop on `FAILED`.
 
-## Optional MCP resources
+## MCP tools
 
 - `list_avatars` / `get_avatar` — inspect custom avatars in project.
-- Knowledge docs: `list_avatar_knowledge_documents`, create/update via MCP write tools when user wants domain knowledge.
+- `create_avatar` / `update_avatar` / `delete_avatar` — manage custom characters; confirm destructive changes before applying them.
+- `list_avatar_knowledge_documents` / `get_avatar_knowledge_document` — inspect attached knowledge.
+- `create_avatar_knowledge_document` / `update_avatar_knowledge_document` / `delete_avatar_knowledge_document` — manage domain knowledge when requested; confirm deletion first.
 
 For React embed UI, also see `+rw-integrate-character-embed`. For server-side session management patterns, `+rw-integrate-characters`.
 

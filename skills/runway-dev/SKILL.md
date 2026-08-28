@@ -1,12 +1,12 @@
 ---
 name: runway-dev
-description: "Foundation for building, modifying, debugging, or verifying Runway Dev Platform integrations: connect Dev MCP, use llms.txt, resolve project context, submit safely, poll tasks, and handle errors. Load with relevant runway-dev-* surface skills. Not for direct media generation scripts or REST CLI shortcuts."
+description: "Foundation for building, modifying, debugging, or verifying Runway Dev Platform integrations in an application: connect Dev MCP, use llms.txt to find current resources, resolve project context, use SDK wait helpers, and handle errors. Load with relevant runway-dev-* surface skills. Not for direct media generation scripts or REST CLI shortcuts."
 user-invocable: true
 ---
 
 # Runway Dev Platform
 
-Durable workflow for working with Runway in a server-side project. MCP supplies live account state; the SDK submits billable work; `llms.txt` is the API contract.
+Durable workflow for integrating Runway Dev products into an application. MCP supplies live account state, the SDK is the application integration path, and `llms.txt` points to current setup guides and API references.
 
 > **When to use:** Building, modifying, debugging, or verifying a Runway integration, including work started from Dev Portal.
 >
@@ -16,9 +16,9 @@ Durable workflow for working with Runway in a server-side project. MCP supplies 
 
 1. **Connect Dev MCP** if tools are missing. Server: `https://dev.runwayml.com/mcp`. OAuth via Runway developer account — never put an API key in MCP config. Finish login in the user's browser; do not automate OAuth. Docs: https://docs.dev.runwayml.com/guides/mcp
 2. **Fetch** https://docs.dev.runwayml.com/llms.txt and follow linked docs — do not invent endpoints or field names.
-3. **Inspect the workspace.** Existing project → find server-side integration point; ask where to wire Runway if unclear. Empty project → ask what to build; offer a small web app with visible inputs and output.
+3. **Inspect the workspace.** Existing project → find its backend boundary and user-facing integration point; ask where to wire Runway if unclear. Empty project → ask what to build; offer a small web app with visible inputs and output.
 
-## Establish context
+## MCP context
 
 1. `whoami` — verify identity.
 2. `list_projects` — pick project; never guess a `projectId`.
@@ -29,12 +29,12 @@ Durable workflow for working with Runway in a server-side project. MCP supplies 
 
 MCP uses OAuth. Generation SDK calls use `RUNWAYML_API_SECRET` in server-side env or dotenv — never client-side, never in chat, never hard-coded. Ask the user to add it when the SDK call is imminent.
 
-## Submit and poll
+## SDK requests
 
-1. Build one valid SDK request from `llms.txt` and MCP `list_models` constraints.
-2. Submit once; retain the task id.
-3. Poll with `get_task` until `SUCCEEDED` or `FAILED`. Use increasing delays; do not busy-loop or resubmit while pending.
-4. Save outputs if the app needs them after signed URLs expire (~24–48h).
+1. Build one valid SDK request from the API docs linked by `llms.txt` and MCP `list_models` constraints.
+2. For task-based SDK calls, use `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python. Submit once; do not add a manual polling loop when the SDK helper fits.
+3. Use MCP `get_task` only to inspect or debug an existing task outside the application's SDK flow.
+4. Wire successful output into the application's intended UI or consumer. Persist outputs if the app needs them after signed URLs expire (~24–48h).
 
 ## Terminology
 

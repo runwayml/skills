@@ -1,6 +1,6 @@
 ---
 name: runway-dev-models
-description: "Build, modify, debug, or verify Runway model generation in a server-side app: discover accessible models and constraints with MCP, implement SDK calls, and inspect tasks. Use with +runway-dev. Not for Model Routers, Characters, recipes, or agent-side generate scripts."
+description: "Build, modify, debug, or verify Runway model generation in an application: discover accessible models and constraints with MCP, implement SDK calls, and wire inputs and outputs into the product UI. Use with +runway-dev. Not for Model Routers, Characters, recipes, or agent-side generate scripts."
 user-invocable: true
 ---
 
@@ -10,23 +10,29 @@ user-invocable: true
 
 ## Goal
 
-Keep a model endpoint integration (`/v1/text_to_video`, `/v1/text_to_image`, etc.) correct for the user's server-side project. Verify changes with one working SDK call when safe.
+Help the user choose and integrate a model endpoint (`/v1/text_to_video`, `/v1/text_to_image`, etc.) across their application, including its backend call and existing UI. Verify changes with one working SDK call when safe.
+
+## MCP tools
+
+- `list_models` — discover models the selected project can call and read each model's `inputConstraints`.
+- `get_credit_balance` — check budget before billable verification.
+- `get_task` — inspect or debug an existing task, not replace SDK wait helpers in application code.
 
 ## Workflow
 
-1. Confirm the target endpoint from provided context or ask the user (video vs image vs audio). Inspect any existing integration before changing it.
-2. `list_models` with `{ projectId, endpoint }`. Pick a returned model; read `inputConstraints` for ratio, duration, and required fields.
-3. If context pins a model id, prefer it when listed and accessible.
-4. Check `RUNWAYML_API_SECRET` only when writing the SDK call.
-5. Implement or update the server-side route/handler per `llms.txt` for that endpoint.
-6. When verification is appropriate, submit one test generation and poll with `get_task` until terminal status.
-7. Present result; offer to persist output locally before signed URL expiry.
+1. Inspect the existing application. Confirm the user experience, target modality, and where generation inputs and outputs belong.
+2. Call `list_models` with `{ projectId, endpoint }`. Pick a returned model; if context pins a model id, prefer it when accessible.
+3. Follow the endpoint docs linked by `llms.txt`; do not infer request fields from another model.
+4. Keep `RUNWAYML_API_SECRET` behind the application's server boundary.
+5. Implement or update the SDK call using `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python.
+6. If the application has a UI, wire its controls to the backend and render loading, error, and generated-output states.
+7. When verification is appropriate, submit one test generation. Present the result and offer to persist output before its signed URL expires.
 
 ## Do not
 
 - Guess model ids, ratios, or durations from memory or other models.
 - Put API keys in frontend bundles.
-- Skip polling or resubmit on transient read errors.
+- Add manual polling when the SDK wait helper fits, or resubmit on transient read errors.
 - Use `rw-generate-*` skills when the task is agent-direct generation, not app integration.
 
 ## Docs
