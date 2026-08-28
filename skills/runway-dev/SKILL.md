@@ -10,13 +10,14 @@ Durable workflow for integrating Runway Dev products into an application. MCP su
 
 > **When to use:** Building, modifying, debugging, or verifying a Runway integration, including work started from Dev Portal.
 >
-> **Do not use for:** one-off media generation from the agent (`rw-generate-*` skills), direct REST CLI actions (`+use-runway-api`), or writing framework-specific integration code without Dev MCP (`rw-integrate-*` skills).
+> **Do not use for:** one-off media generation from the agent or direct REST CLI actions.
 
 ## Before you start
 
 1. **Connect Dev MCP** if tools are missing. Server: `https://dev.runwayml.com/mcp`. OAuth via Runway developer account — never put an API key in MCP config. Finish login in the user's browser; do not automate OAuth. Docs: https://docs.dev.runwayml.com/guides/mcp
 2. **Fetch** https://docs.dev.runwayml.com/llms.txt and follow linked docs — do not invent endpoints or field names.
 3. **Inspect the workspace.** Existing project → find its backend boundary and user-facing integration point; ask where to wire Runway if unclear. Empty project → ask what to build; offer a small web app with visible inputs and output.
+4. **Use the official SDK.** Install `@runwayml/sdk` for Node or `runwayml` for Python if the project does not already have it.
 
 ## MCP context
 
@@ -32,9 +33,10 @@ MCP uses OAuth. Generation SDK calls use `RUNWAYML_API_SECRET` in server-side en
 ## SDK requests
 
 1. Build one valid SDK request from the API docs linked by `llms.txt` and MCP `list_models` constraints.
-2. For task-based SDK calls, use `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python. Submit once; do not add a manual polling loop when the SDK helper fits.
-3. Use MCP `get_task` only to inspect or debug an existing task outside the application's SDK flow.
-4. Wire successful output into the application's intended UI or consumer. Persist outputs if the app needs them after signed URLs expire (~24–48h).
+2. Chain the wait helper directly from the create call: `await client.<operation>.create({...}).waitForTaskOutput()` in Node or `client.<operation>.create(...).wait_for_task_output()` in Python. Do not await `create()` before calling the helper.
+3. Catch the SDK's `TaskFailedError` and surface its task details. Submit once; do not add a manual polling loop or auto-resubmit.
+4. Use MCP `get_task` only to inspect or debug an existing task outside the application's SDK flow.
+5. Wire successful output into the application's intended UI or consumer. Persist outputs if the app needs them after signed URLs expire (~24–48h).
 
 ## Terminology
 
@@ -63,4 +65,4 @@ MCP uses OAuth. Generation SDK calls use `RUNWAYML_API_SECRET` in server-side en
 | `+runway-dev-recipes` | Recipe pipelines |
 | `+runway-dev-workflows` | Runway app workflows → API endpoints |
 
-Load `+runway-dev` first, then the relevant surface skill or skills. Usually one surface skill matches the user's goal; load more when the task crosses surfaces.
+Use `+runway-dev` with the relevant surface skill or skills when both are installed. Surface skills repeat their minimum setup so they remain useful when installed alone. Usually one surface matches the user's goal; load more when the task crosses surfaces.

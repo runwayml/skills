@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Models
 
-> **Prerequisite:** Load and follow `+runway-dev` first.
+> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, read `llms.txt`, and keep `RUNWAYML_API_SECRET` server-side.
 
 ## Goal
 
@@ -24,7 +24,7 @@ Help the user choose and integrate a model endpoint (`/v1/text_to_video`, `/v1/t
 2. Call `list_models` with `{ projectId, endpoint }`. Pick a returned model; if context pins a model id, prefer it when accessible.
 3. Follow the endpoint docs linked by `llms.txt`; do not infer request fields from another model.
 4. Keep `RUNWAYML_API_SECRET` behind the application's server boundary.
-5. Implement or update the SDK call using `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python.
+5. Implement or update the SDK call by chaining `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python directly from the create call.
 6. If the application has a UI, wire its controls to the backend and render loading, error, and generated-output states.
 7. When verification is appropriate, submit one test generation. Present the result and offer to persist output before its signed URL expires.
 
@@ -33,7 +33,6 @@ Help the user choose and integrate a model endpoint (`/v1/text_to_video`, `/v1/t
 - Guess model ids, ratios, or durations from memory or other models.
 - Put API keys in frontend bundles.
 - Add manual polling when the SDK wait helper fits, or resubmit on transient read errors.
-- Use `rw-generate-*` skills when the task is agent-direct generation, not app integration.
 
 ## Docs
 

@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Recipes
 
-> **Prerequisite:** Load and follow `+runway-dev` first.
+> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, read the Recipes docs from `llms.txt`, and keep `RUNWAYML_API_SECRET` server-side.
 
 ## Goal
 
@@ -20,11 +20,12 @@ Help the user choose a relevant recipe, then build or maintain its application i
 ## Workflow
 
 1. Understand the user's desired result. If no recipe is pinned or already integrated, follow `llms.txt` to compare available recipes and recommend the closest fit.
-2. Confirm the recipe id, then follow its linked docs for the input schema and `client.recipes.{method}` mapping.
-3. Check `RUNWAYML_API_SECRET` when implementing the SDK call.
-4. Implement or update the SDK call behind the application's server boundary using its wait helper.
-5. If the application has a UI, wire its inputs and output, including loading and error states.
-6. When verification is appropriate, submit once and present the result.
+2. Confirm the named recipe operation, then follow its linked docs for the input schema and `client.recipes.{method}` mapping.
+3. Pin a documented dated `version` for stable behavior. Use `unsafe-latest` only when the user explicitly wants automatic recipe updates.
+4. Check `RUNWAYML_API_SECRET` when implementing the SDK call.
+5. Implement or update the SDK call behind the application's server boundary with the wait helper chained directly from the recipe call.
+6. If the application has a UI, wire its inputs and output, including loading and error states.
+7. When verification is appropriate, submit once and present the result.
 
 ## Docs
 

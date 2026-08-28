@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Model Routers
 
-> **Prerequisite:** Load and follow `+runway-dev` first.
+> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, read `llms.txt`, and keep `RUNWAYML_API_SECRET` server-side.
 
 ## Goal
 
@@ -14,7 +14,7 @@ Keep a Model Router and its application integration correct. Verify changes with
 
 ## MCP tools
 
-- `list_model_routers` / `get_model_router` — inspect existing router configuration.
+- `list_model_routers` / `get_model_router` — find a router by `configId`, then inspect it using the returned record UUID.
 - `list_models` — inspect eligible models and capabilities.
 - `create_model_router` / `update_model_router` / `delete_model_router` — manage routers after user approval; updates replace the full configuration.
 - `get_credit_balance` — check budget before proposing credit ceilings or testing.
@@ -26,14 +26,16 @@ Keep a Model Router and its application integration correct. Verify changes with
 2. `get_credit_balance` — understand budget before proposing credit ceilings.
 3. Propose: name, immutable `configId` slug, description, routing preference, model-list policy, capacity fallback, optional credit caps. **Wait for user approval** unless they supplied all fields.
 4. `create_model_router`, then `update_model_router` for settings if needed.
-5. When verification is appropriate, make one routed SDK call with the SDK wait helper, then use `get_task_routing` to explain which model ran.
+5. Validate the intended payload with HTTP `dryRun: true` before a billable generation; the SDK does not currently support dry runs.
+6. When billable verification is appropriate, make one routed SDK call with the wait helper chained directly from `create()`, then use `get_task_routing` to explain which model ran.
 
 ## Existing router
 
-1. `get_model_router` for current config and slug.
+1. Use `list_model_routers` to resolve the application's `configId` slug to a router record, then call `get_model_router` with its UUID.
 2. Clarify integration goal (wire into app vs test call).
-3. Implement the routed generate call behind the application's server boundary per https://docs.dev.runwayml.com/model-routers.md
-4. Implement, modify, debug, or verify the routed call with that `configId`, based on the user's goal.
+3. Implement the routed generate call behind the application's server boundary per https://docs.dev.runwayml.com/model-routers.md, chaining the SDK wait helper directly from `create()`.
+4. Validate the same payload with HTTP `dryRun: true` before any billable verification.
+5. After an approved live test, use `get_task_routing` to confirm which model ran.
 
 ## Terminology
 

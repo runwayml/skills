@@ -6,7 +6,7 @@ user-invocable: true
 
 # Runway Dev — Characters
 
-> **Prerequisite:** Load and follow `+runway-dev` first.
+> **Companion:** Use `+runway-dev` for shared setup when available. Otherwise connect Dev MCP, select a project with `list_projects`, read the Characters docs from `llms.txt`, and keep `RUNWAYML_API_SECRET` server-side.
 
 ## Goal
 
@@ -23,7 +23,9 @@ Keep a Characters integration and its live Session lifecycle correct across the 
 
 1. Ask whether the user wants an existing character, a preset, or a custom character from an image. Do not branch into avatar-video generation unless requested.
 2. For a custom character, ask the user to supply the image and use `create_avatar` according to its live MCP tool schema. If the user wants a default instead, use preset `influencer`.
-3. Implement, modify, debug, or verify the Session flow based on the user's goal. For end-to-end verification, create one session, poll for `sessionKey`, and confirm lifecycle.
+3. Implement the Session lifecycle behind the server boundary: create once, poll `NOT_READY` until `READY`, consume connection credentials once, and return only the connection fields the client needs.
+4. Connect the application's call UI with the current Avatar SDK, then end or cancel the Session during teardown so it does not keep running.
+5. For end-to-end verification, connect one Session successfully and cleanly end it.
 
 ## Character specified
 
@@ -38,9 +40,8 @@ Keep a Characters integration and its live Session lifecycle correct across the 
 - `list_avatar_knowledge_documents` / `get_avatar_knowledge_document` — inspect attached knowledge.
 - `create_avatar_knowledge_document` / `update_avatar_knowledge_document` / `delete_avatar_knowledge_document` — manage domain knowledge when requested; confirm deletion first.
 
-For React embed UI, also see `+rw-integrate-character-embed`. For server-side session management patterns, `+rw-integrate-characters`.
-
 ## Docs
 
 - https://docs.dev.runwayml.com/llms.txt
+- Characters: https://docs.dev.runwayml.com/_llms-txt/characters.txt
 - Avatar SDK: https://github.com/runwayml/avatar-sdk-react
