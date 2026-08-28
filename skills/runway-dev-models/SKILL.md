@@ -28,6 +28,13 @@ Help the user choose and integrate a model endpoint (`/v1/text_to_video`, `/v1/t
 6. If the application has a UI, wire its controls to the backend and render loading, error, and generated-output states.
 7. When verification is appropriate, submit one test generation. Present the result and offer to persist output before its signed URL expires.
 
+## Input media
+
+- Follow the current input docs linked by `llms.txt`: use a public HTTPS URL, a small data URI, or an ephemeral upload.
+- Send browser-selected files to the application's server, then use the SDK upload helper and pass its `runway://` URI to generation. Local filesystem paths cannot be API inputs.
+- Do not accept arbitrary remote URLs from clients. Prefer uploads or allowlisted origins.
+- Ephemeral inputs and generated output URLs expire; persist anything the application must retain.
+
 ## Do not
 
 - Guess model ids, ratios, or durations from memory or other models.

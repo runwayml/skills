@@ -16,7 +16,7 @@ Durable workflow for integrating Runway Dev products into an application. MCP su
 
 1. **Connect Dev MCP** if tools are missing. Server: `https://dev.runwayml.com/mcp`. OAuth via Runway developer account — never put an API key in MCP config. Finish login in the user's browser; do not automate OAuth. Docs: https://docs.dev.runwayml.com/guides/mcp
 2. **Fetch** https://docs.dev.runwayml.com/llms.txt and follow linked docs — do not invent endpoints or field names.
-3. **Inspect the workspace.** Existing project → find its backend boundary and user-facing integration point; ask where to wire Runway if unclear. Empty project → ask what to build; offer a small web app with visible inputs and output.
+3. **Inspect the workspace.** Existing project → find its backend boundary and user-facing integration point; ask where to wire Runway if unclear. Frontend-only project → add a server route or function before integrating. Empty project → ask what to build; offer a small web app with visible inputs and output.
 4. **Use the official SDK.** Install `@runwayml/sdk` for Node or `runwayml` for Python if the project does not already have it.
 
 ## MCP context
@@ -28,7 +28,7 @@ Durable workflow for integrating Runway Dev products into an application. MCP su
 
 ## API key (SDK only)
 
-MCP uses OAuth. Generation SDK calls use `RUNWAYML_API_SECRET` in server-side env or dotenv — never client-side, never in chat, never hard-coded. Ask the user to add it when the SDK call is imminent.
+MCP uses OAuth. SDK calls use an organization-scoped API key from Developer Portal settings. The key is shown once: ask the user to store it as `RUNWAYML_API_SECRET` in a server-side env file or secret manager when the SDK call is imminent. Never expose it client-side, in chat, or in source control; ensure local env files are ignored. Confirm prepaid credits with `get_credit_balance` before billable verification.
 
 ## SDK requests
 
