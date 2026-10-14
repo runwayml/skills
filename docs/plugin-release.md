@@ -30,15 +30,15 @@ An additional validation pass on October 14 checked the corrected Recipe SDK gui
 | Check | Observed result | Remaining validation |
 | --- | --- | --- |
 | Updated Codex and Claude installation | Seven current Dev skills, one MCP connection; temporary installs removed | Authenticated tool calls and reconnect behavior |
-| Production unauthenticated initialization | 401 with the Runway protected-resource metadata challenge | Successful initialization after OAuth |
+| Production unauthenticated initialization | 401 with the Runway protected-resource metadata challenge | Incomplete-account recovery through each host |
 | Production invalid bearer token | 401 with an OAuth recovery challenge | Token refresh and expiration through each host |
-| Production OAuth discovery | Resource and authorization-server metadata return 200; authorization server advertises CIMD and PKCE S256 | Browser consent and token exchange |
-| Native Codex OAuth | Client reached the browser authorization step using CIMD | User completes consent; no codes or secrets need to be pasted |
+| Production OAuth discovery | Resource and authorization-server metadata return 200; authorization server advertises CIMD and PKCE S256 | OAuth through the other hosts |
+| Native Codex OAuth and account access | Native CIMD authorization, callback, and token exchange completed; `whoami` and `list_projects` succeeded using a temporary server URL override matching the plugin endpoint | Bundled-plugin OAuth, token refresh, and incomplete-account recovery |
 | Claude agent runtime | Client rejected the request because its Claude OAuth token was expired | Reauthenticate Claude before testing the Runway connection |
 | Cursor CLI local plugin loading | `--plugin-dir` exposes Runway Dev MCP as requiring authentication | Cursor client login, Runway consent, skill activation and tool calls |
 | Replit skill distribution | Skills CLI installed all seven current skills into an isolated Replit project's `.agents/skills`; install-link payload matches the HTTPS MCP endpoint | Replit Project Editor authorization and tool calls |
 
-These results establish packaging, distribution, and unauthenticated protocol behavior. They do not establish authenticated account access, native-host handling of the incomplete-account 403, model behavior against the review cases, or marketplace acceptance. Complete browser sign-in and consent in the user's normal browser; do not collect passwords, callback URLs, OAuth codes, or application API keys in chat.
+These results establish packaging, distribution, unauthenticated protocol behavior, and read-only authenticated account access through the native Codex client. The authenticated check used a temporary MCP configuration, so bundled-plugin authentication remains a separate check. Native-host handling of the incomplete-account 403, the full dedicated-account review cases, and marketplace acceptance remain unverified. Complete browser sign-in and consent in the user's normal browser; do not collect passwords, callback URLs, OAuth codes, or application API keys in chat. No account changes or billable generations were performed, and no account identifiers or credentials are included in this record.
 
 ## Host distribution
 
