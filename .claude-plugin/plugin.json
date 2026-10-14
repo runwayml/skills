@@ -1,23 +1,25 @@
 {
   "name": "runway-api",
-  "description": "Build Runway models, Model Routers, Characters, recipes, and workflows into applications with Dev MCP and the official SDK, or generate media directly.",
-  "version": "3.0.0",
+  "version": "4.0.0",
+  "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills.",
   "author": {
     "name": "Runway",
-    "email": "ops@runwayml.com"
+    "url": "https://runway.com"
   },
+  "homepage": "https://dev.runway.com/agents",
+  "repository": "https://github.com/runwayml/skills",
+  "license": "MIT",
   "keywords": [
     "runway",
-    "runwayml",
-    "video-generation",
-    "image-generation",
-    "audio-generation",
-    "ai-api",
-    "seedance2",
-    "gen4",
-    "veo3",
-    "media-generation",
-    "batch",
-    "runway-api"
-  ]
+    "runway-dev",
+    "api",
+    "sdk",
+    "mcp",
+    "video",
+    "image",
+    "audio",
+    "characters",
+    "model-router"
+  ],
+  "displayName": "Runway Dev"
 }

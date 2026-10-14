@@ -1,0 +1,51 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "runway-api",
+  "version": "4.0.0",
+  "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills.",
+  "author": {
+    "name": "Runway",
+    "url": "https://runway.com"
+  },
+  "homepage": "https://dev.runway.com/agents",
+  "repository": "https://github.com/runwayml/skills",
+  "license": "MIT",
+  "keywords": [
+    "runway",
+    "runway-dev",
+    "api",
+    "sdk",
+    "mcp",
+    "video",
+    "image",
+    "audio",
+    "characters",
+    "model-router"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Runway Dev",
+        "shortDescription": "AI video, image & audio API",
+        "longDescription": "Runway Dev helps coding agents build and maintain applications using Runway's API. It bundles browser-authenticated Dev MCP access with skills for setup, official SDK integration, models, Model Routers, real-time Characters, Recipes, and published Workflows. MCP provides live account context, model prices and constraints, credit balances, task diagnostics, and resource management. Developers' applications make generation requests through the Runway API with their own server-side API key. A Runway Dev account is required for account tools; public documentation and integration guidance remain usable before connecting. The MCP does not generate media or create application API keys.",
+        "developerName": "Runway",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://dev.runway.com/agents",
+        "supportURL": "https://help.runwayml.com/hc/en-us",
+        "privacyPolicyURL": "https://runway.com/privacy-policy",
+        "termsOfServiceURL": "https://runway.com/terms-of-use",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/logo.png",
+        "defaultPrompt": [
+          "Add AI video generation to this app with the Runway API",
+          "Help me connect my Runway Dev account and choose a project",
+          "Why did my last Runway task fail, and how do I fix it?"
+        ]
+      }
+    }
+  }
+}
