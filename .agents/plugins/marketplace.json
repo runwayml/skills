@@ -1,0 +1,20 @@
+{
+  "name": "runway-dev",
+  "interface": {
+    "displayName": "Runway Dev"
+  },
+  "plugins": [
+    {
+      "name": "runway-api",
+      "source": {
+        "source": "local",
+        "path": "./plugins/runway-api"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

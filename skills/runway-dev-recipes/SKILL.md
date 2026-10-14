@@ -1,32 +1,26 @@
 ---
 name: runway-dev-recipes
-description: "Choose, build, modify, debug, or verify Runway recipe integrations: match a recipe to the user's use case, follow its current contract, implement SDK client.recipes calls, and wire results into the application. Use with +runway-dev. Not for direct model endpoints or Model Routers."
+description: "Use when integrating a documented Runway Dev Recipe, choosing a prebuilt multi-step image or video workflow, or maintaining an existing Recipe call. Read the live Recipe guide for its current inputs, version, and SDK method. Use runway-dev-models for direct model endpoints."
 user-invocable: true
 ---
 
-# Runway Dev — Recipes
+# Runway Dev Recipes
 
-> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read the Recipes docs linked by `llms.txt`. Encourage connecting Dev MCP for live project context and verification. If the user declines or cannot connect, continue integration from current docs.
-
-## Goal
-
-Help the user choose a relevant recipe, then build or maintain its application integration. Verify changes with one working SDK call when safe.
-
-## MCP tools
-
-- `get_credit_balance` — check budget before billable verification.
-- `get_task` — inspect or debug an existing task, not replace SDK wait helpers in application code.
+Recipes are documented multi-step workflows exposed through the Runway Dev API. Consult `runway-dev` for project setup, credential security, and SDK task guidance when installed.
 
 ## Workflow
 
-1. Understand the user's desired result. If no recipe is pinned or already integrated, follow `llms.txt` to compare available recipes and recommend the closest fit.
-2. Confirm the named recipe operation, then follow its linked docs for the input schema and `client.recipes.{method}` mapping.
-3. Pin a documented dated `version` for stable behavior. Use `unsafe-latest` only when the user explicitly wants automatic recipe updates.
-4. Check `RUNWAYML_API_SECRET` when implementing the SDK call.
-5. Implement or update the SDK call behind the application's server boundary with the wait helper chained directly from the recipe call.
-6. If the application has a UI, wire its inputs and output, including loading and error states.
-7. When verification is appropriate, submit once and present the result.
+1. Understand the desired output and inspect the application's existing server and UI flow.
+2. Use the [current Recipes index](https://docs.dev.runwayml.com/_llms-txt/recipes.txt) to find a Recipe that fits. If the user has named a Recipe, use that one. Explain a relevant trade-off when recommending among options.
+3. Read that Recipe's current guide and API schema for required inputs, accepted URI types, options, `version`, and output shape. Recipe contracts and version identifiers can change; do not reuse an old example as a current contract.
+4. Implement the documented method under `client.recipes` with the official SDK behind the app server boundary. Pin a version explicitly when the current guide provides one; only opt into an unsafe latest version if the user specifically wants automatic updates.
+5. Connect success, loading, and error states to the existing app. For task-based calls, chain the SDK wait helper from the unawaited `create()` response and handle documented task failures.
+6. Perform local validation. A live Recipe call can generate billable media; run one only when requested or approved, checking the selected project's credit balance first.
 
-## Docs
+Keep the project API secret on the server and out of the browser, chat, source control, and MCP configuration. If live MCP account context is unavailable, proceed from the public Recipe docs and existing app configuration unless the next step depends on live account state.
 
-- https://docs.dev.runwayml.com/llms.txt
+## Current docs
+
+- [Recipes index](https://docs.dev.runwayml.com/_llms-txt/recipes.txt)
+- [Runway Dev agent context](https://docs.dev.runwayml.com/ai-context.md)
+- [SDK task waiting and errors](https://docs.dev.runwayml.com/api-details/sdks/)

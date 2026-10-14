@@ -1,0 +1,32 @@
+name: Verify Runway Dev plugin
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Lint packaging tools
+        run: |
+          ruff check scripts/build_dev_plugin.py scripts/validate_dev_plugin.py tests/test_dev_plugin.py
+          ruff format --check scripts/build_dev_plugin.py scripts/validate_dev_plugin.py tests/test_dev_plugin.py
+      - run: python -m unittest discover -s tests
+      - run: python scripts/build_dev_plugin.py --check --zip
+      - name: Fetch versioned portable schemas
+        run: |
+          mkdir -p .build/schemas
+          curl --fail --silent --show-error --max-time 30 https://agent-plugins.org/schemas/1.0.0/plugin.schema.json -o .build/schemas/plugin.schema.json
+          curl --fail --silent --show-error --max-time 30 https://agent-plugins.org/schemas/1.0.0/mcp.schema.json -o .build/schemas/mcp.schema.json
+      - run: python scripts/validate_dev_plugin.py .build/runway-api-4.0.0.zip

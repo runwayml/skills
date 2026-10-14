@@ -1,90 +1,65 @@
 ---
 name: runway-dev
-description: "Foundation for building, modifying, debugging, or verifying Runway Dev Platform integrations in an application: connect Dev MCP, use llms.txt to find current resources, resolve project context, use SDK wait helpers, and handle errors. Load with relevant runway-dev-* surface skills. Not for direct media generation scripts or REST CLI shortcuts."
+description: "Use whenever you build, modify, or debug an application integration with Runway Dev: inspect the app, connect Dev MCP when useful, find current API contracts, integrate through the official SDK, and keep credentials server-side. Load the matching surface skill for models, Model Routers, Characters, Recipes, or published Workflows."
 user-invocable: true
 ---
 
-# Runway Dev Platform
+# Runway Dev integrations
 
-Workflow for integrating Runway Dev products into an application. Use MCP for live account state and management, the SDK for application code, and current docs for API contracts.
+Use Dev MCP for live account context and management when connected. Use the official SDK and current Runway Dev docs for application code. MCP access and an application API key serve different purposes: MCP authenticates the agent with browser OAuth; the SDK uses a project API key on the application server.
 
-> **When to use:** Building, modifying, debugging, or verifying a Runway integration, including work started from Dev Portal.
->
-> **Do not use for:** one-off media generation from the agent or direct REST CLI actions.
+## Start with the project
 
-## Start with the work
+Inspect the existing application, identify its server boundary and intended user flow, and make progress with the information already available. Ask only when a missing choice blocks implementation. For a client-only app, add or identify a server-side route before adding Runway API calls.
 
-Make useful progress before explaining setup. Inspect the workspace and existing configuration without narrating each check. Ask a question only when missing information blocks the next change.
+Check for `RUNWAYML_API_SECRET` without printing it. If the app already has a configured server-side secret, keep using its established secret mechanism. If a key is needed, direct the user to create one in the Developer Portal and store it in the server environment or secret manager. Never put the key in browser code, source control, chat, or MCP configuration.
 
-- Existing project: find its server boundary and user-facing integration point. Add a server route or function before integrating a frontend-only project.
-- Empty workspace: ask what the user wants to build. You may recommend a small web app with visible inputs and output as a Runway starting point, but do not claim the user requested one.
-- Before giving credential setup instructions, test whether `RUNWAYML_API_SECRET` is present without printing its value, for example with `test -n "${RUNWAYML_API_SECRET:-}"`. If it is present, skip dotenv instructions.
-- Use the official SDK. Install `@runwayml/sdk` for Node or `runwayml` for Python only if the project needs it and does not already have it.
-- Keep updates short. Do not narrate a long setup sequence or checklist.
+## Resolve current API contracts
 
-## Current contracts
+Before choosing models or constructing requests, read `https://docs.dev.runwayml.com/ai-context.md`, then fetch only the relevant current docs linked there. For exact request fields and allowed values, use `https://docs.dev.runwayml.com/api.md` or the linked endpoint reference. Use `https://docs.dev.runwayml.com/openapi.json` when machine-readable detail is needed. Do not rely on remembered model IDs, schemas, availability, or pricing.
 
-Installed skill prose is workflow guidance, not the canonical API schema. Resolve current contracts in this order:
+## Use Dev MCP when it affects the next step
 
-1. Fetch https://docs.dev.runwayml.com/llms.txt.
-2. Fetch only the exact linked documentation subset relevant to the task.
-3. If that subset does not define the contract, read https://docs.dev.runwayml.com/api.md.
-4. If machine-readable detail is still needed, use https://docs.dev.runwayml.com/openapi.json.
+Connect `https://dev.runwayml.com/mcp` through the host's documented MCP setup and complete OAuth in the user's normal browser. Do not automate sign-in or approval, and do not put an API key in MCP configuration. If MCP is unavailable, continue work that only needs public docs and the existing app configuration. Do not imitate MCP account or resource tools with REST calls.
 
-Do not invent endpoints, field names, or model constraints.
+Call only the live tools needed for the task:
 
-## MCP policy
+- `whoami` to confirm which Developer Portal account is connected.
+- `list_projects` when a project must be chosen or verified. Never guess a project ID; ask the user to choose if there are multiple suitable projects.
+- Use a surface skill's live tools only when they change the implementation or the requested management action.
+- Check credit balance immediately before an approved billable verification.
 
-Encourage connecting Dev MCP as the happy path for live account context and management. Connect `https://dev.runwayml.com/mcp` with Runway OAuth. Never put an API key in MCP config or automate browser OAuth.
+If MCP reports `developer_not_found`, direct the user to the Developer Portal to finish any requested account setup, then have them reconnect and check `whoami` again. Do not infer account state, create a substitute account path, or keep retrying a failing connection. If the explicit error persists, stop the MCP-dependent step and report it.
 
-If the user declines or the connection fails, never block account-independent work. Continue with live docs, existing application config, or environment configuration. SDK and API integration code remain allowed. Stop only when the next requested step requires live account discovery, account or resource mutations, or billable verification.
+## Implement and verify
 
-Never imitate an unavailable MCP account-management or resource-management tool with a REST call. Explain the MCP dependency only when it blocks the requested action.
+Use `@runwayml/sdk` for Node.js or `runwayml` for Python when appropriate to the app. Follow the current surface documentation for the method and request shape. For asynchronous generation calls, chain the SDK's task wait helper directly from `create()`; handle `TaskFailedError` and `TaskTimeoutError` as documented. Do not add a competing manual polling loop or automatically resubmit a request.
 
-Call MCP tools only when the result affects the next step:
-
-- `whoami` when identity or access is uncertain.
-- `list_projects` when a live `projectId` must be selected or verified. Never guess one.
-- `list_models` when model access, selection, or current constraints matter.
-- `get_credit_balance` immediately before an approved billable verification.
-
-## API key (SDK only)
-
-MCP uses OAuth. SDK calls use an organization-scoped API key from Developer Portal settings. Probe `RUNWAYML_API_SECRET` without printing it. If missing when a live SDK call is imminent, ask the user to store the key in a server-side environment file or secret manager. Never expose it client-side, in chat, or in source control; ensure local environment files are ignored.
-
-## SDK requests
-
-1. Build one valid SDK request from the current API docs and, when needed, MCP `list_models` constraints.
-2. Chain the wait helper directly from the create call: `await client.<operation>.create({...}).waitForTaskOutput()` in Node or `client.<operation>.create(...).wait_for_task_output()` in Python. Do not await `create()` before calling the helper.
-3. Catch the SDK's `TaskFailedError` and surface its task details. Submit once; do not add a manual polling loop or auto-resubmit.
-4. Use MCP `get_task` only to inspect or debug an existing task outside the application's SDK flow.
-5. Wire successful output into the application's intended UI or consumer. Persist outputs if the app needs them after signed URLs expire (~24–48h).
-
-## Terminology
-
-| UI / quickstart | MCP / API |
-|-----------------|-----------|
-| Characters | avatars (`list_avatars`, `get_avatar`) |
-| Character ID | avatar UUID |
-| Model Router config ID | immutable slug (`configId`) |
-| live Session | `POST /v1/realtime_sessions` |
-
-## Errors
-
-- Validation error → show message, fix field from MCP constraints or docs, retry once.
-- Auth/permission → stop; ask user to authenticate or pick accessible project.
-- Rate limit → honor retry interval.
-- `FAILED` task → report failure details; do not auto-resubmit.
-- Missing MCP tool → continue account-independent implementation; stop only when live account state or management is required.
+Keep generated outputs in the application's intended UI or consumer. Signed output and upload URLs expire; persist media separately if the app needs longer-lived access. Verify changes with local checks. Run a live or billable call only when it is appropriate to the user's request, and ask before creating billable output if the user has not requested that verification.
 
 ## Surface skills
 
-| Skill | When |
-|-------|------|
-| `+runway-dev-models` | Model generation integration |
-| `+runway-dev-model-routers` | Model Router setup and routed calls |
-| `+runway-dev-characters` | Characters / realtime sessions |
-| `+runway-dev-recipes` | Recipe pipelines |
-| `+runway-dev-workflows` | Runway app workflows → API endpoints |
+Use the matching installed skill for the detailed workflow:
 
-Use `+runway-dev` with the relevant surface skill or skills when both are installed. Surface skills repeat their minimum setup so they remain useful when installed alone. Usually one surface matches the user's goal; load more when the task crosses surfaces.
+- `runway-dev-models` for a direct model endpoint.
+- `runway-dev-model-routers` for configured model-agnostic routing.
+- `runway-dev-characters` for conversational Characters and realtime Sessions.
+- `runway-dev-recipes` for documented multi-step Recipes.
+- `runway-dev-workflows` for published Runway app Workflows exposed through the API.
+
+When a surface skill is installed without this foundation, follow its local setup and security guidance and consult the current docs linked from `llms.txt`.
+
+## Errors
+
+- Validation errors: use the endpoint's current schema to correct the request; retry only after correcting it.
+- Authentication or permission errors: stop and guide the user through the host's OAuth or the Developer Portal's project access flow.
+- Rate limits: honor the returned retry guidance.
+- Failed task: report the task failure details; do not resubmit automatically.
+- Missing MCP tool: continue account-independent implementation; pause only the step that needs live account state or management.
+
+## Current links
+
+- [Runway Dev agent context](https://docs.dev.runwayml.com/ai-context.md)
+- [Connect Dev MCP](https://docs.dev.runwayml.com/guides/mcp/)
+- [API setup](https://docs.dev.runwayml.com/guides/setup/)
+- [SDKs and task waiting](https://docs.dev.runwayml.com/api-details/sdks/)

@@ -1,0 +1,24 @@
+{
+  "name": "runway-api",
+  "version": "4.0.0",
+  "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills.",
+  "author": {
+    "name": "Runway",
+    "url": "https://runway.com"
+  },
+  "homepage": "https://dev.runway.com/agents",
+  "repository": "https://github.com/runwayml/skills",
+  "license": "MIT",
+  "keywords": [
+    "runway",
+    "runway-dev",
+    "api",
+    "sdk",
+    "mcp",
+    "video",
+    "image",
+    "audio",
+    "characters",
+    "model-router"
+  ]
+}
