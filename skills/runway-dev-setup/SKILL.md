@@ -24,6 +24,8 @@ If the MCP server is not configured, help add it using the exact configuration f
 
 When prompted, have the user complete Runway OAuth in their normal browser, return to the same agent session, and retry the MCP check. Never ask for their Runway password, OAuth code, or API key.
 
+For the Codex CLI, run `codex mcp login runway-dev` after installing the plugin to authenticate its bundled connection. Credentials are associated with the configured MCP connection, so signing in through a separately named test entry does not authenticate the bundled server.
+
 ## 3. Confirm the account and project
 
 After OAuth completes, call `whoami` and report the connected Developer Portal email or identity shown by the tool. If the user has an app to connect, call `list_projects` and let them choose among accessible projects. Do not guess or silently select a project when there are multiple candidates.
