@@ -45,7 +45,8 @@
           "Help me connect my Runway Dev account and choose a project",
           "Why did my last Runway task fail, and how do I fix it?"
         ]
-      }
+      },
+      "onboardingSkill": "./skills/runway-dev-setup/SKILL.md"
     }
   }
 }

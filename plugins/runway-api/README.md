@@ -1,11 +1,11 @@
 # Runway Dev
 
-Build AI video, image, audio, and real-time Character features into your applications with Runway's API. This plugin combines Runway Dev MCP with six integration skills for the official SDKs, models, Model Routers, Characters, Recipes, and published Workflows.
+Build AI video, image, audio, and real-time Character features into your applications with Runway's API. This plugin combines Runway Dev MCP with seven integration skills for setup, the official SDKs, models, Model Routers, Characters, Recipes, and published Workflows.
 
 ## Getting started
 
 1. Install the plugin in your coding agent.
-2. Ask: "Help me connect my Runway Dev account and choose a project."
+2. Run its setup skill, or ask: "Help me connect my Runway Dev account and choose a project."
 3. Sign in or create a [Runway Dev account](https://dev.runway.com/) in your browser, finish Developer Portal setup, and authorize the bundled MCP connection.
 4. Ask the agent to build the integration you need. When the application needs an API key, create one in Developer Portal and store it in your server environment as `RUNWAYML_API_SECRET`.
 

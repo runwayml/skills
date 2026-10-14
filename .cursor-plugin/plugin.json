@@ -34,6 +34,7 @@
   ],
   "skills": [
     "./plugins/runway-api/skills/runway-dev",
+    "./plugins/runway-api/skills/runway-dev-setup",
     "./plugins/runway-api/skills/runway-dev-models",
     "./plugins/runway-api/skills/runway-dev-model-routers",
     "./plugins/runway-api/skills/runway-dev-characters",
