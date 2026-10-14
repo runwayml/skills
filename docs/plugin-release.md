@@ -25,6 +25,21 @@ CI runs the packaging checks; it does not install plugins, authenticate, publish
 
 Local validation on October 14, 2026 passed portable JSON Schema/ZIP checks, packaging unit tests, and Python lint/format checks. Codex CLI `0.162.0-alpha.17.2` discovered and installed v4 with all seven skills and the onboarding entrypoint. Claude Code `2.1.231` validated and installed the package; its component inventory reported seven skills, one MCP server, and no hooks. Temporary test installs and marketplace registrations were removed afterward. Skills CLI discovery listed exactly seven active skills from the repository root and five archived skills only when explicitly pointed at `legacy/`. These checks did not authenticate the new connection or run review cases. Cursor native inspection did not produce a usable plugin-management view; runtime validation remains pending.
 
+An additional validation pass on October 14 checked the corrected Recipe SDK guidance and the boundaries around fetched references and account actions:
+
+| Check | Observed result | Remaining validation |
+| --- | --- | --- |
+| Updated Codex and Claude installation | Seven current Dev skills, one MCP connection; temporary installs removed | Authenticated tool calls and reconnect behavior |
+| Production unauthenticated initialization | 401 with the Runway protected-resource metadata challenge | Successful initialization after OAuth |
+| Production invalid bearer token | 401 with an OAuth recovery challenge | Token refresh and expiration through each host |
+| Production OAuth discovery | Resource and authorization-server metadata return 200; authorization server advertises CIMD and PKCE S256 | Browser consent and token exchange |
+| Native Codex OAuth | Client reached the browser authorization step using CIMD | User completes consent; no codes or secrets need to be pasted |
+| Claude agent runtime | Client rejected the request because its Claude OAuth token was expired | Reauthenticate Claude before testing the Runway connection |
+| Cursor CLI local plugin loading | `--plugin-dir` exposes Runway Dev MCP as requiring authentication | Cursor client login, Runway consent, skill activation and tool calls |
+| Replit skill distribution | Skills CLI installed all seven current skills into an isolated Replit project's `.agents/skills`; install-link payload matches the HTTPS MCP endpoint | Replit Project Editor authorization and tool calls |
+
+These results establish packaging, distribution, and unauthenticated protocol behavior. They do not establish authenticated account access, native-host handling of the incomplete-account 403, model behavior against the review cases, or marketplace acceptance. Complete browser sign-in and consent in the user's normal browser; do not collect passwords, callback URLs, OAuth codes, or application API keys in chat.
+
 ## Host distribution
 
 | Host | Source | Identity |
