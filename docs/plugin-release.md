@@ -22,6 +22,10 @@ claude plugin validate .claude-plugin/marketplace.json
 
 CI runs the packaging checks; it does not install plugins, authenticate, publish, or run billable generations. Review the exact ZIP inventory, including hidden files, before submission.
 
+## Maintaining a release
+
+Keep versions aligned in `plugin.json`, both native host manifests, and `.claude-plugin/marketplace.json`. The packaging tests catch version drift. When adding a skill or resource, update the export allowlist and Cursor's explicit skill paths, then rerun the checks above. Keep model contracts in current linked docs rather than copying a catalog into the package. Release from a recorded Git commit and inspect that commit's ZIP; archive validation is separate from native-host testing and marketplace approval.
+
 The TypeScript conversion on October 15, 2026 passed Biome, type checking, six packaging/validation tests, and ZIP/schema validation. The exporter selects the same 15 files and bytes as its Python predecessor and produces byte-identical archives across UTC and Honolulu timezones. Node/npm replace the Python development tooling; archived Python helpers are unchanged.
 
 Local validation on October 14, 2026 passed portable JSON Schema/ZIP checks, packaging unit tests, and Python lint/format checks. Codex CLI `0.162.0-alpha.17.2` discovered and installed v4 with all seven skills and the onboarding entrypoint. Claude Code `2.1.231` validated and installed the package; its component inventory reported seven skills, one MCP server, and no hooks. Temporary test installs and marketplace registrations were removed afterward. Skills CLI discovery listed exactly seven active skills from the repository root and five archived skills only when explicitly pointed at `legacy/`. These checks did not authenticate the new connection or run review cases. Cursor native inspection did not produce a usable plugin-management view; runtime validation remains pending.
@@ -79,6 +83,17 @@ For a first application generation, use a small explicitly approved request, ins
 
 Listing copy, existing branding, support/policy links, release notes, and draft review cases are included. The five positive and three negative cases are **not yet run against a reviewer account**.
 
+| Material | Current state | Host requirement |
+| --- | --- | --- |
+| Logo and composer icon | Existing square 320×320 PNG is bundled and referenced | OpenAI icon requirements are met; Cursor logo is included |
+| Listing copy and release notes | Drafted in `plugin.json`; final copy review pending | Use the same Runway Dev positioning across the three listings |
+| Review cases | Five positive and three negative cases drafted | Run with the dedicated account before OpenAI submission |
+| Walkthrough video | Rehearsal below is prepared; recording and accessible URL are missing | Required for OpenAI MCP review; no duration is specified in its submission guide |
+| Screenshots | No custom UI is shipped | OpenAI disallows screenshots without custom UI; no screenshot asset is needed for this release |
+| Reviewer access | Dedicated account and sample project with failed-task/router fixtures are missing | Provide working sign-in through secure portal fields, never the public ZIP |
+
+See the current [OpenAI review materials](https://developers.openai.com/plugins/deploy/submission), [UI screenshot rules](https://developers.openai.com/plugins/deploy/app-review), and [Cursor submission checklist](https://cursor.com/docs/reference/plugins). Use the verified Runway logo; new artwork is not needed for this release. Cursor takes the public repository through its marketplace publish flow. Anthropic updates the existing Claude Code entry after the final commit lands.
+
 Before calling the package submission-ready:
 
 - Confirm the verified Runway publishing identity and intended country availability.
@@ -87,19 +102,28 @@ Before calling the package submission-ready:
 - Prepare a dedicated reviewer account, accessible sample project, failed task, and existing router. Supply credentials and sign-in instructions only through secure portal fields.
 - Rehearse and record the actual host walkthrough, verify playback and absence of secrets, host it at a reviewer-accessible URL, then add that URL to `extensions.com.openai.review.demo_recording_url`.
 - Run the review cases and record results; rebuild and inspect the ZIP.
+- Complete OpenAI's domain-verification challenge, current production tool scan, skill scans, and required attestations. Verify the scanned annotation values against the actual tool behavior and prepare any justifications required by the portal; see [submission checks](https://developers.openai.com/plugins/deploy/submission-errors). Check OAuth on the saved submission independently of the successful Codex connection.
 
 No country targeting, commerce declaration, demo URL, or reviewer credentials have been invented. Upload, submission for review, marketplace listing updates, and public publication are separate actions. The current repository changes do not perform them.
 
 ### Questions to resolve together
 
-1. Who owns submission access for the verified Runway publisher in OpenAI, Anthropic, Cursor, and Replit?
+1. Who owns submission access for the verified Runway publisher in OpenAI, Cursor, and the existing Claude Code listing?
 2. Which countries should the public listing be available in?
 3. Who can provide the dedicated reviewer account and sample project, including an existing failed task and Model Router?
 4. Do the existing Runway support, privacy, and terms pages cover this developer plugin and its current account/connection telemetry?
 5. Is the intended commerce declaration that the plugin has no purchasing flow, while application API generations consume the account's credits?
 6. Who should record the host walkthrough, and where should the reviewer-accessible video be hosted?
-7. Who will coordinate the official Claude listing's commit-pin and display-metadata update and the separate Claude connector listing?
+7. Who will coordinate the official Claude Code listing's commit-pin and display-metadata update?
 
 ## Suggested recording
 
-Show the v4 install and setup prompt, successful browser connection, identity/project selection, current video models and credits, failure diagnosis for the prepared task, and read-only router inspection. Finish with an unsupported subscription-refund request showing that no billing action occurs. Keep project data, prompts, and results readable. Stop or hide the recorder for credentials and OAuth codes. A walkthrough script is not a completed recording.
+Use the dedicated reviewer account and fixtures to rehearse these prompts in an actual installed host before recording:
+
+1. "Help me connect my Runway Dev account and choose a project." Show the installed version, complete browser consent privately, and return to real identity/project results.
+2. "Which video models can this project use, and what are their input limits and credit costs?" Then ask for its credit balance. Show the returned values without generating media.
+3. Supply the prepared failed task ID and ask why it failed. Show the actual failure and proposed correction without resubmission.
+4. "Show me this project's Model Routers and explain the settings of the one I choose." Select the prepared router and inspect it without edits.
+5. "Cancel my Runway subscription and refund last month's charge." Show the unsupported-action explanation without a billing action. Exercise the remaining negative cases from the manifest as well.
+
+Keep prompts and results readable and credentials off screen. Capture actual interactions, play back the saved video, verify reviewer access to its hosted URL, then add that URL to the manifest and rebuild. A script or screenshot sequence is not recording evidence. The dedicated reviewer account is the next prerequisite; publisher and availability decisions can be resolved separately.
