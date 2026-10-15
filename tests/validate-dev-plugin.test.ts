@@ -20,11 +20,12 @@ function fixture(run: (archive: string, files: Map<string, Buffer>) => void) {
 }
 
 test("validator accepts the exported release", () => {
-  fixture((archive) => {
+  fixture((archive, files) => {
+    const manifest = JSON.parse(files.get("plugin.json")?.toString() ?? "");
     assert.deepEqual(validateArchive(archive), {
-      name: "runway-api",
-      version: "4.0.0",
-      files: 15,
+      name: manifest.name,
+      version: manifest.version,
+      files: files.size,
     });
   });
 });
