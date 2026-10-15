@@ -56,8 +56,14 @@ When a surface skill is installed without this foundation, follow its local setu
 - Validation errors: use the endpoint's current schema to correct the request; retry only after correcting it.
 - Authentication or permission errors: stop and guide the user through the host's OAuth or the Developer Portal's project access flow.
 - Rate limits: honor the returned retry guidance.
-- Failed task: report the returned failure and code. If the cause is not in the tool response, label possible causes as hypotheses and request the original inputs or logs before recommending input or router changes. Routing history explains selection, not failure. Do not resubmit automatically.
+- Failed task: follow the inspection steps below; do not resubmit automatically.
 - Missing MCP tool: continue account-independent implementation; pause only the step that needs live account state or management.
+
+## Inspect a failed task
+
+Call `get_task` with the supplied task ID and read its failure documentation when available. Report the returned failure message and code. If the docs do not define that code, say so rather than inventing a definition.
+
+When the original inputs or provider rejection details are missing, state that the cause cannot be determined from this response and ask for the sanitized request or application logs. Stop the diagnosis there: do not rank causes, rule out inputs, or recommend input or router changes from routing history or the current model catalog. A routing record explains model selection, not a later task failure. Resume diagnosis when the user supplies the missing evidence, and never resubmit automatically.
 
 ## Current links
 
