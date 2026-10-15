@@ -35,7 +35,7 @@ If MCP reports `developer_not_found`, direct the user to the Developer Portal to
 
 ## Implement and verify
 
-Use `@runwayml/sdk` for Node.js or `runwayml` for Python when appropriate to the app. Follow the current surface documentation for the method and request shape. For task-based calls, chain the SDK's wait helper directly from the unawaited task-creating method call; handle `TaskFailedError` and `TaskTimeoutError` as documented. Do not add a competing manual polling loop or automatically resubmit a request.
+Use `@runwayml/sdk` for Node.js or `runwayml` for Python when appropriate to the app. Follow the current surface documentation for the method and request shape. For task-based calls, chain the SDK's wait helper directly from the unawaited task-creating method call; handle `TaskFailedError` and the SDK's timeout error (`TaskTimedOutError` in Node.js, `TaskTimeoutError` in Python). Do not add a competing manual polling loop or automatically resubmit a request.
 
 Keep generated outputs in the application's intended UI or consumer. Signed output and upload URLs expire; persist media separately if the app needs longer-lived access. Verify changes with local checks. Run a live or billable call only when it is appropriate to the user's request, and ask before creating billable output if the user has not requested that verification.
 
