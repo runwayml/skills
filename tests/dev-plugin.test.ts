@@ -73,6 +73,9 @@ test("hosts load the same root plugin", () => {
       "./",
     );
     assert.equal(entry.name, manifest.name);
+    if (entry.version !== undefined) {
+      assert.equal(entry.version, manifest.version);
+    }
   }
 });
 

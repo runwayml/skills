@@ -134,8 +134,12 @@ export function validateArchive(
   const includedSkills = new Set<string>();
   for (const [name, data] of members) {
     if (name.startsWith("skills/") && name.endsWith("/SKILL.md")) {
-      const metadata = parse(data.toString().split("---", 3)[1]);
       const skill = name.split("/")[1];
+      const frontmatter = data
+        .toString()
+        .match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+      assert(frontmatter, `Missing or unclosed skill frontmatter: ${skill}`);
+      const metadata = parse(frontmatter[1]);
       assert(
         metadata.name === skill &&
           typeof metadata.description === "string" &&
