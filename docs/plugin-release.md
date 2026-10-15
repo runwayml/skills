@@ -13,6 +13,7 @@ npm run typecheck
 mkdir -p .build/schemas
 curl --fail --silent --show-error https://agent-plugins.org/schemas/1.0.0/plugin.schema.json -o .build/schemas/plugin.schema.json
 curl --fail --silent --show-error https://agent-plugins.org/schemas/1.0.0/mcp.schema.json -o .build/schemas/mcp.schema.json
+shasum -a 256 -c scripts/portable-schemas.sha256
 npm test
 npm run build:plugin
 npm run validate:plugin
@@ -21,6 +22,8 @@ claude plugin validate .claude-plugin/marketplace.json
 ```
 
 The exporter writes `.build/runway-api-<version>.zip` from an explicit allowlist. CI checks the package; installation, OAuth, and marketplace acceptance require separate verification.
+
+If schema checksums change, review the upstream schema diff before updating `scripts/portable-schemas.sha256`.
 
 ## Updating a release
 
