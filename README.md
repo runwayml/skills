@@ -4,18 +4,18 @@ Build AI video, image, audio, and real-time Character features into applications
 
 This repository is the plugin: root manifests and MCP configuration load the seven active skills in `skills/`. The install ID remains `runway-api`; the display name is Runway Dev.
 
-The v4 plugin in this branch is in development. Public directory submissions and the existing official Claude listing update are pending. Installing a plugin does not configure an application's API key or automatically create a Runway account.
+Installing a plugin does not configure an application's API key or automatically create a Runway account. Public directory availability depends on each host's listing.
 
 ## Claude Code
 
-Use the Runway-maintained marketplace to install the Dev-only package after these changes are merged:
+Install from the Runway-maintained marketplace:
 
 ```sh
 claude plugin marketplace add runwayml/skills
 claude plugin install runway-api@runway-dev
 ```
 
-For local testing before merge:
+For local testing:
 
 ```sh
 claude plugin marketplace add /absolute/path/to/skills
@@ -24,7 +24,7 @@ claude plugin install runway-api@runway-dev
 
 Ask Claude to help connect your Runway Dev account, or run `/runway-api:runway-dev-setup`. Complete browser sign-in and consent yourself.
 
-The existing `runway-api@claude-plugins-official` listing is pinned to the legacy package. Anthropic must refresh its commit pin and listing metadata before that install command supplies v4. The repository URL and root source stay the same. The older community listing is separate. See [release instructions](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
+The `runway-api@claude-plugins-official` listing is managed by Anthropic and may pin a different version from the Runway-maintained marketplace.
 
 ## Codex and ChatGPT
 
@@ -35,7 +35,7 @@ codex plugin marketplace add /absolute/path/to/skills
 codex plugin add runway-api@runway-dev
 ```
 
-Once merged, the Git-backed equivalent is `codex plugin marketplace add runwayml/skills`. The package declares an onboarding skill; run setup or ask the agent to help connect your Runway Dev account. Public directory availability requires submission and review.
+The Git-backed equivalent is `codex plugin marketplace add runwayml/skills`. The package declares an onboarding skill; run setup or ask the agent to help connect your Runway Dev account. Public directory availability requires submission and review.
 
 For an OpenAI package export, use Node.js 24.12 or newer:
 
@@ -48,9 +48,7 @@ This creates `.build/runway-api-4.0.0.zip`. It exports the root plugin files and
 
 ## Cursor
 
-The root `.cursor-plugin/plugin.json` defines **Runway Dev** (`runway-api`) and selects the root developer skills and MCP connection. Submit this public repository to the Cursor Marketplace after local testing. The new listing is not yet published.
-
-For testing, use Cursor's local plugin workflow or its repository install flow with the branch containing this package. A standalone [MCP connection](https://docs.dev.runwayml.com/guides/mcp/) remains available; adding only MCP does not install skills.
+The root `.cursor-plugin/plugin.json` defines **Runway Dev** (`runway-api`) and selects the root developer skills and MCP connection. For testing, use Cursor's local plugin workflow or its repository install flow with the branch containing this package. A standalone [MCP connection](https://docs.dev.runwayml.com/guides/mcp/) remains available; adding only MCP does not install skills.
 
 ## Replit
 
@@ -63,7 +61,7 @@ Replit distributes MCP connections and Agent Skills separately:
 npx skills add runwayml/skills --skill runway-dev-setup --skill runway-dev --skill runway-dev-models -a replit
 ```
 
-The link uses Replit's documented MCP install format; its Runway OAuth flow still needs real-host validation. This is not a published Replit plugin bundle.
+The MCP link and standalone skills are separate installations.
 
 ## Skills
 
@@ -97,6 +95,6 @@ Use the [current docs](https://docs.dev.runwayml.com/), [MCP connection guide](h
 
 ## Development and release
 
-Edit the root manifests and active `skills/` directly. There is no generated plugin copy or sync step. Run `npm run build:plugin` to export a ZIP; add any new skill resources to its explicit file allowlist. CI checks the export, cross-host paths, and portable schemas. See [validation, host testing, and submission preparation](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
+Edit the root manifests and active `skills/` directly. There is no generated plugin copy or sync step. Run `npm run build:plugin` to export a ZIP; add any new skill resources to its explicit file allowlist. CI checks the export, cross-host paths, and portable schemas. See [the maintainer guide](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
 
 Licensed under [MIT](LICENSE).

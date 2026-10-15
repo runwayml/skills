@@ -69,7 +69,7 @@
               "expected_behavior": "Reports the selected project's returned balance and its units. Does not buy, transfer, or spend credits."
             },
             {
-              "description": "Before recording, prepare a real failed task owned by an accessible reviewer project and supply its task ID in the conversation. Never substitute a fabricated task ID.",
+              "description": "Use a real failed task owned by an accessible reviewer project and supply its task ID in the conversation. Never substitute a fabricated task ID.",
               "prompt": "Why did the Runway task I shared fail, and what should I change?",
               "tools_triggered": "get_task",
               "expected_behavior": "Looks up the supplied task ID, explains the actual returned failure details using current documentation, and suggests a correction without automatically resubmitting the task."
