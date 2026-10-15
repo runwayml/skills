@@ -52,7 +52,7 @@
           "positive": [
             {
               "description": "Use a dedicated reviewer account with at least one accessible project. The result must identify only projects returned by MCP.",
-              "prompt": "Which Runway Dev projects can I use?",
+              "prompt": "Which Runway Dev account am I connected to, and which projects can I use?",
               "tools_triggered": "whoami, list_projects",
               "expected_behavior": "Reports the connected identity and accessible project names and IDs from the tool responses, without inventing or creating a project."
             },
@@ -75,10 +75,10 @@
               "expected_behavior": "Looks up the supplied task ID, explains the actual returned failure details using current documentation, and suggests a correction without automatically resubmitting the task."
             },
             {
-              "description": "Prepare a reviewer project with at least one existing Model Router. Ask for inspection only.",
-              "prompt": "Show me this project's Model Routers and explain the settings of the one I choose.",
-              "tools_triggered": "list_model_routers, get_model_router",
-              "expected_behavior": "Lists the selected project's routers, asks which to inspect when needed, and explains the chosen router's returned configuration without changing or deleting it."
+              "description": "Use an existing reviewer-project router and a real task routed through it within the last 30 days. Supply the task ID in the conversation; ask for inspection only.",
+              "prompt": "Show me this project's Model Routers, inspect the one I choose, and explain its model choice for the task I shared.",
+              "tools_triggered": "list_model_routers, get_model_router, get_task_routing",
+              "expected_behavior": "Lists the selected project's routers, inspects the chosen router, and uses the supplied task's routing record to explain the model, selection reason, and estimated credits. Does not infer historical routing from current settings, change resources, or submit a generation."
             }
           ],
           "negative": [
