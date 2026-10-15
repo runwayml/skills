@@ -56,7 +56,7 @@ When a surface skill is installed without this foundation, follow its local setu
 - Validation errors: use the endpoint's current schema to correct the request; retry only after correcting it.
 - Authentication or permission errors: stop and guide the user through the host's OAuth or the Developer Portal's project access flow.
 - Rate limits: honor the returned retry guidance.
-- Failed task: report the task failure details; do not resubmit automatically.
+- Failed task: report the returned failure and code. If the cause is not in the tool response, label possible causes as hypotheses and request the original inputs or logs before recommending input or router changes. Routing history explains selection, not failure. Do not resubmit automatically.
 - Missing MCP tool: continue account-independent implementation; pause only the step that needs live account state or management.
 
 ## Current links
