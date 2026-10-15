@@ -1,27 +1,28 @@
 # Runway Dev plugin release
 
-The repository root is the v4 plugin. Edit `plugin.json`, native host manifests, MCP configuration, and active `skills/` directly. No generated copies or synchronization are needed. `scripts/build_dev_plugin.py` exports an allowlisted ZIP from those files; update the allowlist when adding skill resources. Legacy generation and utility skills and their helper scripts are archived under `legacy/`, outside active discovery. Their source is preserved; the archive README documents explicit legacy use.
+The repository root is the v4 plugin. Edit `plugin.json`, native host manifests, MCP configuration, and active `skills/` directly. No generated copies or synchronization are needed. `scripts/build-dev-plugin.ts` exports an allowlisted ZIP from those files; update the allowlist when adding skill resources. Legacy generation and utility skills and their helper scripts are archived under `legacy/`, outside active discovery. Their source is preserved; the archive README documents explicit legacy use.
 
 ## Validate and build
 
-Use Python 3.11 or newer:
+Use Node.js 24.12 or newer. Node runs the TypeScript scripts and tests directly; dependencies are development-only:
 
 ```sh
-python3 -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/ruff check scripts/build_dev_plugin.py scripts/validate_dev_plugin.py tests/test_dev_plugin.py
-.venv/bin/ruff format --check scripts/build_dev_plugin.py scripts/validate_dev_plugin.py tests/test_dev_plugin.py
-python3 -m unittest discover -s tests
-python3 scripts/build_dev_plugin.py
+npm ci --ignore-scripts
+npm run check
+npm run typecheck
 mkdir -p .build/schemas
 curl --fail --silent --show-error https://agent-plugins.org/schemas/1.0.0/plugin.schema.json -o .build/schemas/plugin.schema.json
 curl --fail --silent --show-error https://agent-plugins.org/schemas/1.0.0/mcp.schema.json -o .build/schemas/mcp.schema.json
-.venv/bin/python scripts/validate_dev_plugin.py .build/runway-api-4.0.0.zip
+npm test
+npm run build:plugin
+npm run validate:plugin
 claude plugin validate .claude-plugin/plugin.json
 claude plugin validate .claude-plugin/marketplace.json
 ```
 
 CI runs the packaging checks; it does not install plugins, authenticate, publish, or run billable generations. Review the exact ZIP inventory, including hidden files, before submission.
+
+The TypeScript conversion on October 15, 2026 passed Biome, type checking, six packaging/validation tests, and ZIP/schema validation. The exporter selects the same 15 files and bytes as its Python predecessor and produces byte-identical archives across UTC and Honolulu timezones. Node/npm replace the Python development tooling; archived Python helpers are unchanged.
 
 Local validation on October 14, 2026 passed portable JSON Schema/ZIP checks, packaging unit tests, and Python lint/format checks. Codex CLI `0.162.0-alpha.17.2` discovered and installed v4 with all seven skills and the onboarding entrypoint. Claude Code `2.1.231` validated and installed the package; its component inventory reported seven skills, one MCP server, and no hooks. Temporary test installs and marketplace registrations were removed afterward. Skills CLI discovery listed exactly seven active skills from the repository root and five archived skills only when explicitly pointed at `legacy/`. These checks did not authenticate the new connection or run review cases. Cursor native inspection did not produce a usable plugin-management view; runtime validation remains pending.
 
