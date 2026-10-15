@@ -45,6 +45,12 @@ test("validator rejects invalid schemas, skills, and review cases", () => {
       );
     },
     (files: Map<string, Buffer>) => {
+      files.set(
+        "skills/runway-dev/SKILL.md",
+        Buffer.from("---\nname: runway-dev\ndescription: example\n"),
+      );
+    },
+    (files: Map<string, Buffer>) => {
       const manifest = JSON.parse(files.get("plugin.json")?.toString() ?? "");
       manifest.extensions["com.openai"].review = {
         test_cases: { positive: [], negative: [] },
