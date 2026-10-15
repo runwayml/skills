@@ -20,11 +20,11 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run check
       - run: npm run typecheck
-      - run: npm test
-      - run: npm run build:plugin
       - name: Fetch versioned portable schemas
         run: |
           mkdir -p .build/schemas
           curl --fail --silent --show-error --max-time 30 https://agent-plugins.org/schemas/1.0.0/plugin.schema.json -o .build/schemas/plugin.schema.json
           curl --fail --silent --show-error --max-time 30 https://agent-plugins.org/schemas/1.0.0/mcp.schema.json -o .build/schemas/mcp.schema.json
+      - run: npm test
+      - run: npm run build:plugin
       - run: npm run validate:plugin

@@ -192,8 +192,12 @@ if (import.meta.main) {
     positionals.length <= 1,
     "Usage: validate-dev-plugin.ts [archive] [--schemas directory]",
   );
+  const manifest = JSON.parse(
+    readFileSync(resolve(REPO_ROOT, "plugin.json"), "utf8"),
+  );
   const result = validateArchive(
-    positionals[0] ?? resolve(REPO_ROOT, ".build/runway-api-4.0.0.zip"),
+    positionals[0] ??
+      resolve(REPO_ROOT, `.build/${manifest.name}-${manifest.version}.zip`),
     values.schemas,
   );
   console.log(
