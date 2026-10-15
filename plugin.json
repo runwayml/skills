@@ -72,7 +72,7 @@
               "description": "Use a real failed task owned by an accessible reviewer project and supply its task ID in the conversation. Never substitute a fabricated task ID.",
               "prompt": "Why did the Runway task I shared fail, and what should I change?",
               "tools_triggered": "get_task",
-              "expected_behavior": "Looks up the supplied task ID, explains the actual returned failure details using current documentation, and suggests a correction without automatically resubmitting the task."
+            "expected_behavior": "Looks up the supplied task ID and explains the actual returned failure details using current documentation. Suggests a correction only when the evidence supports it; otherwise states the limitation and asks for sanitized request inputs or logs. Does not guess a cause or automatically resubmit the task."
             },
             {
               "description": "Use an existing reviewer-project router and a real task routed through it within the last 30 days. Supply the task ID in the conversation; ask for inspection only.",
