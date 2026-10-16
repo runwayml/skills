@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "runway-api",
   "version": "4.0.0",
-  "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills.",
+  "description": "Build, debug, and maintain apps with Runway's unified generative media API, integration skills, and Dev MCP.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"
@@ -27,8 +27,8 @@
       "onboardingSkill": "./skills/runway-dev-setup/SKILL.md",
       "interface": {
         "displayName": "Runway Dev",
-        "shortDescription": "AI video, image & audio API",
-        "longDescription": "Runway Dev helps coding agents build and maintain applications using Runway's API. It bundles browser-authenticated Dev MCP access with skills for setup, official SDK integration, models, Model Routers, real-time Characters, Recipes, and published Workflows. MCP provides live account context, model prices and constraints, credit balances, task diagnostics, and resource management. Developers' applications make generation requests through the Runway API with their own server-side API key. A Runway Dev account is required for account tools; public documentation and integration guidance remain usable before connecting. The MCP does not generate media or create application API keys.",
+        "shortDescription": "Build apps with Runway's API",
+        "longDescription": "Runway Dev brings leading image, video, and audio models from Runway and other frontier labs together in one API.\n\nBuild, debug, and maintain your Runway integration from your coding agent. Get guidance on the official SDKs, model selection, Model Routers, Recipes, Workflows, and live avatars (Runway Characters). Connect your account to manage Model Routers and Characters, investigate failed requests, and understand model routing decisions.",
         "developerName": "Runway",
         "category": "Developer Tools",
         "capabilities": [
@@ -42,9 +42,9 @@
         "logo": "./assets/logo.png",
         "composerIcon": "./assets/logo.png",
         "defaultPrompt": [
-          "Add AI video generation to this app with the Runway API",
-          "Help me connect my Runway Dev account and choose a project",
-          "Why did my last Runway task fail, and how do I fix it?"
+          "Integrate video generation into this app",
+          "Help me get started with Runway Dev",
+          "Help me investigate a failed Runway task"
         ]
       },
       "review": {
@@ -101,7 +101,7 @@
         }
       },
       "publication": {
-        "release_notes": "Runway Dev 4.0.0 keeps the runway-api install ID and moves the developer plugin to the repository root with seven refreshed skills. Legacy generation and utility skills are archived under legacy/ for explicit separate use."
+        "release_notes": "Connect your coding agent to Runway Dev for integration guidance, resource management, and debugging. Includes refreshed guidance for models, Model Routers, Recipes, Workflows, and live avatars."
       }
     }
   }

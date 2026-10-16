@@ -1,7 +1,7 @@
 {
   "name": "runway-api",
   "version": "4.0.0",
-  "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills.",
+  "description": "Build, debug, and maintain apps with Runway's unified generative media API, integration skills, and Dev MCP.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"
