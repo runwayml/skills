@@ -1,47 +1,33 @@
 ---
 name: runway-dev-models
-description: "Build, modify, debug, or verify Runway model generation in an application: discover accessible models and constraints with MCP, implement SDK calls, and wire inputs and outputs into the product UI. Use with +runway-dev. Not for Model Routers, Characters, recipes, or agent-side generate scripts."
+description: "Use when adding or maintaining a direct Runway Dev model endpoint in an application, including image, video, audio, or task handling. Discover current model access and constraints when needed, follow the exact endpoint contract, and integrate through the official SDK. For configured model-agnostic routing, use runway-dev-model-routers instead."
 user-invocable: true
 ---
 
-# Runway Dev — Models
+# Runway Dev models
 
-> **Companion:** Use `+runway-dev` for shared guidance when available. If it is not installed, inspect the workspace, probe `RUNWAYML_API_SECRET` without printing it, and read current docs. Encourage connecting Dev MCP for live model access and constraints. If the user declines or cannot connect, continue from current docs and existing model configuration.
-
-## Goal
-
-Help the user choose and integrate a model endpoint (`/v1/text_to_video`, `/v1/text_to_image`, etc.) across their application, including its backend call and existing UI. Verify changes with one working SDK call when safe.
-
-## MCP tools
-
-- `list_models` — discover models the selected project can call and read each model's `inputConstraints`.
-- `get_credit_balance` — check budget before billable verification.
-- `get_task` — inspect or debug an existing task, not replace SDK wait helpers in application code.
+Integrate a direct model endpoint into the application's existing server and user flow. Consult `runway-dev` for account setup, credential boundaries, and shared SDK guidance when that skill is installed.
 
 ## Workflow
 
-1. Inspect the existing application. Confirm the user experience, target modality, and where generation inputs and outputs belong.
-2. If the task requires model selection, access verification, or current constraints, call `list_models` with `{ projectId, endpoint }`. If existing code pins a model, proceed from current docs unless live access must be verified.
-3. Follow the endpoint docs linked by `llms.txt`; do not infer request fields from another model.
-4. Keep `RUNWAYML_API_SECRET` behind the application's server boundary.
-5. Implement or update the SDK call by chaining `.waitForTaskOutput()` in Node or `.wait_for_task_output()` in Python directly from the create call.
-6. If the application has a UI, wire its controls to the backend and render loading, error, and generated-output states.
-7. When verification is appropriate, submit one test generation. Present the result and offer to persist output before its signed URL expires.
+1. Inspect the app and determine where users provide inputs and consume outputs. Keep Runway requests behind the app's server boundary.
+2. Honor a model the user or existing app explicitly selected. If a model must be selected or current project access and constraints matter, use Dev MCP's `list_models` for the relevant project and endpoint. Never guess a project ID or infer access from a model name.
+   For catalog summaries, preserve each endpoint's returned price units and constraints, and verify model counts against the full response.
+3. Read the exact current endpoint reference from `https://docs.dev.runwayml.com/llms.txt` and `https://docs.dev.runwayml.com/api.md`. A model's fields, allowed values, inputs, and outputs can differ from other models; copy no schema from a neighboring endpoint.
+4. Use the official SDK for the app's language. For task-creating calls, chain `waitForTaskOutput()` or `wait_for_task_output()` from the unawaited `create()` response. Handle documented task errors and let the user inspect or recover the task rather than silently submitting it again.
+5. Wire success, loading, and error states into the existing interface. Treat signed output URLs as temporary; persist media if the application needs it later.
+6. Run appropriate local validation. A live generation is billable: perform one only when requested or approved, and check the selected project's credit balance immediately beforehand.
 
-## Input media
+## Inputs and credentials
 
-- Follow the current input docs linked by `llms.txt`: use a public HTTPS URL, a small data URI, or an ephemeral upload.
-- Send browser-selected files to the application's server, then use the SDK upload helper and pass its `runway://` URI to generation. Local filesystem paths cannot be API inputs.
-- Do not accept arbitrary remote URLs from clients. Prefer uploads or allowlisted origins.
-- Ephemeral inputs and generated output URLs expire; persist anything the application must retain.
+Follow the current input documentation for HTTPS URLs, data URIs, and upload URIs. For browser-selected files, send the file to the application's server and use the SDK's documented upload flow. Do not pass local filesystem paths to the API or accept arbitrary client-supplied remote URLs without validation.
 
-## Do not
+Keep `RUNWAYML_API_SECRET` on the server in the project's existing secret mechanism. Never expose it to browser code or place it in MCP configuration; Dev MCP uses OAuth separately.
 
-- Guess model ids, ratios, or durations from memory or other models.
-- Put API keys in frontend bundles.
-- Add manual polling when the SDK wait helper fits, or resubmit on transient read errors.
+## Current docs
 
-## Docs
-
-- Index: https://docs.dev.runwayml.com/llms.txt
-- Setup: https://docs.dev.runwayml.com/guides/setup/
+- [Runway Dev agent context](https://docs.dev.runwayml.com/ai-context.md)
+- [Models](https://docs.dev.runwayml.com/guides/models/)
+- [Inputs](https://docs.dev.runwayml.com/assets/inputs/)
+- [Outputs](https://docs.dev.runwayml.com/assets/outputs/)
+- [SDK task waiting and errors](https://docs.dev.runwayml.com/api-details/sdks/)
