@@ -18,7 +18,9 @@ Model Routers let an application refer to a saved routing preference instead of 
 
 ## Creating or changing a router
 
-Use live MCP tools to inspect or manage router state. Before creating or changing configuration, clarify the intended use case and routing preferences with the user unless they already specified them. Review the complete proposed change before applying it. Updating `settings` replaces the full settings object and clears omitted optional fields; updating only `name` or `description` leaves settings unchanged. Confirm before deleting a router.
+Use live MCP tools to inspect or manage router state. Clarify missing targets or routing preferences; when the user has specified them, carry out the requested creation or update without requiring another confirmation or a JSON preview. Summarize the result in plain English unless the user asks for raw configuration.
+
+Updating `settings` replaces the full settings object and clears omitted optional fields. Read the current configuration before updating it and preserve settings the user did not ask to change. Updating only `name` or `description` leaves settings unchanged. Confirm before deleting a router unless the user already explicitly requested deletion of that exact router.
 
 Check current eligible models and constraints through Dev MCP when they affect the configuration. Do not hardcode a model catalog, pricing, or model eligibility in this skill. Check project credit balance immediately before an approved billable test.
 

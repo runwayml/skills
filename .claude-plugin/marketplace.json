@@ -11,7 +11,7 @@
       "name": "runway-api",
       "source": "./",
       "version": "4.0.0",
-      "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills."
+      "description": "Add AI video, image and audio generation to your apps with Runway’s API, including Runway’s own models alongside the best from other labs. This plugin connects Claude to the Runway Dev MCP and adds Runway's skills, so Claude works with live data from your account (models, prices, Model Routers, failed tasks) and builds the integration end to end."
     }
   ]
 }

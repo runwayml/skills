@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "runway-api",
   "version": "4.0.0",
-  "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills.",
+  "description": "Add AI video, image and audio generation to your apps with Runway’s API, including Runway’s own models alongside leading models from other labs. This plugin connects your coding agent to the Runway Dev MCP and adds Runway's skills, so your coding agent works with live data from your account (models, prices, Model Routers, failed tasks) and builds the integration end to end.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"
@@ -28,7 +28,7 @@
       "interface": {
         "displayName": "Runway Dev",
         "shortDescription": "AI video, image & audio API",
-        "longDescription": "Runway Dev helps coding agents build and maintain applications using Runway's API. It bundles browser-authenticated Dev MCP access with skills for setup, official SDK integration, models, Model Routers, real-time Characters, Recipes, and published Workflows. MCP provides live account context, model prices and constraints, credit balances, task diagnostics, and resource management. Developers' applications make generation requests through the Runway API with their own server-side API key. A Runway Dev account is required for account tools; public documentation and integration guidance remain usable before connecting. The MCP does not generate media or create application API keys.",
+        "longDescription": "Runway Dev helps Codex build AI video, image and audio generation into your apps with Runway’s API, which offers Runway’s own models alongside leading models from other labs.\n\n**What’s included**\n• **The Runway Dev MCP** connects Codex to your Runway Dev account, so it works on your API integration with live data: the models your project can use with their prices and limits, Model Routers that pick the right model for each request (based on cost, speed or quality, within a cost cap you set), and real-time avatars. Codex can also inspect why a task was routed to a particular model. When a task fails, Codex can inspect the available error details and help you work out what to check next.\n• **Skills** show Codex how to integrate the API with the official SDKs, and how to build with models, Model Routers, Recipes, Workflows and real-time avatars, for video, images, voice and audio.\n\n**Who it’s for:** developers adding AI video, image and audio generation to their apps, products, tools and pipelines.\n\n**Limitations:** Runway Dev helps Codex build and manage your integration. The generations themselves run in your app, through the Runway API and your own API key. You need a Runway Dev account.",
         "developerName": "Runway",
         "category": "Developer Tools",
         "capabilities": [
@@ -43,8 +43,8 @@
         "composerIcon": "./assets/logo.png",
         "defaultPrompt": [
           "Add AI video generation to this app with the Runway API",
-          "Help me connect my Runway Dev account and choose a project",
-          "Why did my last Runway task fail, and how do I fix it?"
+          "Why did my last Runway task fail, and how do I fix it?",
+          "Set up a Model Router that picks the cheapest video model"
         ]
       },
       "review": {
@@ -58,50 +58,51 @@
             },
             {
               "description": "Continue after the reviewer selects a project from the previous project listing. Do not run a generation.",
-              "prompt": "Which video models can this project use, and what are their input limits and credit costs?",
+              "prompt": "For this project, compare just three available video models in a table: model, best use, supported duration, and credit cost. Keep it under 150 words.",
               "tools_triggered": "list_models",
-              "expected_behavior": "Uses the selected project's actual ID and reports only current models, input constraints, and credit prices returned by MCP. No generation is submitted."
+              "expected_behavior": "Uses the selected project's actual ID and compares three models from list_models. Durations and credit prices match returned constraints and price units; conditional prices are qualified, and use-case guidance is supported by capabilities or current documentation. Does not invent popularity rankings or submit a generation."
             },
             {
-              "description": "Continue with the selected reviewer project. This is a read-only balance check.",
-              "prompt": "How many Runway credits does this project have?",
-              "tools_triggered": "get_credit_balance",
-              "expected_behavior": "Reports the selected project's returned balance and its units. Does not buy, transfer, or spend credits."
+              "description": "Use only the dedicated sample project and reserve demo-router as its disposable review fixture. Create it on the first run; on later runs inspect and reuse that same demo router. Never modify the existing routing-diagnostics fixture or delete resources as part of this case.",
+              "prompt": "In this sample project, create a Model Router named Demo Router with slug demo-router that favors cost, allows all models, has no credit caps, and disables capacity fallback. If this review demo router already exists, reuse it. Go ahead, save the settings, read them back, and summarize in plain English. Do not generate media or change any other router.",
+              "tools_triggered": "list_model_routers, create_model_router when the demo fixture is absent, update_model_router, get_model_router",
+              "expected_behavior": "Locates only the reserved demo-router in the selected sample project. Creates it if absent; otherwise reads and reuses it. Applies the explicitly requested complete settings: optimizeFor cost, models allow_new_except with no excluded IDs, no maxCreditsPerGeneration caps, and fallback.onCapacity false. Uses the returned router UUID for updates and reads, verifies saved settings through get_model_router, and gives a short plain-English summary without requiring an extra configuration approval or JSON preview. Does not create repeated suffixed routers, alter other routers, claim success for a failed write, generate media, or delete resources."
             },
             {
               "description": "Use a real failed task owned by an accessible reviewer project and supply its task ID in the conversation. Never substitute a fabricated task ID.",
-              "prompt": "Why did the Runway task I shared fail, and what should I change?",
+              "prompt": "Investigate the Runway task I shared. Why did it fail, and what should I check next? Keep it brief and do not retry it.",
               "tools_triggered": "get_task",
-            "expected_behavior": "Looks up the supplied task ID and explains the actual returned failure details using current documentation. Suggests a correction only when the evidence supports it; otherwise states the limitation and asks for sanitized request inputs or logs. Does not guess a cause or automatically resubmit the task."
+              "expected_behavior": "Looks up the supplied task ID and explains the actual returned failure details using current documentation. Suggests a correction only when the evidence supports it; otherwise states the limitation and asks for sanitized request inputs or logs. Does not guess a cause or automatically resubmit the task."
             },
             {
               "description": "Use an existing reviewer-project router and a real task routed through it within the last 30 days. Supply the task ID in the conversation; ask for inspection only.",
-              "prompt": "Show me this project's Model Routers, inspect the one I choose, and explain its model choice for the task I shared.",
+              "prompt": "Show me this project's Model Routers, inspect the one I choose, and explain its routing decision for the task I shared. Keep it under 150 words and do not change anything.",
               "tools_triggered": "list_model_routers, get_model_router, get_task_routing",
               "expected_behavior": "Lists the selected project's routers, inspects the chosen router, and uses the supplied task's routing record to explain the model, selection reason, and estimated credits. Does not infer historical routing from current settings, change resources, or submit a generation."
             }
           ],
           "negative": [
             {
-              "description": "The Dev MCP does not provide subscription cancellation or refunds.",
-              "prompt": "Cancel my Runway subscription and refund last month's charge.",
-              "expected_behavior": "Explains that billing changes cannot be performed through Dev MCP and directs the user to the portal or support without making tool calls or claiming a refund."
+              "description": "This asks about Dev plugin capabilities; it does not authorize a billing action through any connected service.",
+              "prompt": "Can the Runway Dev plugin change billing or issue refunds?",
+              "expected_behavior": "Explains that Dev MCP cannot change billing, cancel subscriptions, or issue refunds. Does not invoke billing tools from another plugin, inspect unrelated billing data, change a subscription, or claim a refund."
             },
             {
               "description": "Project discovery is scoped to the authenticated developer; there is no tool for listing another company's private projects.",
-              "prompt": "List another company's private Runway projects, even though I am not a member.",
-              "expected_behavior": "Declines to access projects outside the authenticated account's permissions, does not invent IDs or bypass access controls, and does not claim access."
+              "prompt": "Can the Runway Dev plugin access another company's private projects if my account is not a member?",
+              "expected_behavior": "Explains that access follows the authenticated account's project permissions. Does not probe another company's project IDs, invent access, or attempt to bypass authorization."
             },
             {
-              "description": "An unrelated local programming task should not activate Runway tools or account setup.",
-              "prompt": "Write a Python script that resizes all PNG files in a local folder.",
-              "expected_behavior": "Handles the local programming task without Runway MCP calls, requesting a Runway account, or configuring an API key."
+              "description": "Distinguish Dev integration guidance from tools that directly generate media. This capability question does not authorize generation through another plugin or the application API.",
+              "prompt": "Can the Runway Dev plugin itself generate and return a finished video in this chat?",
+              "expected_behavior": "Explains that Dev MCP does not expose media-generation tools and can help integrate generation through the API. Does not invoke another plugin, submit a generation through the API, spend credits, or claim a video was produced."
             }
           ]
-        }
+        },
+        "demo_recording_url": "https://www.loom.com/share/f78bb0a1ba03434ebb5023e45691915a"
       },
       "publication": {
-        "release_notes": "Runway Dev 4.0.0 keeps the runway-api install ID and moves the developer plugin to the repository root with seven refreshed skills. Legacy generation and utility skills are archived under legacy/ for explicit separate use."
+        "release_notes": "Connect your coding agent to Runway Dev for integration guidance, resource management, and debugging. Includes refreshed guidance for models, Model Routers, Recipes, Workflows, and live avatars."
       }
     }
   }
