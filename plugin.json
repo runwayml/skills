@@ -98,7 +98,8 @@
               "expected_behavior": "Explains that Dev MCP does not expose media-generation tools and can help integrate generation through the API. Does not invoke another plugin, submit a generation through the API, spend credits, or claim a video was produced."
             }
           ]
-        }
+        },
+        "demo_recording_url": "https://www.loom.com/share/f78bb0a1ba03434ebb5023e45691915a"
       },
       "publication": {
         "release_notes": "Connect your coding agent to Runway Dev for integration guidance, resource management, and debugging. Includes refreshed guidance for models, Model Routers, Recipes, Workflows, and live avatars."
