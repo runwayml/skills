@@ -1,6 +1,11 @@
 # Runway Dev
 
-Build AI video, image, audio, and real-time Character features into applications with Runway Dev. The developer plugin combines the hosted Dev MCP with seven skills for setup, official SDK integration, models, Model Routers, Characters, Recipes, and published Workflows.
+Runway Dev helps your coding agent build AI video, image and audio generation into your apps with Runway’s API, including Runway’s own models alongside the best from other labs.
+
+## What’s included
+
+- **The Runway Dev MCP** connects your agent to your Runway Developer Portal account. It can look up available models, prices and limits; set up Model Routers based on cost, speed or quality, with an optional credit cap; and manage real-time avatars. It can also inspect failed tasks and routing decisions to help you work out what to check next.
+- **Skills** show your agent how to integrate the API with the official SDKs, and how to build with models, Model Routers, Recipes, Workflows and real-time avatars.
 
 This repository is the plugin: root manifests and MCP configuration load the seven active skills in `skills/`. The install ID remains `runway-api`; the display name is Runway Dev.
 
