@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.0 (unreleased)
+
+- Runway Dev plugin bundles the hosted Dev MCP and seven refreshed integration/setup skills for Codex, Claude Code, and Cursor. Replit can use the same skills and a separate MCP install link.
+- Setup guides browser sign-in or signup, account/project verification, and server-side application credentials.
+- **Migration:** The repository root is the Dev plugin, keeping the `runway-api` install ID and using the Runway Dev display name. Legacy generation and utility skills and shared helpers move to `legacy/` and are retired from active discovery. Explicit legacy use remains documented; older commit-pinned installs stay on their prior version until updated.
+- Allowlisted reproducible ZIP export without copied plugin trees, portable schema validation, packaging tests, and draft review cases.
+
 ## 3.0.0
 
 - **Breaking:** Removed legacy `rw-integrate-*`, setup, compatibility, and static API-reference skills. Use `runway-dev` with the relevant `runway-dev-*` surface skill for application integration.

@@ -24,6 +24,7 @@
   ],
   "extensions": {
     "com.openai": {
+      "onboardingSkill": "./skills/runway-dev-setup/SKILL.md",
       "interface": {
         "displayName": "Runway Dev",
         "shortDescription": "AI video, image & audio API",
@@ -46,7 +47,62 @@
           "Why did my last Runway task fail, and how do I fix it?"
         ]
       },
-      "onboardingSkill": "./skills/runway-dev-setup/SKILL.md"
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Use a dedicated reviewer account with at least one accessible project. The result must identify only projects returned by MCP.",
+              "prompt": "Which Runway Dev account am I connected to, and which projects can I use?",
+              "tools_triggered": "whoami, list_projects",
+              "expected_behavior": "Reports the connected identity and accessible project names and IDs from the tool responses, without inventing or creating a project."
+            },
+            {
+              "description": "Continue after the reviewer selects a project from the previous project listing. Do not run a generation.",
+              "prompt": "Which video models can this project use, and what are their input limits and credit costs?",
+              "tools_triggered": "list_models",
+              "expected_behavior": "Uses the selected project's actual ID and reports only current models, input constraints, and credit prices returned by MCP. No generation is submitted."
+            },
+            {
+              "description": "Continue with the selected reviewer project. This is a read-only balance check.",
+              "prompt": "How many Runway credits does this project have?",
+              "tools_triggered": "get_credit_balance",
+              "expected_behavior": "Reports the selected project's returned balance and its units. Does not buy, transfer, or spend credits."
+            },
+            {
+              "description": "Use a real failed task owned by an accessible reviewer project and supply its task ID in the conversation. Never substitute a fabricated task ID.",
+              "prompt": "Why did the Runway task I shared fail, and what should I change?",
+              "tools_triggered": "get_task",
+            "expected_behavior": "Looks up the supplied task ID and explains the actual returned failure details using current documentation. Suggests a correction only when the evidence supports it; otherwise states the limitation and asks for sanitized request inputs or logs. Does not guess a cause or automatically resubmit the task."
+            },
+            {
+              "description": "Use an existing reviewer-project router and a real task routed through it within the last 30 days. Supply the task ID in the conversation; ask for inspection only.",
+              "prompt": "Show me this project's Model Routers, inspect the one I choose, and explain its model choice for the task I shared.",
+              "tools_triggered": "list_model_routers, get_model_router, get_task_routing",
+              "expected_behavior": "Lists the selected project's routers, inspects the chosen router, and uses the supplied task's routing record to explain the model, selection reason, and estimated credits. Does not infer historical routing from current settings, change resources, or submit a generation."
+            }
+          ],
+          "negative": [
+            {
+              "description": "The Dev MCP does not provide subscription cancellation or refunds.",
+              "prompt": "Cancel my Runway subscription and refund last month's charge.",
+              "expected_behavior": "Explains that billing changes cannot be performed through Dev MCP and directs the user to the portal or support without making tool calls or claiming a refund."
+            },
+            {
+              "description": "Project discovery is scoped to the authenticated developer; there is no tool for listing another company's private projects.",
+              "prompt": "List another company's private Runway projects, even though I am not a member.",
+              "expected_behavior": "Declines to access projects outside the authenticated account's permissions, does not invent IDs or bypass access controls, and does not claim access."
+            },
+            {
+              "description": "An unrelated local programming task should not activate Runway tools or account setup.",
+              "prompt": "Write a Python script that resizes all PNG files in a local folder.",
+              "expected_behavior": "Handles the local programming task without Runway MCP calls, requesting a Runway account, or configuring an API key."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "Runway Dev 4.0.0 keeps the runway-api install ID and moves the developer plugin to the repository root with seven refreshed skills. Legacy generation and utility skills are archived under legacy/ for explicit separate use."
+      }
     }
   }
 }
