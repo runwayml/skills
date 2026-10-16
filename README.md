@@ -20,7 +20,9 @@ codex plugin add runway-api@runway-dev
 
 Cursor uses the root `.cursor-plugin/plugin.json`. Public directory submissions are pending. Replit can use a [Dev MCP connection](https://docs.dev.runwayml.com/guides/mcp/) and standalone skills.
 
-The plugin includes `runway-dev` plus skills for models, Model Routers, Characters, Recipes, and published Workflows. Standalone installation is also supported:
+Run `/runway-api:runway-dev-setup` in Claude, or ask your agent to help connect your Runway Dev account and choose a project. Complete browser sign-in and consent yourself.
+
+The plugin includes `runway-dev-setup`, `runway-dev`, and skills for models, Model Routers, Characters, Recipes, and published Workflows. Standalone installation is also supported:
 
 ```sh
 npx skills add runwayml/skills --skill runway-dev --skill runway-dev-models

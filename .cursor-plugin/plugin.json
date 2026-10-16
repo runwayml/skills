@@ -33,6 +33,7 @@
   ],
   "skills": [
     "./skills/runway-dev",
+    "./skills/runway-dev-setup",
     "./skills/runway-dev-models",
     "./skills/runway-dev-model-routers",
     "./skills/runway-dev-characters",
