@@ -1,0 +1,17 @@
+{
+  "name": "runway-dev",
+  "owner": {
+    "name": "Runway"
+  },
+  "metadata": {
+    "description": "Runway Dev MCP and application integration skills"
+  },
+  "plugins": [
+    {
+      "name": "runway-api",
+      "source": "./",
+      "version": "4.0.0",
+      "description": "Build AI video, image, audio, and real-time Character features into applications with Runway Dev's MCP, official SDKs, and integration skills."
+    }
+  ]
+}
