@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "runway-api",
   "version": "4.0.0",
-  "description": "Build, debug, and maintain apps with Runway's unified generative media API, integration skills, and Dev MCP.",
+  "description": "Build, debug, and maintain apps with Runway Dev's unified generative media API, integration skills, and Dev MCP.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"
@@ -27,8 +27,8 @@
       "onboardingSkill": "./skills/runway-dev-setup/SKILL.md",
       "interface": {
         "displayName": "Runway Dev",
-        "shortDescription": "Build apps with Runway's API",
-        "longDescription": "Runway Dev brings leading image, video, and audio models from Runway and other frontier labs together in one API.\n\nBuild, debug, and maintain your Runway integration from your coding agent. Get guidance on the official SDKs, model selection, Model Routers, Recipes, Workflows, and live avatars (Runway Characters). Connect your account to manage Model Routers and Characters, investigate failed requests, and understand model routing decisions.",
+        "shortDescription": "Build apps with Runway Dev",
+        "longDescription": "Runway Dev brings leading image, video, and audio models from Runway and other frontier labs together in one API.\n\nBuild, debug, and maintain your Runway Dev integration from your coding agent. Get guidance on the official SDKs, model selection, Model Routers, Recipes, Workflows, and live avatars (Runway Characters). Connect your account to manage Model Routers and Characters, investigate failed requests, and understand model routing decisions.",
         "developerName": "Runway",
         "category": "Developer Tools",
         "capabilities": [
