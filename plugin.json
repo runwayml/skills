@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "runway-api",
   "version": "4.0.0",
-  "description": "Add AI video, image and audio generation to your apps with Runway’s API, including Runway’s own models alongside leading models from other labs. This plugin connects your coding agent to the Runway Dev MCP and adds Runway's skills, so your coding agent works with live data from your account (models, prices, Model Routers, failed tasks) and builds the integration end to end.",
+  "description": "Get guidance for integrating video, image and audio generation with the Runway API and official SDKs. Connect to your Runway Dev account to inspect available models and task errors, manage Model Routers and live avatars, and inspect recorded routing decisions.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"
@@ -27,8 +27,8 @@
       "onboardingSkill": "./skills/runway-dev-setup/SKILL.md",
       "interface": {
         "displayName": "Runway Dev",
-        "shortDescription": "AI video, image & audio API",
-        "longDescription": "Runway Dev helps Codex build AI video, image and audio generation into your apps with Runway’s API, which offers Runway’s own models alongside leading models from other labs.\n\nWhat’s included\n\nThe Runway Dev MCP connects Codex to your Runway Dev account, so it works on your API integration with live data: the models your project can use with their prices and limits, Model Routers that pick the right model for each request (based on cost, speed or quality, within a cost cap you set), and real-time avatars. Codex can also inspect why a task was routed to a particular model. When a task fails, Codex can inspect the available error details and help you work out what to check next.\n\nSkills show Codex how to integrate the API with the official SDKs, and how to build with models, Model Routers, Recipes, Workflows and real-time avatars, for video, images, voice and audio.\n\nWho it’s for: developers adding AI video, image and audio generation to their apps, products, tools and pipelines.\n\nLimitations: Runway Dev helps Codex build and manage your integration. The generations themselves run in your app, through the Runway API and your own API key. You need a Runway Dev account.",
+        "shortDescription": "Runway API integration help",
+        "longDescription": "Runway Dev helps you integrate video, image and audio generation into your apps through Runway’s API, with models from Runway and other providers.\n\nWhat’s included\n\nThe Runway Dev MCP connects to your Runway Dev account so your coding agent can inspect the models your project can use, including their input limits and prices; manage Model Router configurations and live-avatar resources; inspect recorded task-routing decisions; and read available task error details.\n\nSkills provide guidance for using the official SDKs and integrating models, Model Routers, Recipes, Workflows and live avatars.\n\nWho it’s for: developers integrating generative media into apps, products, tools and pipelines.\n\nLimitations: the plugin provides integration guidance and account-management tools. Media generation runs through the Runway API in your application. You need a Runway Dev account to access project resources.",
         "developerName": "Runway",
         "category": "Developer Tools",
         "capabilities": [
@@ -42,9 +42,9 @@
         "logo": "./assets/logo.png",
         "composerIcon": "./assets/logo.png",
         "defaultPrompt": [
-          "Add AI video generation to this app with the Runway API",
-          "Why did my last Runway task fail, and how do I fix it?",
-          "Set up a Model Router that picks the cheapest video model"
+          "Help me integrate video generation into this app.",
+          "Help me investigate a failed Runway task.",
+          "Configure a Model Router to favor lower-cost models."
         ]
       },
       "review": {
