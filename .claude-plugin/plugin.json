@@ -21,5 +21,6 @@
     "characters",
     "model-router"
   ],
-  "displayName": "Runway Dev"
+  "displayName": "Runway Dev",
+  "icon": "./assets/logo.png"
 }
