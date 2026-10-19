@@ -2,7 +2,7 @@
   "name": "runway-api",
   "displayName": "Runway Dev",
   "version": "4.0.0",
-  "description": "Add AI video, image and audio generation to your apps with Runway’s API, including Runway’s own models alongside the best from other labs. This plugin connects Cursor to the Runway Dev MCP and adds Runway's skills, so Cursor’s agent works with live data from your account (models, prices, Model Routers, failed tasks) and builds the integration end to end.",
+  "description": "Get guidance for integrating video, image and audio generation with the Runway API and official SDKs. Connect to your Runway Dev account to inspect available models and task errors, manage Model Routers and live avatars, and inspect recorded routing decisions.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"

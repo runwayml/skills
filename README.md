@@ -45,8 +45,8 @@ The Git-backed equivalent is `codex plugin marketplace add runwayml/skills`. The
 For an OpenAI package export, use Node.js 24.12 or newer:
 
 ```sh
-npm ci --ignore-scripts
-npm run build:plugin
+npm --prefix tooling ci --ignore-scripts
+npm --prefix tooling run build:plugin
 ```
 
 This creates `.build/runway-api-4.0.0.zip`. It exports the root plugin files and active Dev skills from an explicit allowlist, excluding the legacy archive and development files. Package validation and native authentication are separate checks.
@@ -100,6 +100,6 @@ Use the [current docs](https://docs.dev.runwayml.com/), [MCP connection guide](h
 
 ## Development and release
 
-Edit the root manifests and active `skills/` directly. There is no generated plugin copy or sync step. Run `npm run build:plugin` to export a ZIP; add any new skill resources to its explicit file allowlist. CI checks the export, cross-host paths, and portable schemas. See [the maintainer guide](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
+Edit the root manifests and active `skills/` directly. There is no generated plugin copy or sync step. Build and test dependencies live under `tooling/` so plugin installation does not install development packages. Run `npm --prefix tooling run build:plugin` to export a ZIP; add any new skill resources to its explicit file allowlist. CI checks the export, cross-host paths, and portable schemas. See [the maintainer guide](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
 
 Licensed under [MIT](LICENSE).

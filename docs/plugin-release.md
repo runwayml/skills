@@ -7,28 +7,28 @@ Edit the root manifests, MCP configuration, and active `skills/` directly. The M
 Use Node.js 24.12 or newer:
 
 ```sh
-npm ci --ignore-scripts
-npm run check
-npm run typecheck
+npm --prefix tooling ci --ignore-scripts
+npm --prefix tooling run check
+npm --prefix tooling run typecheck
 mkdir -p .build/schemas
 curl --fail --silent --show-error https://agent-plugins.org/schemas/1.0.0/plugin.schema.json -o .build/schemas/plugin.schema.json
 curl --fail --silent --show-error https://agent-plugins.org/schemas/1.0.0/mcp.schema.json -o .build/schemas/mcp.schema.json
-shasum -a 256 -c scripts/portable-schemas.sha256
-npm test
-npm run build:plugin
-npm run validate:plugin
+shasum -a 256 -c tooling/scripts/portable-schemas.sha256
+npm --prefix tooling test
+npm --prefix tooling run build:plugin
+npm --prefix tooling run validate:plugin
 claude plugin validate .claude-plugin/plugin.json
 claude plugin validate .claude-plugin/marketplace.json
 ```
 
 The exporter writes `.build/runway-api-<version>.zip` from an explicit allowlist. CI checks the package; installation, OAuth, and marketplace acceptance require separate verification.
 
-If schema checksums change, review the upstream schema diff before updating `scripts/portable-schemas.sha256`.
+If schema checksums change, review the upstream schema diff before updating `tooling/scripts/portable-schemas.sha256`.
 
 ## Updating a release
 
 - Keep the version aligned in `plugin.json`, `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, and `.claude-plugin/marketplace.json`. Update the changelog and manifest release notes.
-- When adding skill resources, update the export allowlist in `scripts/build-dev-plugin.ts` and Cursor's explicit skill paths. Keep model contracts in linked current docs.
+- When adding skill resources, update the export allowlist in `tooling/scripts/build-dev-plugin.ts` and Cursor's explicit skill paths. Keep model contracts in linked current docs.
 - Test installation, setup, authenticated tool calls, and reconnect behavior in each supported host. Keep the manifest's reviewer cases aligned with supported behavior; record results against the release commit outside the package.
 
 ## Distribution

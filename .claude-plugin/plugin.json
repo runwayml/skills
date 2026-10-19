@@ -1,12 +1,16 @@
 {
   "name": "runway-api",
   "version": "4.0.0",
-  "description": "Add AI video, image and audio generation to your apps with Runway’s API, including Runway’s own models alongside the best from other labs. This plugin connects Claude to the Runway Dev MCP and adds Runway's skills, so Claude works with live data from your account (models, prices, Model Routers, failed tasks) and builds the integration end to end.",
+  "description": "Get guidance for integrating video, image and audio generation with the Runway API and official SDKs. Connect to your Runway Dev account to inspect available models and task errors, manage Model Routers and live avatars, and inspect recorded routing decisions.",
   "author": {
     "name": "Runway",
     "url": "https://runway.com"
   },
   "homepage": "https://dev.runway.com/agents",
+  "documentationUrl": "https://docs.dev.runwayml.com/",
+  "supportUrl": "https://help.runwayml.com/hc/en-us",
+  "privacyPolicyUrl": "https://runway.com/privacy-policy",
+  "termsOfServiceUrl": "https://runway.com/terms-of-use",
   "repository": "https://github.com/runwayml/skills",
   "license": "MIT",
   "keywords": [
@@ -21,5 +25,6 @@
     "characters",
     "model-router"
   ],
-  "displayName": "Runway Dev"
+  "displayName": "Runway Dev",
+  "icon": "./assets/logo.png"
 }
