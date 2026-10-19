@@ -90,7 +90,15 @@ Standalone skills do not automatically configure MCP. Use one installation path 
 
 ## Legacy generation and utility skills
 
-The older `rw-generate-*`, `use-runway-api`, and `rw-check-org-details` skills and their helpers are archived under [`legacy/`](https://github.com/runwayml/skills/tree/main/legacy). They are retired from the active plugin and have not been refreshed. The archive explains explicit standalone installation for self-contained skills and the repository checkout needed for shared Python helpers. Existing marketplace installs pinned to an older commit keep that version until updated.
+The older `rw-generate-*`, `use-runway-api`, and `rw-check-org-details` skills and their helpers remain available at [this pinned revision](https://github.com/runwayml/skills/tree/342b34b0df2bd3e6747beaa5fdb9ef11d565be94/legacy). They are retired and are no longer included in the current plugin repository files.
+
+Install the self-contained `use-runway-api` skill explicitly:
+
+```sh
+npx skills add https://github.com/runwayml/skills/tree/342b34b0df2bd3e6747beaa5fdb9ef11d565be94/legacy --skill use-runway-api
+```
+
+For the older Python helpers, clone this repository, check out that revision, and run from `legacy/`. Existing marketplace installs pinned to an older commit keep that version until updated.
 
 ## Credentials and usage
 
