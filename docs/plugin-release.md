@@ -1,6 +1,6 @@
 # Maintaining the Runway Dev plugin
 
-Edit the root manifests, MCP configuration, and active `skills/` directly. The MCP server is hosted separately; this repository packages its connection and skills. Legacy skills stay under `legacy/`, outside the active plugin.
+Edit the root manifests, MCP configuration, and active `skills/` directly. The MCP server is hosted separately; this repository packages its connection and skills. Legacy skills remain available at the pinned revision linked in the README, outside the current plugin files.
 
 ## Validate and build
 
