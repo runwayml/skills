@@ -17,15 +17,16 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-      - run: npm ci --ignore-scripts
-      - run: npm run check
-      - run: npm run typecheck
+          cache-dependency-path: tooling/package-lock.json
+      - run: npm --prefix tooling ci --ignore-scripts
+      - run: npm --prefix tooling run check
+      - run: npm --prefix tooling run typecheck
       - name: Fetch and verify portable schemas
         run: |
           mkdir -p .build/schemas
           curl --fail --silent --show-error --max-time 30 https://agent-plugins.org/schemas/1.0.0/plugin.schema.json -o .build/schemas/plugin.schema.json
           curl --fail --silent --show-error --max-time 30 https://agent-plugins.org/schemas/1.0.0/mcp.schema.json -o .build/schemas/mcp.schema.json
-          shasum -a 256 -c scripts/portable-schemas.sha256
-      - run: npm test
-      - run: npm run build:plugin
-      - run: npm run validate:plugin
+          shasum -a 256 -c tooling/scripts/portable-schemas.sha256
+      - run: npm --prefix tooling test
+      - run: npm --prefix tooling run build:plugin
+      - run: npm --prefix tooling run validate:plugin

@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import AdmZip from "adm-zip";
 
-export const REPO_ROOT = resolve(import.meta.dirname, "..");
+export const REPO_ROOT = resolve(import.meta.dirname, "../..");
 export const SKILLS = [
   "runway-dev",
   "runway-dev-setup",
