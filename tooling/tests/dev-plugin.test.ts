@@ -37,11 +37,24 @@ function fixture(run: (root: string, directory: string) => void) {
   }
 }
 
-test("hosts load the same root plugin", () => {
+const CLAUDE_ROOT = join(REPO_ROOT, "claude");
+const CLAUDE_MCP_URL = "https://dev.runwayml.com/mcp/claude";
+
+function repoJson(path: string) {
+  return JSON.parse(readFileSync(join(REPO_ROOT, path), "utf8"));
+}
+
+function skillName(markdown: string) {
+  return markdown.match(/^---\nname: (\S+)\n/)?.[1];
+}
+
+test("hosts load the same plugin identity", () => {
   const { manifest, files } = buildFiles();
   const json = (path: string) => JSON.parse(files.get(path)?.toString() ?? "");
-  for (const host of ["claude", "cursor"]) {
-    const native = json(`.${host}-plugin/plugin.json`);
+  for (const native of [
+    json(".cursor-plugin/plugin.json"),
+    repoJson("claude/.claude-plugin/plugin.json"),
+  ]) {
     assert.equal(native.name, manifest.name);
     assert.equal(native.version, manifest.version);
     assert.equal(native.displayName, "Runway Dev");
@@ -62,19 +75,46 @@ test("hosts load the same root plugin", () => {
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name);
   assert.deepEqual(new Set(active), new Set(SKILLS));
-  for (const path of [
-    ".claude-plugin/marketplace.json",
-    ".agents/plugins/marketplace.json",
+  for (const [path, source] of [
+    [".claude-plugin/marketplace.json", "./claude"],
+    [".agents/plugins/marketplace.json", "./"],
   ]) {
-    const entry = JSON.parse(readFileSync(join(REPO_ROOT, path), "utf8"))
-      .plugins[0];
+    const entry = repoJson(path).plugins[0];
     assert.equal(
       typeof entry.source === "string" ? entry.source : entry.source.path,
-      "./",
+      source,
     );
     assert.equal(entry.name, manifest.name);
     if (entry.version !== undefined) {
       assert.equal(entry.version, manifest.version);
+    }
+  }
+});
+
+test("Claude plugin uses its own MCP endpoint and skill copies", () => {
+  assert.equal(
+    repoJson("claude/.mcp.json").mcpServers["runway-dev"].url,
+    CLAUDE_MCP_URL,
+  );
+  const claudeSkills = readdirSync(join(CLAUDE_ROOT, "skills"), {
+    withFileTypes: true,
+  })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+  assert.deepEqual(new Set(claudeSkills), new Set(SKILLS));
+  for (const skill of SKILLS) {
+    const markdown = readFileSync(
+      join(CLAUDE_ROOT, "skills", skill, "SKILL.md"),
+      "utf8",
+    );
+    assert.equal(skillName(markdown), skill);
+    for (const forbidden of [
+      /create_avatar\b/,
+      /requested or approved/i,
+      /approved billable/i,
+      /dev\.runwayml\.com\/mcp(?!\/claude)\b/,
+    ]) {
+      assert.doesNotMatch(markdown, forbidden, `${skill}: ${forbidden}`);
     }
   }
 });

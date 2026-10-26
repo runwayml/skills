@@ -9,9 +9,9 @@
   "plugins": [
     {
       "name": "runway-api",
-      "source": "./",
+      "source": "./claude",
       "version": "4.0.0",
-      "description": "Get guidance for integrating video, image and audio generation with the Runway API and official SDKs. Connect to your Runway Dev account to inspect available models and task errors, manage Model Routers and live avatars, and inspect recorded routing decisions."
+      "description": "Get guidance for integrating video, image and audio generation with the Runway API and official SDKs. Connect to your Runway Dev account to inspect available models and task errors, manage Model Routers and existing real-time avatars, and inspect recorded routing decisions."
     }
   ]
 }

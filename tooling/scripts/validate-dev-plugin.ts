@@ -175,10 +175,10 @@ export function validateArchive(
       }
     }
   }
-  const native = json(".claude-plugin/plugin.json");
+  const native = json(".cursor-plugin/plugin.json");
   assert(
     native.name === manifest.name && native.version === manifest.version,
-    "Native Claude identity differs",
+    "Native Cursor identity differs",
   );
   return {
     name: manifest.name,

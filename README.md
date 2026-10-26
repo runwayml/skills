@@ -7,11 +7,13 @@ Runway Dev helps your coding agent build AI video, image and audio generation in
 - **The Runway Dev MCP** connects your agent to your Runway Developer Portal account. It can look up available models, prices and limits; set up Model Routers based on cost, speed or quality, with an optional credit cap; and manage real-time avatars. It can also inspect failed tasks and routing decisions to help you work out what to check next.
 - **Skills** show your agent how to integrate the API with the official SDKs, and how to build with models, Model Routers, Recipes, Workflows and real-time avatars.
 
-This repository is the plugin: root manifests and MCP configuration load the seven active skills in `skills/`. The install ID remains `runway-api`; the display name is Runway Dev.
+This repository is the plugin: root manifests and MCP configuration load the seven active skills in `skills/`. Claude uses a separate plugin folder, `claude/`, described below. The install ID remains `runway-api`; the display name is Runway Dev.
 
 Installing a plugin does not configure an application's API key or automatically create a Runway account. Public directory availability depends on each host's listing.
 
 ## Claude Code
+
+The Claude plugin lives in `claude/`, with its own manifest, MCP configuration and copies of the seven skills. It connects to `https://dev.runwayml.com/mcp/claude`, which omits the `create_avatar` tool; users create new avatars in the Developer Portal. Its skills validate integrations with local checks and leave live generations, Sessions, Recipe calls and Workflow invocations to the user's application.
 
 Install from the Runway-maintained marketplace:
 
@@ -49,7 +51,7 @@ npm --prefix tooling ci --ignore-scripts
 npm --prefix tooling run build:plugin
 ```
 
-This creates `.build/runway-api-4.0.0.zip`. It exports the root plugin files and active Dev skills from an explicit allowlist, excluding the legacy archive and development files. Package validation and native authentication are separate checks.
+This creates `.build/runway-api-4.0.0.zip`. It exports the root plugin files and active Dev skills from an explicit allowlist, excluding the Claude plugin folder and development files. Package validation and native authentication are separate checks.
 
 ## Cursor
 
@@ -88,18 +90,6 @@ npx skills add runwayml/skills --skill runway-dev --skill runway-dev-models --ag
 
 Standalone skills do not automatically configure MCP. Use one installation path for each skill to avoid duplicate copies.
 
-## Legacy generation and utility skills
-
-The older `rw-generate-*`, `use-runway-api`, and `rw-check-org-details` skills and their helpers remain available at [this pinned revision](https://github.com/runwayml/skills/tree/342b34b0df2bd3e6747beaa5fdb9ef11d565be94/legacy). They are retired and are no longer included in the current plugin repository files.
-
-Install the self-contained `use-runway-api` skill explicitly:
-
-```sh
-npx skills add https://github.com/runwayml/skills/tree/342b34b0df2bd3e6747beaa5fdb9ef11d565be94/legacy --skill use-runway-api
-```
-
-For the older Python helpers, clone this repository, check out that revision, and run from `legacy/`. Existing marketplace installs pinned to an older commit keep that version until updated.
-
 ## Credentials and usage
 
 MCP uses browser OAuth at `https://dev.runwayml.com/mcp`; do not put an API key in its configuration. Your application uses its own server-side `RUNWAYML_API_SECRET`. Create the key in [Developer Portal](https://dev.runway.com/) and keep it out of browser bundles, chat, and source control. API generations may consume credits.
@@ -108,6 +98,6 @@ Use the [current docs](https://docs.dev.runwayml.com/), [MCP connection guide](h
 
 ## Development and release
 
-Edit the root manifests and active `skills/` directly. There is no generated plugin copy or sync step. Build and test dependencies live under `tooling/` so plugin installation does not install development packages. Run `npm --prefix tooling run build:plugin` to export a ZIP; add any new skill resources to its explicit file allowlist. CI checks the export, cross-host paths, and portable schemas. See [the maintainer guide](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
+Edit the root manifests and active `skills/` directly. When a skill changes, make the matching change in `claude/skills/` unless it conflicts with the Claude variant's differences above; there is no generated copy or sync step. Build and test dependencies live under `tooling/` so plugin installation does not install development packages. Run `npm --prefix tooling run build:plugin` to export a ZIP; add any new skill resources to its explicit file allowlist. CI checks the export, cross-host paths, and portable schemas. See [the maintainer guide](https://github.com/runwayml/skills/blob/main/docs/plugin-release.md).
 
 Licensed under [MIT](LICENSE).
