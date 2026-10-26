@@ -17,7 +17,6 @@ export const FILES = [
   "plugin.json",
   "mcp.json",
   ".mcp.json",
-  ".claude-plugin/plugin.json",
   ".cursor-plugin/plugin.json",
   "README.md",
   "LICENSE",
