@@ -27,7 +27,7 @@
       "onboardingSkill": "./skills/runway-dev-setup/SKILL.md",
       "interface": {
         "displayName": "Runway Dev",
-        "shortDescription": "Runway API integration help",
+        "shortDescription": "Build with media models.",
         "longDescription": "Runway Dev helps you integrate video, image and audio generation into your apps through Runway’s API, with models from Runway and other providers.\n\nWhat’s included\n\nThe Runway Dev MCP connects to your Runway Dev account so your coding agent can inspect the models your project can use, including their input limits and prices; manage Model Router configurations and live-avatar resources; inspect recorded task-routing decisions; and read available task error details.\n\nSkills provide guidance for using the official SDKs and integrating models, Model Routers, Recipes, Workflows and live avatars.\n\nWho it’s for: developers integrating generative media into apps, products, tools and pipelines.\n\nLimitations: the plugin provides integration guidance and account-management tools. Media generation runs through the Runway API in your application. You need a Runway Dev account to access project resources.",
         "developerName": "Runway",
         "category": "Developer Tools",
