@@ -1,6 +1,10 @@
 # Changelog
 
-## 4.0.0 (unreleased)
+## 4.0.1
+
+- Added tool title annotations and improved skill instructions.
+
+## 4.0.0
 
 - Runway Dev plugin bundles the hosted Dev MCP and seven refreshed integration/setup skills for Codex, Claude Code, and Cursor. Replit can use the same skills and a separate MCP install link.
 - Setup guides browser sign-in or signup, account/project verification, and server-side application credentials.
