@@ -1,7 +1,7 @@
 {
   "name": "runway-api",
   "displayName": "Runway Dev",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Get guidance for integrating video, image and audio generation with the Runway API and official SDKs. Connect to your Runway Dev account to inspect available models and task errors, manage Model Routers and live avatars, and inspect recorded routing decisions.",
   "author": {
     "name": "Runway",

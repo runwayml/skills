@@ -51,7 +51,7 @@ npm --prefix tooling ci --ignore-scripts
 npm --prefix tooling run build:plugin
 ```
 
-This creates `.build/runway-api-4.0.0.zip`. It exports the root plugin files and active Dev skills from an explicit allowlist, excluding the Claude plugin folder and development files. Package validation and native authentication are separate checks.
+This creates `.build/runway-api-4.0.1.zip`. It exports the root plugin files and active Dev skills from an explicit allowlist, excluding the Claude plugin folder and development files. Package validation and native authentication are separate checks.
 
 ## Cursor
 
